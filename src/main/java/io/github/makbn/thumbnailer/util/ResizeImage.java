@@ -31,28 +31,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Resize an image.
- *
- * @author Benjamin
- */
+
 public class ResizeImage {
 
-    /**
-     * The logger for this class
-     */
     private static final Logger mLog = Logger.getLogger(ResizeImage.class);
 
-
-    BufferedImage inputImage;
+    private BufferedImage inputImage;
     private boolean isProcessed = false;
-    BufferedImage outputImage;
+    private BufferedImage outputImage;
 
     private int imageWidth;
     private int imageHeight;
     private int thumbWidth;
     private int thumbHeight;
-    private double resizeRatio = 1.0;
 
     /**
      * Scale input image so that width and height is equal (or smaller) to the output size.
@@ -138,6 +129,7 @@ public class ResizeImage {
     }
 
     private void calcDimensions(int resizeMethod) {
+        double resizeRatio = 1.0;
         switch (resizeMethod) {
             case RESIZE_FIT_BOTH_DIMENSIONS:
                 resizeRatio = Math.min(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);

@@ -54,13 +54,11 @@ public abstract class OfficeFileIdentifier implements MimeTypeIdentifier {
     }
 
     protected boolean isOfficeFile(String mimeType) {
-        if (MS_OFFICE_MIME_TYPE.equals(mimeType))
-            return true;
         if (mimeType == null)
             return false;
-        if (mimeType.startsWith("application/vnd.ms"))
-            return true;
-        if (mimeType.startsWith("application/vnd.openxmlformats"))
+
+        if (MS_OFFICE_MIME_TYPE.equals(mimeType) || mimeType.startsWith("application/vnd.ms")
+                || mimeType.startsWith("application/vnd.openxmlformats") )
             return true;
 
         return false;

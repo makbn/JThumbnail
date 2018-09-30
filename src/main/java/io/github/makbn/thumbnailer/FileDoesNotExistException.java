@@ -47,12 +47,13 @@ public class FileDoesNotExistException extends IOException {
      * Test if the file/directory exists and can be read.
      *
      * @param f     File to be tested
-     * @param label How the file is called.
+     * @param name  How the file is called.
      * @throws FileDoesNotExistException if it does not exists or cannot be read.
      */
-    public static void check(File f, String label) throws FileDoesNotExistException {
-        if (label == null)
-            label = "The file";
+    public static void check(File f, String name) throws FileDoesNotExistException {
+        String label = "The file";
+        if (name != null)
+            label = name;
 
         if (f == null)
             throw new FileDoesNotExistException(label + " does not exist (is null).");
@@ -71,9 +72,10 @@ public class FileDoesNotExistException extends IOException {
         check(f, null);
     }
 
-    public static void checkWrite(File f, String label, boolean createParentDirsIfNotExist, boolean isDir) throws FileDoesNotExistException {
-        if (label == null)
-            label = "The file";
+    public static void checkWrite(File f, String name, boolean createParentDirsIfNotExist, boolean isDir) throws FileDoesNotExistException {
+        String label = "The file";
+        if (name != null)
+            label = name;
         if (f == null)
             throw new FileDoesNotExistException(label + " does not exist (is null).");
 

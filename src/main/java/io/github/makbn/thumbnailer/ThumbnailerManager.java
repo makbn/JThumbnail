@@ -105,7 +105,7 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
      * Initialise Thumbnail Manager
      */
     public ThumbnailerManager() {
-        // Execute close() when JVM shuts down (if it wasn't executed before).
+
         final ThumbnailerManager self = this;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
@@ -113,20 +113,14 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
             }
         });
 
-        thumbnailers = new ChainedHashMap<String, Thumbnailer>(DEFAULT_NB_MIME_TYPES, DEFAULT_NB_THUMBNAILERS_PER_MIME);
-        allThumbnailers = new LinkedList<Thumbnailer>();
+        thumbnailers = new ChainedHashMap<>(DEFAULT_NB_MIME_TYPES, DEFAULT_NB_THUMBNAILERS_PER_MIME);
+        allThumbnailers = new LinkedList<>();
 
         mimeTypeDetector = new MimeTypeDetector();
 
         thumbHeight = THUMBNAIL_DEFAULT_HEIGHT;
         thumbWidth = THUMBNAIL_DEFAULT_WIDTH;
     }
-/* currently not used
-	private static String generate_hash(String str)
-	{
-		return StringUtil.transpose_string(StringUtil.md5(str));
-	}
-*/
 
     /**
      * Calculate a thumbnail filename (via hashing).
@@ -139,7 +133,7 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
         if (thumbnailFolder == null)
             throw new RuntimeException("chooseThumbnailFilename cannot be run before a first call to setThumbnailFolder()");
         if (input == null)
-            throw new NullPointerException("Input file may not be null");
+            throw new IllegalArgumentException("Input file may not be null");
 
         String hash = ""; //"_" + generate_hash(input.getAbsolutePath());
         String prefix = input.getName().replace('.', '_');
