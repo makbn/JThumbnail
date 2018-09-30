@@ -21,14 +21,13 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.UnsupportedInputFileFormatException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This class uses Java Image I/O (Java's internal Image Processing library) in order to resize images.

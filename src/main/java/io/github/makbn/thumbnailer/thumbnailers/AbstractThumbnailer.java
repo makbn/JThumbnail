@@ -21,11 +21,11 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.io.File;
-import java.io.IOException;
-
 import io.github.makbn.thumbnailer.ThumbnailerConstants;
 import io.github.makbn.thumbnailer.ThumbnailerException;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This AbstractThumbnailer may be used in order to implement only essential methods.
@@ -69,8 +69,8 @@ public abstract class AbstractThumbnailer implements Thumbnailer, ThumbnailerCon
     /**
      * Set a new Thumbnail size. All following thumbnails will be generated in this size.
      *
-     * @param thumbWidth              Width in Pixel
-     * @param thumbHeight             Height in Pixel
+     * @param thumbWidth         Width in Pixel
+     * @param thumbHeight        Height in Pixel
      * @param imageResizeOptions Options for ResizeImage (currently ignored)
      */
     @Override

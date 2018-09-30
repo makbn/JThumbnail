@@ -21,8 +21,6 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.io.IOException;
-
 /**
  * Dummy class for converting Text documents into Openoffice-Textfiles.
  * <p>
@@ -32,7 +30,7 @@ import java.io.IOException;
  */
 public class JODWordConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODWordConverterThumbnailer() throws IOException {
+    public JODWordConverterThumbnailer() {
         super();
     }
 

@@ -21,8 +21,6 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.io.IOException;
-
 /**
  * Dummy class for converting Html documents into Openoffice-Textfiles.
  * <p>
@@ -33,7 +31,7 @@ import java.io.IOException;
  */
 public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODHtmlConverterThumbnailer() throws IOException {
+    public JODHtmlConverterThumbnailer() {
         super();
     }
 

@@ -20,14 +20,14 @@
  */
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.ThumbnailerException;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
-
 // For example code
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 public class DummyThumbnailer extends AbstractThumbnailer {
 

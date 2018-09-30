@@ -21,8 +21,6 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.io.IOException;
-
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
  *
@@ -30,7 +28,7 @@ import java.io.IOException;
  */
 public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODPowerpointConverterThumbnailer() throws IOException {
+    public JODPowerpointConverterThumbnailer() {
         super();
     }
 

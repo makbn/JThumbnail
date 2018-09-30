@@ -21,29 +21,20 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImagingOpException;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-
 import io.github.makbn.thumbnailer.FileDoesNotExistException;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
+import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.rendering.PageDrawer;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Renders the first page of a PDF file into a thumbnail.
@@ -105,7 +96,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
     private BufferedImage writeImageFirstPage(PDDocument document, int imageType)
             throws IOException {
 
-        PDPage page = (PDPage) document.getDocumentCatalog().getPages().get(0);
+        PDPage page = document.getDocumentCatalog().getPages().get(0);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
         // Here is the main work:
 

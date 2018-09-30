@@ -22,9 +22,6 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 import java.io.File;
-import java.io.IOException;
-
-import io.github.makbn.thumbnailer.ThumbnailerException;
 
 /**
  * This class creates Thumbnails from websites
@@ -35,7 +32,7 @@ import io.github.makbn.thumbnailer.ThumbnailerException;
 public class CobraThumbnailer extends AbstractThumbnailer {
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) {
 		
 		
 /*		

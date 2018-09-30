@@ -21,16 +21,16 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.util.IOUtil;
+import io.github.makbn.thumbnailer.util.ResizeImage;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
-import io.github.makbn.thumbnailer.ThumbnailerException;
-import io.github.makbn.thumbnailer.util.IOUtil;
-import io.github.makbn.thumbnailer.util.ResizeImage;
 
 /**
  * This class extracts Thumbnails from OpenOffice-Files.
