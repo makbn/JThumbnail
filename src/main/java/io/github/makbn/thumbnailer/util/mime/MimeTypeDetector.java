@@ -179,6 +179,9 @@ public class MimeTypeDetector {
             case "application/pdf":
                 extensions.add("pdf");
                 break;
+            default:
+                mLog.warn("no ext found!");
+                break;
 
         }
         extensionsCache.put(mimeType, extensions);

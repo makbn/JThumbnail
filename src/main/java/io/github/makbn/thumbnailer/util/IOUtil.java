@@ -30,11 +30,8 @@ public class IOUtil {
     }
 
     public static void deleteQuietlyForce(File file) {
-        if (file != null) {
-            if (!file.delete()) {
-                if (file.exists())
-                    file.deleteOnExit();
-            }
+        if (file != null && !file.delete() && file.exists()) {
+            file.deleteOnExit();
         }
     }
     /**
