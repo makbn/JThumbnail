@@ -26,12 +26,10 @@ import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +38,6 @@ import java.io.IOException;
  * Renders the first page of a PDF file into a thumbnail.
  */
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-
-    private static final Color TRANSPARENT_WHITE = new Color(255, 255, 255, 0);
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException,
@@ -59,7 +55,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
                 throw new ThumbnailerException("Could not load PDF File", e);
             }
 
-            BufferedImage tmpImage = writeImageFirstPage(document, BufferedImage.TYPE_INT_RGB);
+            BufferedImage tmpImage = writeImageFirstPage(document);
 
             if (tmpImage.getWidth() == thumbWidth) {
                 ImageIO.write(tmpImage, "PNG", output);
@@ -82,23 +78,18 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
     /**
      * Loosely based on the commandline-Tool PDFImageWriter
      *
-     * @param document
-     * @param imageType
-     * @return
+     * @param document to generate image from first page
+
+     * @return generated image
      * @throws IOException
      */
-    private BufferedImage writeImageFirstPage(PDDocument document, int imageType)
-            throws IOException {
+    private BufferedImage writeImageFirstPage(PDDocument document) throws IOException {
 
-        PDPage page = document.getDocumentCatalog().getPages().get(0);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
-        // Here is the main work:
-
         BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
 
         return bim;
     }
-
 
     /**
      * Get a List of accepted File Types.
