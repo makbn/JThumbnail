@@ -56,26 +56,19 @@ public class Thumbnailer {
             File out = createThumbnail(f);
             System.out.println("FILE created at : "+out.getAbsolutePath());
         }
-/*
-        File out = createThumbnail(new File("/home/fanap/Desktop/docs/aa.docx"));
-        System.out.println("FILE created at : "+out.getAbsolutePath());*/
 
     }
 
 
-    protected static void initLogging() throws IOException
-    {
+    protected static void initLogging() throws IOException {
         System.setProperty("log4j.configuration", LOG4J_CONFIG_FILE);
 
         File logConfigFile = new File(loader.getResource(LOG4J_CONFIG_FILE).getFile());
-        if (!logConfigFile.exists())
-        {
-            // Extract config properties from jar
+        if (!logConfigFile.exists()) {
             InputStream in = Thumbnailer.class.getResourceAsStream("/" + LOG4J_CONFIG_FILE);
-            if (in == null)
-            {
-                System.err.println("Packaging error: can't find logging configuration inside jar. (Neither can I find the config file on the file system: " + logConfigFile.getAbsolutePath() + ")");
-                System.exit(1);
+            if (in == null) {
+                System.err.println("Packaging error: can't find logging configuration inside jar. (Neither can " +
+                        "I find the config file on the file system: " + logConfigFile.getAbsolutePath() + ")");
             }
 
             OutputStream out = null;
