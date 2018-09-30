@@ -36,6 +36,13 @@ try {
 * Image files (`jpg`, `png`, `bmp`, `gif`)
 * AutoCad files (`dwg`)
 
+## TODO
+
+[X] Update all dependenciesfrom jar to maven
+[X] update project old and deprecated depencencies
+[X] Change the structure of project
+[] Add new Configuration method to confige OpenOffice dir and port 
+[] Add Async multi-thread support
 
 ## Original project
 
