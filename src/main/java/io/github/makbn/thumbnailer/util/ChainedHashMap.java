@@ -31,8 +31,8 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
     private static final int DEFAULT_LIST_SIZE = 10;
     private int listSize;
 
-    HashMap<K, List<V>> hashtable;
-    int size;
+    private HashMap<K, List<V>> hashtable;
+    private int size;
 
     public ChainedHashMap() {
         this(DEFAULT_HASHTABLE_SIZE);
@@ -43,7 +43,7 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
     }
 
     public ChainedHashMap(int hashtableSize, int chainSize) {
-        hashtable = new HashMap<K, List<V>>(hashtableSize);
+        hashtable = new HashMap<>(hashtableSize);
         listSize = chainSize;
 
         size = 0;
@@ -127,13 +127,15 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
                             throw new NoSuchElementException("Empty");
                         }
 
+                        @Override
                         public void remove() {
+                            //do nothing
                         }
+
                     };
                 }
             };
         } else {
-            // Iterator of list
             return new Iterable<V>() {
                 public Iterator<V> iterator() {
                     return list.iterator();
