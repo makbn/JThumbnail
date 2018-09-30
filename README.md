@@ -4,7 +4,7 @@
 
 JThumbnail is a Java library for creating Thumbnails of common file types of file line `.doc`, `.docx`, `.pdf` and ...[full list](#supported-file-formats)
 
-*  Project is under development! maven and gradle will be out soon.
+*   Project is under development! maven and gradle will be out soon.
 
 ## How to use
 
@@ -49,4 +49,3 @@ try {
 ## Original project
 
 **JThumbnail** is based on an [old project](https://github.com/benjaminpick/java-thumbnailer) of the university of Siegen for the benefit of [come_IN Computerclubs](http://www.computerclub-comein.de). and thanks alot to @ benjaminpick
-
