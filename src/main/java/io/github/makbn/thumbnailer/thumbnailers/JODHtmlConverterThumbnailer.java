@@ -31,11 +31,6 @@ package io.github.makbn.thumbnailer.thumbnailers;
  */
 public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODHtmlConverterThumbnailer() {
-        super();
-    }
-
-
     protected String getStandardOpenOfficeExtension() {
         return ".odt";
     }
