@@ -27,24 +27,24 @@ try {
 
 ## Requirements
 
-*  Java JRE 1.8
-*  (optional) OpenOffice 4 or LibreOffice
+*   Java JRE 1.8
+*   (optional) OpenOffice 4 or LibreOffice
 
 ## Supported File Formats
 
-*  Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
-*  OpenOffice files (all of them)
-*  Text files (`txt`, `pdf`, `rtf`, `html`)
-*  Image files (`jpg`, `png`, `bmp`, `gif`)
-*  AutoCad files (`dwg`)
+*   Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
+*   OpenOffice files (all of them)
+*   Text files (`txt`, `pdf`, `rtf`, `html`)
+*   Image files (`jpg`, `png`, `bmp`, `gif`)
+*   AutoCad files (`dwg`)
 
 ## TODO
 
-- [x] Update all dependenciesfrom jar to maven
-- [x] update project old and deprecated depencencies
-- [x] Change the structure of project
-- [ ] Add new Configuration method to confige OpenOffice dir and port 
-- [ ] Add Async multi-thread support
+-   [x] Update all dependenciesfrom jar to maven
+-   [x] update project old and deprecated depencencies
+-   [x] Change the structure of project
+-   [ ] Add new Configuration method to confige OpenOffice dir and port 
+-   [ ] Add Async multi-thread support
 
 ## Original project
 
