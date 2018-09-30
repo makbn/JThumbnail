@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.makbn</groupId>
-    <artifactId>thumbnail-extractor</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>jthumbnail</artifactId>
+    <version>v1.0</version>
     <build>
         <plugins>
             <plugin>
