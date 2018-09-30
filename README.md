@@ -23,16 +23,16 @@ try {
 
 ## Requirements
 
-* Java JRE 1.8
-* (optional) OpenOffice 4 or LibreOffice
+*  Java JRE 1.8
+*  (optional) OpenOffice 4 or LibreOffice
 
 ## Supported File Formats
 
-* Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
-* OpenOffice files (all of them)
-* Text files (`txt`, `pdf`, `rtf`, `html`)
-* Image files (`jpg`, `png`, `bmp`, `gif`)
-* AutoCad files (`dwg`)
+*  Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
+*  OpenOffice files (all of them)
+*  Text files (`txt`, `pdf`, `rtf`, `html`)
+*  Image files (`jpg`, `png`, `bmp`, `gif`)
+*  AutoCad files (`dwg`)
 
 ## TODO
 
