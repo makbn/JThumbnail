@@ -40,9 +40,9 @@ try {
 
 ## TODO
 
--   [x] Update all dependenciesfrom jar to maven
--   [x] update project old and deprecated depencencies
--   [x] Change the structure of project
+-   [+] Update all dependenciesfrom jar to maven
+-   [+] update project old and deprecated depencencies
+-   [+] Change the structure of project
 -   [ ] Add new Configuration method to confige OpenOffice dir and port 
 -   [ ] Add Async multi-thread support
 
