@@ -1,5 +1,6 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 
@@ -73,6 +74,8 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 resizer.setInputImage(originalImage);
                 resizer.writeOutput(output);
             }
+        } catch (ThumbnailerException e) {
+            e.printStackTrace();
         } finally {
             IOUtil.quietlyClose(fis);
         }

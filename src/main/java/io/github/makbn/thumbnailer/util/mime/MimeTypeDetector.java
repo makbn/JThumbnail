@@ -42,15 +42,15 @@ public class MimeTypeDetector {
 
 
     private List<MimeTypeIdentifier> extraIdentifiers;
-
+    private Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
     private static Logger mLog = Logger.getLogger(MimeTypeDetector.class);
-    private static Tika tika;
+    private final Tika tika;
 
     /**
      * Create a MimeType Detector and init it.
      */
     public MimeTypeDetector() {
-        extraIdentifiers = new ArrayList<MimeTypeIdentifier>();
+        extraIdentifiers = new ArrayList<>();
         tika = new Tika();
         addMimeTypeIdentifier(new Office2007FileIdentifier());
         addMimeTypeIdentifier(new PptFileIdentifier());
@@ -121,31 +121,12 @@ public class MimeTypeDetector {
         }
     }
 
-    Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
 
     @SuppressWarnings("unchecked")
     protected List<String> getExtensionsCached(String mimeType) {
         List<String> extensions = extensionsCache.get(mimeType);
         if (extensions != null)
             return extensions;
-/*
-
-        MimeTypes all = MimeTypes.getDefaultMimeTypes();
-
-        try {
-            extensions = (List<String>) all.forName(mimeType).getExtensions();
-        } catch (MimeTypeException e) {
-            e.printStackTrace();
-        }
-
-        for (MimeTypeIdentifier identifier : extraIdentifiers) {
-            if (extensions != null)
-                return extensions;
-
-            extensions = identifier.getExtensionsFor(mimeType);
-        }
-*/
-
 
         extensions = new ArrayList<>();
         switch (mimeType){
@@ -182,7 +163,6 @@ public class MimeTypeDetector {
             default:
                 mLog.warn("no ext found!");
                 break;
-
         }
         extensionsCache.put(mimeType, extensions);
         return extensions;
@@ -196,7 +176,7 @@ public class MimeTypeDetector {
      * @return True if compatible.
      */
     public boolean doesExtensionMatchMimeType(String extension, String mimeType) {
-        List<String> extensions = null;
+        List<String> extensions;
         extensions = getExtensionsCached(mimeType);
         if (extensions == null)
             return false;

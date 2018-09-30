@@ -21,6 +21,7 @@
 
 package io.github.makbn.thumbnailer.util;
 
+import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.UnsupportedInputFileFormatException;
 import org.apache.log4j.Logger;
 
@@ -106,18 +107,18 @@ public class ResizeImage {
         imageHeight = inputImage.getHeight(null);
     }
 
-    public void writeOutput(File output) throws IOException {
+    public void writeOutput(File output) throws IOException, ThumbnailerException {
         writeOutput(output, "PNG");
     }
 
-    public void writeOutput(File output, String format) throws IOException {
+    public void writeOutput(File output, String format) throws IOException, ThumbnailerException {
         if (!isProcessed)
             process();
 
         ImageIO.write(outputImage, format, output);
     }
 
-    private void process() {
+    private void process() throws ThumbnailerException {
         if (imageWidth == thumbWidth && imageHeight == thumbHeight)
             outputImage = inputImage;
         else {
@@ -129,7 +130,7 @@ public class ResizeImage {
     }
 
     private void calcDimensions(int resizeMethod) {
-        double resizeRatio = 1.0;
+        double resizeRatio;
         switch (resizeMethod) {
             case RESIZE_FIT_BOTH_DIMENSIONS:
                 resizeRatio = Math.min(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
@@ -138,24 +139,20 @@ public class ResizeImage {
             case RESIZE_FIT_ONE_DIMENSION:
                 resizeRatio = Math.max(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
                 break;
-
-            case NO_RESIZE_ONLY_CROP:
+            default:
                 resizeRatio = 1.0;
                 break;
         }
-        if ((extraOptions & DO_NOT_SCALE_UP) > 0)
-            if (resizeRatio > 1.0)
+        if ((extraOptions & DO_NOT_SCALE_UP) > 0 && resizeRatio > 1.0)
                 resizeRatio = 1.0;
 
 
         scaledWidth = (int) Math.round(imageWidth * resizeRatio);
         scaledHeight = (int) Math.round(imageHeight * resizeRatio);
 
-        if ((extraOptions & ALLOW_SMALLER) > 0) {
-            if (scaledWidth < thumbWidth && scaledHeight < thumbHeight) {
-                thumbWidth = scaledWidth;
-                thumbHeight = scaledHeight;
-            }
+        if ((extraOptions & ALLOW_SMALLER) > 0 && scaledWidth < thumbWidth && scaledHeight < thumbHeight) {
+            thumbWidth = scaledWidth;
+            thumbHeight = scaledHeight;
         }
 
         // Center if smaller.
@@ -170,7 +167,7 @@ public class ResizeImage {
             offsetY = 0;
     }
 
-    private void paint() {
+    private void paint() throws ThumbnailerException {
         outputImage = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graphics2D = outputImage.createGraphics();
@@ -189,7 +186,7 @@ public class ResizeImage {
         if (!scalingComplete && observer != null) {
             // ImageObserver must wait for ready
             if (mLog.isDebugEnabled())
-                throw new RuntimeException("Scaling is not yet complete!");
+                throw new ThumbnailerException("Scaling is not yet complete!");
             else {
                 mLog.warn("ResizeImage: Scaling is not yet complete!");
 
