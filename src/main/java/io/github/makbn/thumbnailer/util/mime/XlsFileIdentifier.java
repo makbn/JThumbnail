@@ -26,10 +26,10 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import java.io.File;
 import java.io.FileInputStream;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class XlsFileIdentifier extends OfficeFileIdentifier {
     public XlsFileIdentifier() {

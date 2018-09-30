@@ -20,12 +20,12 @@
  */
 package io.github.makbn.thumbnailer.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * Keep a list of temporary files so that the same file needn't be copied twice.

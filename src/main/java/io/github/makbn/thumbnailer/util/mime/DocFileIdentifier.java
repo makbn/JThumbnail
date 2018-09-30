@@ -25,10 +25,10 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.poi.hwpf.HWPFDocument;
+
 import java.io.File;
 import java.io.FileInputStream;
-
-import org.apache.poi.hwpf.HWPFDocument;
 
 public class DocFileIdentifier extends OfficeFileIdentifier {
     public DocFileIdentifier() {

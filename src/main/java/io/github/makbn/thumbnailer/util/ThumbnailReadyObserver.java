@@ -1,9 +1,9 @@
 package io.github.makbn.thumbnailer.util;
 
-import java.awt.Image;
-import java.awt.image.ImageObserver;
-
 import org.apache.log4j.Logger;
+
+import java.awt.*;
+import java.awt.image.ImageObserver;
 
 /**
  * Not quite sure if this is necessary:

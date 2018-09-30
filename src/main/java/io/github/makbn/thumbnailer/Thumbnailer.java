@@ -21,26 +21,16 @@
 
 package io.github.makbn.thumbnailer;
 
+import io.github.makbn.thumbnailer.thumbnailers.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import io.github.makbn.thumbnailer.thumbnailers.DWGThumbnailer;
-
-import io.github.makbn.thumbnailer.thumbnailers.JODExcelConverterThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.JODHtmlConverterThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.JODPowerpointConverterThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.JODWordConverterThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.NativeImageThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.OpenOfficeThumbnailer;
-import io.github.makbn.thumbnailer.thumbnailers.PDFBoxThumbnailer;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 
 /**
@@ -141,14 +131,10 @@ public class Thumbnailer {
         thumbnailer.registerThumbnailer(new OpenOfficeThumbnailer());
         thumbnailer.registerThumbnailer(new PDFBoxThumbnailer());
 
-        try {
-            thumbnailer.registerThumbnailer(new JODWordConverterThumbnailer());
-            thumbnailer.registerThumbnailer(new JODExcelConverterThumbnailer());
-            thumbnailer.registerThumbnailer(new JODPowerpointConverterThumbnailer());
-            thumbnailer.registerThumbnailer(new JODHtmlConverterThumbnailer());
-        } catch (IOException e) {
-
-        }
+        thumbnailer.registerThumbnailer(new JODWordConverterThumbnailer());
+        thumbnailer.registerThumbnailer(new JODExcelConverterThumbnailer());
+        thumbnailer.registerThumbnailer(new JODPowerpointConverterThumbnailer());
+        thumbnailer.registerThumbnailer(new JODHtmlConverterThumbnailer());
 
 
         thumbnailer.registerThumbnailer(new DWGThumbnailer());

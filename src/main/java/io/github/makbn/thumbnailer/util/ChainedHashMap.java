@@ -21,28 +21,9 @@
 package io.github.makbn.thumbnailer.util;
 
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
-/**
- * Hashtable that can contain several entries per key.
- * (Helper Class)
- * <p>
- * Contract:
- * <li>It is possible to put several identical key-value pairs (i.e. where key and value is equal)
- * <li>entrySet is not supported. Instead, it can be iterated over all entries.
- *
- * @param <K> Key
- * @param <V> Value
- */
-@SuppressWarnings("ALL")
+
 public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>> {
 
     private static final int DEFAULT_HASHTABLE_SIZE = 20;
@@ -273,8 +254,6 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
         return hashtable.keySet();
     }
 
-
-    // TODO "The set is backed by the map, so changes to the map are reflected in the set, and vice-versa."
     public Collection<V> values() {
         List<V> newList = new ArrayList<V>();
 
@@ -288,7 +267,6 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
 
         return newList;
     }
-
 
     public Set<Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException("entrySet is not implemented, as identical entries are allowed (conflict with Set contract). Instead, use .iterator() to iterate through all entries.");

@@ -37,9 +37,6 @@ public class IOUtil {
             }
         }
     }
-
-    // More difficult than I thought. See http://www.java2s.com/Code/Java/File-Input-Output/Getrelativepath.htm and http://stackoverflow.com/questions/204784/how-to-construct-a-relative-path-in-java-from-two-absolute-paths-or-urls
-
     /**
      * Simplistic version: return the substring after the base
      */

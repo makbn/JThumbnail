@@ -21,18 +21,17 @@
 
 package io.github.makbn.thumbnailer;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import org.apache.log4j.Logger;
-
 import io.github.makbn.thumbnailer.thumbnailers.Thumbnailer;
 import io.github.makbn.thumbnailer.util.ChainedHashMap;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.StringUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * This class manages all available Thumbnailers.

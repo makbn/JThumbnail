@@ -21,18 +21,14 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import io.github.makbn.thumbnailer.util.IOUtil;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
-import io.github.makbn.thumbnailer.util.IOUtil;
 
 /**
  * Add detection of Office2007 files (and OpenOffice files).

@@ -21,20 +21,15 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.log4j.Logger;
+import org.apache.tika.Tika;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.apache.tika.Tika;
-import org.apache.tika.metadata.PDF;
-import org.apache.tika.mime.MimeTypeException;
-import org.apache.tika.mime.MimeTypes;
-
-
 
 
 /**

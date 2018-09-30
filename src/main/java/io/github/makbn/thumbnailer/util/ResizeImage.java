@@ -21,19 +21,15 @@
 
 package io.github.makbn.thumbnailer.util;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import io.github.makbn.thumbnailer.UnsupportedInputFileFormatException;
+import org.apache.log4j.Logger;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
-import org.apache.log4j.Logger;
-
-import io.github.makbn.thumbnailer.UnsupportedInputFileFormatException;
 
 /**
  * Resize an image.
