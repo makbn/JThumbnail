@@ -2,6 +2,8 @@
 
 JThumbnail is a Java library for creating Thumbnails of common file types of file line `.doc`, `.docx`, `.pdf` and ...[full list](#supported-file-formats)
 
+*  Project is under development! maven and gradle will be out soon.
+
 ## How to use
 
 ```java
