@@ -28,11 +28,6 @@ package io.github.makbn.thumbnailer.thumbnailers;
  */
 public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODPowerpointConverterThumbnailer() {
-        super();
-    }
-
-
     protected String getStandardOpenOfficeExtension() {
         return ".odp";
     }

@@ -38,12 +38,6 @@ import java.io.IOException;
 
 /**
  * Renders the first page of a PDF file into a thumbnail.
- * <p>
- * Performance note: This takes about 2-3 seconds per file.
- * (TODO : Try to override PDPage.convertToImage - this is where the heavy lifting takes place)
- * <p>
- * Depends on:
- * <li>PDFBox (>= 1.5.0)
  */
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
 

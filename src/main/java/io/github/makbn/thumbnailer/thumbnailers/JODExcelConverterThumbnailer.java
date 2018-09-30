@@ -28,10 +28,6 @@ package io.github.makbn.thumbnailer.thumbnailers;
  */
 public class JODExcelConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODExcelConverterThumbnailer() {
-        super();
-    }
-
     protected String getStandardOpenOfficeExtension() {
         return "ods";
     }

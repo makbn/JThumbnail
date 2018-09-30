@@ -129,13 +129,13 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
      * @param checkExist If true: guarantuee that such a filename doesn't exist yet
      * @return The chosen filename
      */
-    public File chooseThumbnailFilename(File input, boolean checkExist) {
+    public File chooseThumbnailFilename(File input, boolean checkExist) throws ThumbnailerException {
         if (thumbnailFolder == null)
-            throw new RuntimeException("chooseThumbnailFilename cannot be run before a first call to setThumbnailFolder()");
+            throw new ThumbnailerException("chooseThumbnailFilename cannot be run before a first call to setThumbnailFolder()");
         if (input == null)
             throw new IllegalArgumentException("Input file may not be null");
 
-        String hash = ""; //"_" + generate_hash(input.getAbsolutePath());
+        String hash = ""; 
         String prefix = input.getName().replace('.', '_');
 
         int tries = 0;

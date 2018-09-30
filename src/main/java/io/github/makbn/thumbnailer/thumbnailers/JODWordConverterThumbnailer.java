@@ -30,10 +30,6 @@ package io.github.makbn.thumbnailer.thumbnailers;
  */
 public class JODWordConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODWordConverterThumbnailer() {
-        super();
-    }
-
     protected String getStandardOpenOfficeExtension() {
         return ".odt";
     }
