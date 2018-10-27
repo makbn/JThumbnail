@@ -51,4 +51,6 @@ public interface MimeTypeIdentifier {
      * @return List of file extensions (main extension first).
      */
     public List<String> getExtensionsFor(String mimeType);
+
+    public String getThumbnailExtension();
 }

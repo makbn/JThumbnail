@@ -61,7 +61,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
                 ImageIO.write(tmpImage, "PNG", output);
             } else {
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-                resizer.resizeMethod = ResizeImage.NO_RESIZE_ONLY_CROP;
+                resizer.resizeMethod = ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS;
                 resizer.setInputImage(tmpImage);
                 resizer.writeOutput(output);
             }
@@ -79,7 +79,6 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
      * Loosely based on the commandline-Tool PDFImageWriter
      *
      * @param document to generate image from first page
-
      * @return generated image
      * @throws IOException
      */

@@ -54,4 +54,9 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
         return mimeType;
     }
 
+    @Override
+    public String getThumbnailExtension() {
+        return "png";
+    }
+
 }

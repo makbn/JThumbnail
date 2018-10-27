@@ -21,6 +21,7 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.AppSettings;
 import io.github.makbn.thumbnailer.ThumbnailerConstants;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 
@@ -34,9 +35,9 @@ import java.io.IOException;
  * <li>implements an empty close method
  * <li>specifies an wildcard MIME Type as appropriate Filetype
  *
- * @author Benjamin
+ * @author Mehdi Akbarian-Rastaghi
  */
-public abstract class AbstractThumbnailer implements Thumbnailer, ThumbnailerConstants {
+public abstract class AbstractThumbnailer implements Thumbnailer {
 
     /**
      * @var Height of thumbnail picture to create (in Pixel)
@@ -62,8 +63,8 @@ public abstract class AbstractThumbnailer implements Thumbnailer, ThumbnailerCon
      * Initialize the thumbnail size from default constants.
      */
     public AbstractThumbnailer() {
-        thumbHeight = THUMBNAIL_DEFAULT_HEIGHT;
-        thumbWidth = THUMBNAIL_DEFAULT_WIDTH;
+        thumbHeight = AppSettings.THUMB_HEIGHT;
+        thumbWidth = AppSettings.THUMB_WIDTH;
     }
 
     /**

@@ -144,7 +144,7 @@ public class ResizeImage {
                 break;
         }
         if ((extraOptions & DO_NOT_SCALE_UP) > 0 && resizeRatio > 1.0)
-                resizeRatio = 1.0;
+            resizeRatio = 1.0;
 
 
         scaledWidth = (int) Math.round(imageWidth * resizeRatio);
@@ -179,6 +179,9 @@ public class ResizeImage {
 
         // Enable smooth, high-quality resampling
         graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+
 
         ThumbnailReadyObserver observer = new ThumbnailReadyObserver(Thread.currentThread());
         boolean scalingComplete = graphics2D.drawImage(inputImage, offsetX, offsetY, scaledWidth, scaledHeight, observer);

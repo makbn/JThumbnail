@@ -85,4 +85,9 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
     public List<String> getExtensionsFor(String mimeType) {
         return new ArrayList<String>(){{add("docx");}};
     }
+
+    @Override
+    public String getThumbnailExtension() {
+        return "png";
+    }
 }

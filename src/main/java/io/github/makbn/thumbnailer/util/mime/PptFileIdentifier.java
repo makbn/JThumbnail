@@ -56,63 +56,10 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
 
         return mimeType;
     }
-	
-	/* Orig:
 
-    public String[] process(byte[] data, int offset, int length, long bitmask,
-            char comparator, String mimeType, Map params) {
-
-        String[] mimetypes = { "" };
-        File file = null;
-
-        try {
-            file = File.createTempFile("magicdetector", ".ppt");
-            FileUtils.writeFile(file, data);
-            mimetypes = guessPowerpoint(file);
-        } catch (IOException e) {
-            log.error(e, e);
-        } finally {
-            if (file != null) {
-                file.delete();
-            }
-        }
-
-        return mimetypes;
+    @Override
+    public String getThumbnailExtension() {
+        return "png";
     }
-
-    public String[] process(File file, int offset, int length, long bitmask,
-            char comparator, String mimeType, Map params) {
-
-        return guessPowerpoint(file);
-    }
-
-    public String[] guessPowerpoint(File file) {
-
-        String[] mimetypes = {};
-
-        try {
-            FileInputStream stream = new FileInputStream(file);
-            HSLFSlideShow ppt = new HSLFSlideShow(stream);
-            SlideShow presentation = new SlideShow(ppt);
-
-            if (presentation.getSlides().length != 0) {
-                mimetypes = getHandledTypes();
-            }
-        } catch (FileNotFoundException e) {
-            // This is not powerpoint file
-            log.debug("MimeType detector : Not a powerpoint file - FileNotFoundException");
-        } catch (IOException e) {
-            // This is not a powerpoint file
-            log.debug("MimeType detector : Not a powerpoint file - IOException");
-        } catch (RuntimeException e) {
-            // This is not a powerpoint file
-            log.debug("MimeType detector : Not a powerpoint file - RuntimeException");
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-        return mimetypes;
-    }
-    
-    */
 
 }

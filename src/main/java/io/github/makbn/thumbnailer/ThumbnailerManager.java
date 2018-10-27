@@ -26,6 +26,7 @@ import io.github.makbn.thumbnailer.util.ChainedHashMap;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.StringUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -44,7 +45,7 @@ import java.util.Queue;
  *
  * @author Benjamin
  */
-public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
+public class ThumbnailerManager implements Thumbnailer {
 
     /**
      * @var Starting estimate of the number of mime types that the thumbnailer can manager
@@ -118,41 +119,31 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
 
         mimeTypeDetector = new MimeTypeDetector();
 
-        thumbHeight = THUMBNAIL_DEFAULT_HEIGHT;
-        thumbWidth = THUMBNAIL_DEFAULT_WIDTH;
+        thumbHeight = AppSettings.THUMB_HEIGHT;
+        thumbWidth = AppSettings.THUMB_WIDTH;
     }
 
     /**
      * Calculate a thumbnail filename (via hashing).
      *
      * @param input      Input file
-     * @param checkExist If true: guarantuee that such a filename doesn't exist yet
      * @return The chosen filename
      */
-    public File chooseThumbnailFilename(File input, boolean checkExist) throws ThumbnailerException {
+    public File chooseThumbnailFilename(File input, String ext) throws ThumbnailerException {
         if (thumbnailFolder == null)
             throw new ThumbnailerException("chooseThumbnailFilename cannot be run before a first call to setThumbnailFolder()");
         if (input == null)
             throw new IllegalArgumentException("Input file may not be null");
 
-        String hash = ""; 
-        String prefix = input.getName().replace('.', '_');
-
-        int tries = 0;
-        String suffix = "";
         File output;
-        do {
-            if (tries > 0) {
-                int suffix_length = tries / 4 + 1; // Simple (i.e. guessed) heuristic to add randomness if many files have the same name
-                suffix = "-" + StringUtil.randomString(suffix_length);
-            }
 
-            String name = prefix + hash + suffix + ".png";
-            output = new File(thumbnailFolder, name);
+        String name= FilenameUtils.getBaseName(input.getName())+"_thumb";
 
-            tries++;
-        }
-        while (checkExist && output.exists());
+        name = name+"."+ext;
+
+
+        output = new File(thumbnailFolder, name);
+
 
         return output;
     }
@@ -192,8 +183,8 @@ public class ThumbnailerManager implements Thumbnailer, ThumbnailerConstants {
      * @throws ThumbnailerException
      * @return Name of Thumbnail-File generated.
      */
-    public File createThumbnail(File input) throws FileDoesNotExistException, IOException, ThumbnailerException {
-        File output = chooseThumbnailFilename(input, true);
+    public File createThumbnail(File input,String ext) throws FileDoesNotExistException, IOException, ThumbnailerException {
+        File output = chooseThumbnailFilename(input, ext);
         generateThumbnail(input, output);
 
         return output;

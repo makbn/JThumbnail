@@ -3,6 +3,8 @@ package io.github.makbn.thumbnailer.thumbnailers;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,7 +12,9 @@ import java.io.*;
 
 public class DWGThumbnailer extends AbstractThumbnailer {
 
-    public void generateThumbnail(File input, File output) throws IOException {
+    private static final Logger logger = LoggerFactory.getLogger(DWGThumbnailer.class);
+
+    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         //GENERATE FROM EXISTING BITMAP IN DWG
         byte[] outputByte = new byte[4096];
 
@@ -75,7 +79,8 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 resizer.writeOutput(output);
             }
         } catch (ThumbnailerException e) {
-            e.printStackTrace();
+            logger.warn("DWGThumbnailer", e);
+            throw new ThumbnailerException();
         } finally {
             IOUtil.quietlyClose(fis);
         }
@@ -86,3 +91,4 @@ public class DWGThumbnailer extends AbstractThumbnailer {
     }
 
 }
+

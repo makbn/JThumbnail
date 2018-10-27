@@ -21,9 +21,13 @@
 
 package io.github.makbn.thumbnailer;
 
+import io.github.makbn.thumbnailer.listener.ThumbnailListener;
+import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
 import io.github.makbn.thumbnailer.thumbnailers.*;
+import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -31,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -38,55 +43,27 @@ import java.io.OutputStream;
  */
 public class Thumbnailer {
 
+    private enum  ThumbnailState{ideal,running};
+
     private static ThumbnailerManager thumbnailer;
-    private static final String LOG4J_CONFIG_FILE = "conf/javathumbnailer.log4j.properties";
-    private static int width = 220;
-    private static int height = 150;
-    private static ClassLoader loader = Thumbnailer.class.getClassLoader();
-    protected static Logger mLog = Logger.getLogger(Thumbnailer.class);
 
+    private static String defaultOutputDir = AppSettings.TEMP_DIR;
 
-    public static void main(String[] args) throws IOException, ThumbnailerException {
-        initLogging();
-        start();
+    protected static Logger mLog =  LogManager.getLogger(Thumbnailer.class.getName());
 
-        File dir = new File("/home/fanap/Desktop/docs");
+    private static ThumbnailState state;
+    private static MimeTypeDetector typeDetector = new MimeTypeDetector();
+    private static ConcurrentHashMap<ThumbnailCandidate,ThumbnailListener> files;
 
-        for(File f:dir.listFiles()){
-            File out = createThumbnail(f);
-            System.out.println("FILE created at : "+out.getAbsolutePath());
-        }
-
-    }
-
-
-    protected static void initLogging() throws IOException {
-        System.setProperty("log4j.configuration", LOG4J_CONFIG_FILE);
-
-        File logConfigFile = new File(loader.getResource(LOG4J_CONFIG_FILE).getFile());
-        if (!logConfigFile.exists()) {
-            InputStream in = Thumbnailer.class.getResourceAsStream("/" + LOG4J_CONFIG_FILE);
-            if (in == null) {
-                System.err.println("Packaging error: can't find logging configuration inside jar. (Neither can " +
-                        "I find the config file on the file system: " + logConfigFile.getAbsolutePath() + ")");
-            }
-
-            OutputStream out = null;
-            try {
-                out = FileUtils.openOutputStream(logConfigFile);
-                IOUtils.copy(in, out);
-            } finally { try { if (in != null) in.close(); } finally { if (out != null) out.close(); } }
-        }
-
-        PropertyConfigurator.configureAndWatch(logConfigFile.getAbsolutePath(), 10 * 1000);
-        mLog.info("Logging initialized");
-    }
 
     public static void start() throws FileDoesNotExistException {
+        if(files == null)
+            files = new ConcurrentHashMap<>();
 
+        if(thumbnailer!= null)
+            return;
         thumbnailer = new ThumbnailerManager();
         loadExistingThumbnailers();
-
         setParameters();
     }
 
@@ -100,45 +77,83 @@ public class Thumbnailer {
         }
     }
 
-    public static  File createThumbnail(File inputFile) throws IOException, ThumbnailerException {
+    public static  File createThumbnail(File inputFile,String ext) throws IOException, ThumbnailerException {
         if(thumbnailer!=null){
-            return thumbnailer.createThumbnail(inputFile);
+            return thumbnailer.createThumbnail(inputFile, ext);
         }else {
             start();
-            return thumbnailer.createThumbnail(inputFile);
+            return thumbnailer.createThumbnail(inputFile, ext);
         }
     }
 
-    private static void setParameters() throws FileDoesNotExistException {
-        thumbnailer.setThumbnailFolder("thumbs/");
-        thumbnailer.setImageSize(width, height, 0);
+
+    public static void  createThumbnail(ThumbnailCandidate candidate, ThumbnailListener listener){
+        synchronized (files){
+
+            files.put(candidate,listener);
+            mLog.warn("file added to queue!");
+            if(state == ThumbnailState.ideal) {
+                runTasks();
+            }else {
+                mLog.warn("task is running!");
+            }
+        }
+
+    }
+
+    private static void runTasks() {
+        synchronized (state) {
+            if(state == ThumbnailState.running) {
+                return;
+            }
+            mLog.warn("task started!");
+            state = ThumbnailState.running;
+            Runnable taskRunner = () -> {
+                while (!files.isEmpty()) {
+                    files.entrySet().removeIf(e -> {
+                        try {
+                            e.getKey().setThumbExt(typeDetector.getOutputExt(e.getKey().getFile()));
+                            File out = createThumbnail(e.getKey().getFile(), e.getKey().getThumbExt());
+                            e.getValue().onThumbnailReady(out.getName(), out);
+                            return true;
+                        } catch (IOException | ThumbnailerException exp) {
+                            mLog.warn(exp);
+                            e.getValue().onThumbnailFailed(e.getKey().getHash(),exp.getMessage(),100);
+                            return true;
+                        }
+                    });
+                }
+                mLog.warn("task ended!");
+                state = ThumbnailState.ideal;
+            };
+            Thread taskThread = new Thread(taskRunner);
+            taskThread.setName("thumbnail-task-thread-"+taskThread.getId());
+            taskThread.start();
+        }
     }
 
 
+    private static void setParameters() throws FileDoesNotExistException {
+        thumbnailer.setThumbnailFolder(defaultOutputDir);
+        thumbnailer.setImageSize(AppSettings.THUMB_WIDTH, AppSettings.THUMB_WIDTH, 0);
+        state = ThumbnailState.ideal;
+    }
 
 
     protected static void loadExistingThumbnailers() {
-        if (classExists("io.github.makbn.thumbnailer.thumbnailers.NativeImageThumbnailer"))
-            thumbnailer.registerThumbnailer(new NativeImageThumbnailer());
 
+        thumbnailer.registerThumbnailer(new NativeImageThumbnailer());
         thumbnailer.registerThumbnailer(new OpenOfficeThumbnailer());
         thumbnailer.registerThumbnailer(new PDFBoxThumbnailer());
-
         thumbnailer.registerThumbnailer(new JODWordConverterThumbnailer());
         thumbnailer.registerThumbnailer(new JODExcelConverterThumbnailer());
         thumbnailer.registerThumbnailer(new JODPowerpointConverterThumbnailer());
         thumbnailer.registerThumbnailer(new JODHtmlConverterThumbnailer());
-
-
+        thumbnailer.registerThumbnailer(new MPEGThumbnailer());
+        thumbnailer.registerThumbnailer(new MP3Thumbnailer());
         thumbnailer.registerThumbnailer(new DWGThumbnailer());
-    }
+        thumbnailer.registerThumbnailer(new ImageThumbnailer());
 
-    public static boolean classExists(String qualifiedClassname) {
-        try {
-            Class.forName(qualifiedClassname);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-        return true;
+        mLog.warn("Thumbnailers loaded!");
     }
 }
