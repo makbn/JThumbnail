@@ -13,12 +13,6 @@ public class AppSettings {
     public static  int DRIVE_OPENOFFICE_PORT;
     public static String DRIVE_OPENOFFICE_SERVER_PATH;
 
-    public static String AEROSPIKE_IP;
-    public static int AEROSPIKE_PORT;
-    public static String AEROSPIKE_USERNAME;
-    public static String AEROSPIKE_PASSWORD;
-    public static String AEROSPIKE_NAMESPACE;
-    public static String AEROSPIKE_SET;
     public static String TEMP_DIR;
     public static String DRIVE_DIR;
 
@@ -35,12 +29,7 @@ public class AppSettings {
 
             DRIVE_OPENOFFICE_PORT = Integer.parseInt(getValue(cmd, "openoffice_port"));
             DRIVE_OPENOFFICE_SERVER_PATH = getValue(cmd,"openoffice_dir");
-            AEROSPIKE_USERNAME = getValue(cmd, "aerospike_username");
-            AEROSPIKE_PASSWORD = getValue(cmd, "aerospike_password");
-            AEROSPIKE_IP = getValue(cmd, "aerospike_ip");
-            AEROSPIKE_PORT = Integer.parseInt(getValue(cmd, "aerospike_port"));
-            AEROSPIKE_NAMESPACE = getValue(cmd, "aerospike_namespace");
-            AEROSPIKE_SET = getValue(cmd, "aerospike_set");
+
             TEMP_DIR = getValue(cmd, "temp_dir");
             DRIVE_DIR = getValue(cmd, "drive_dir");
             THUMB_HEIGHT = Integer.parseInt(getValue(cmd, "thumb_height"));
@@ -55,12 +44,8 @@ public class AppSettings {
 
     private static Options getOptions() {
         Options options = new Options();
-
-        options.addOption("aerospike_username",true,"username of aerospike.");
-        options.addOption("aerospike_password",true,"password of aerospike.");
-        options.addOption("aerospike_ip",true,"address of aerospike.");
-        options.addOption("aerospike_port",true,"port of aerospike.");
-        options.addOption("aerospike_namespace",true,"namespace of aerospike.");
+        options.addOption("openoffice_port",true,"tcp port for open office.");
+        options.addOption("openoffice_dir",true,"open office home dir.");
         options.addOption("temp_dir",true,"temp directory for saving thumb files.");
         options.addOption("drive_dir",true,"drive directory to save thumb files.");
         options.addOption("thumb_height",true," thumbnail height size in px.");
