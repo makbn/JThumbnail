@@ -18,6 +18,7 @@ public class AppSettings {
 
     public static int THUMB_WIDTH;
     public static int THUMB_HEIGHT;
+    private static boolean init = false;
 
 
 
@@ -34,9 +35,7 @@ public class AppSettings {
             DRIVE_DIR = getValue(cmd, "drive_dir");
             THUMB_HEIGHT = Integer.parseInt(getValue(cmd, "thumb_height"));
             THUMB_WIDTH = Integer.parseInt(getValue(cmd, "thumb_width"));
-
-
-
+            init = true;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -59,5 +58,9 @@ public class AppSettings {
         }else {
             return rb.getString(key);
         }
+    }
+
+    public static boolean isInit() {
+        return init;
     }
 }
