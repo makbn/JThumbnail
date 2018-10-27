@@ -9,28 +9,28 @@ JThumbnail is a Java library for creating Thumbnails of common file types of fil
 ## How to use
 
 ```java
-ttry {
-            AppSettings.init(args);
-            Thumbnailer.start();
-            File in = new File("/inputFile.docx");
-            if(in.exists()) {
-                ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+try {
+   AppSettings.init(args);   
+   Thumbnailer.start();
+   File in = new File("/inputFile.docx");
+   if(in.exists()) {
+      ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
-                Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
-                    @Override
-                    public void onThumbnailReady(String hash, File thumbnail) {
-                        System.out.println("FILE created at : " + thumbnail.getAbsolutePath());
-                    }
+      Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
+         @Override
+         public void onThumbnailReady(String hash, File thumbnail) {
+            System.out.println("FILE created at : " + thumbnail.getAbsolutePath());
+         }
 
-                    @Override
-                    public void onThumbnailFailed(String hash, String message, int code) {
+         @Override
+         public void onThumbnailFailed(String hash, String message, int code) {
 
-                    }
-                });
-            }
-        } catch (IOException | ThumbnailerException e) {
-            e.printStackTrace();
-        }
+         }
+      });
+   }
+   } catch (IOException | ThumbnailerException e) {
+         e.printStackTrace();
+   }
 ```
 
 ## Configuration Args
