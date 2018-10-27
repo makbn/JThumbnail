@@ -56,7 +56,9 @@ public class Thumbnailer {
     private static ConcurrentHashMap<ThumbnailCandidate,ThumbnailListener> files;
 
 
-    public static void start() throws FileDoesNotExistException {
+    public static void start() throws FileDoesNotExistException, ThumbnailerException {
+        if(!AppSettings.isInit())
+            throw new ThumbnailerException("call AppSettings.init(args) first!");
         if(files == null)
             files = new ConcurrentHashMap<>();
 

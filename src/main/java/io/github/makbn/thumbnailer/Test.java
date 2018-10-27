@@ -15,8 +15,9 @@ public class Test {
     public static void main(String[] args) {
 
         try {
+            AppSettings.init(args);
             Thumbnailer.start();
-            File in = new File("/files/pdf/test1.pdf");
+            File in = new File("/inputFile.docx");
             if(in.exists()) {
                 ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
@@ -32,7 +33,7 @@ public class Test {
                     }
                 });
             }
-        } catch (IOException e) {
+        } catch (IOException | ThumbnailerException e) {
             e.printStackTrace();
         }
 
