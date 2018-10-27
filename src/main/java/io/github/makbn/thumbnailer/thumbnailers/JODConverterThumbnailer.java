@@ -21,12 +21,15 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.AppSettings;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.Platform;
 import io.github.makbn.thumbnailer.util.TemporaryFilesManager;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jodconverter.OfficeDocumentConverter;
 import org.jodconverter.office.LocalOfficeManager;
 import org.jodconverter.office.OfficeException;
@@ -38,15 +41,11 @@ import java.io.IOException;
 
 public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
-
-    /**
-     * The Port on which to connect (must be unoccupied)
-     */
-    private final static int OOO_DEFAULT_PORT = 9852;
     /**
      * How long may a service work take? (in ms)
      */
     private static final long TIMEOUT = 3600000;
+    protected static Logger mLog = LogManager.getLogger(JODConverterThumbnailer.class.getName());
     /**
      * JOD Office Manager
      */
@@ -90,7 +89,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             try {
                 officeManager.stop();
             } catch (OfficeException e) {
-                e.printStackTrace();
+                mLog.warn("JODConverterThumbnailer", e);
             }
         }
         officeManager = null;
@@ -114,17 +113,19 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             return;
 
         officeManager = LocalOfficeManager.builder()
-                .portNumbers(OOO_DEFAULT_PORT)
+                .portNumbers(AppSettings.DRIVE_OPENOFFICE_PORT)
                 .processTimeout(TIMEOUT)
-                .maxTasksPerProcess(200)
+                .maxTasksPerProcess(1000)
                 .killExistingProcess(true)
-                .officeHome("/opt/openoffice4/")
+                .disableOpengl(true)
+                .officeHome(AppSettings.DRIVE_OPENOFFICE_SERVER_PATH)
                 .build();
 
         try {
             officeManager.start();
+            mLog.warn("openoffice server started!");
         } catch (OfficeException e) {
-            e.printStackTrace();
+            mLog.warn(e);
         }
         officeConverter = new OfficeDocumentConverter(officeManager);
     }
@@ -152,32 +153,30 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @throws ThumbnailerException If the thumbnailing process failed.
      */
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        // Connect on first use
         if (!isConnected())
             connect();
 
         File outputTmp = null;
         try {
-            outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
+            outputTmp = File.createTempFile("jodtemp",   "." + getStandardOpenOfficeExtension());
 
-            // Naughty hack to circumvent invalid URLs under windows (C:\\ ...)
             if (Platform.isWindows())
                 input = new File(input.getAbsolutePath().replace("\\\\", "\\"));
-
-            /*officeConverter.convert(new FileInputStream(input))
-                    .as(DefaultDocumentFormatRegistry.getFormatByExtension(
-                    FilenameUtils.getExtension(input.getAbsolutePath()))).to(outputTmp);*/
 
             try {
                 officeConverter.convert(input, outputTmp);
             } catch (OfficeException e) {
-                e.printStackTrace();
+                mLog.warn(e);
+                throw new ThumbnailerException();
+
             }
             if (outputTmp.length() == 0) {
                 throw new ThumbnailerException("Could not convert into OpenOffice-File (file was empty)...");
             }
 
             ooo_thumbnailer.generateThumbnail(outputTmp, output);
+
+
         } finally {
             IOUtil.deleteQuietlyForce(outputTmp);
         }

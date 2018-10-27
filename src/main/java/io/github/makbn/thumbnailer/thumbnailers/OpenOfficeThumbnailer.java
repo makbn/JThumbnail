@@ -24,6 +24,9 @@ package io.github.makbn.thumbnailer.thumbnailers;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -41,32 +44,40 @@ import java.util.zip.ZipFile;
  */
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
 
+    private static final Logger logger = LoggerFactory.getLogger(OpenOfficeThumbnailer.class);
+    private static PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
+
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        BufferedInputStream in = null;
-        ZipFile zipFile = null;
+        if(FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")){
+            pdfBoxThumbnailer.generateThumbnail(input,output);
+        }else {
+            BufferedInputStream in = null;
+            ZipFile zipFile = null;
 
-        try {
-            zipFile = new ZipFile(input);
-        } catch (ZipException e) {
-            throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice-File?", e);
-        }
+            try {
+                zipFile = new ZipFile(input);
+            } catch (ZipException e) {
+                logger.warn("OpenOfficeThumbnailer", e);
+                throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice-File?", e);
+            }
 
-        try {
-            ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
-            if (entry == null)
-                throw new ThumbnailerException("Zip file does not contain 'Thumbnails/thumbnail.png' . Is this really an OpenOffice-File?");
+            try {
+                ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
+                if (entry == null)
+                    throw new ThumbnailerException("Zip file does not contain 'Thumbnails/thumbnail.png' . Is this really an OpenOffice-File?");
 
-            in = new BufferedInputStream(zipFile.getInputStream(entry));
+                in = new BufferedInputStream(zipFile.getInputStream(entry));
 
-            ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-            resizer.setInputImage(in);
-            resizer.writeOutput(output);
+                ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
+                resizer.setInputImage(in);
+                resizer.writeOutput(output);
 
-            in.close();
-        } finally {
-            IOUtil.quietlyClose(in);
-            IOUtil.quietlyClose(zipFile);
+                in.close();
+            } finally {
+                IOUtil.quietlyClose(in);
+                IOUtil.quietlyClose(zipFile);
+            }
         }
     }
 
@@ -106,7 +117,7 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 "application/vnd.oasis.opendocument.formula",
                 "application/vnd.oasis.opendocument.database",
                 "application/vnd.oasis.opendocument.image",
-
+                "text/html",
                 "application/zip" /* Could be an OpenOffice file! */
         };
     }

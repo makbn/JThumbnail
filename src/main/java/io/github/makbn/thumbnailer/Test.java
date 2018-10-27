@@ -1,5 +1,8 @@
 package io.github.makbn.thumbnailer;
 
+import io.github.makbn.thumbnailer.listener.ThumbnailListener;
+import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -15,13 +18,20 @@ public class Test {
             Thumbnailer.start();
             File in = new File("/files/pdf/test1.pdf");
             if(in.exists()) {
-                File out = Thumbnailer.createThumbnail(in);
-                System.out.println("FILE created at : " + out.getAbsolutePath());
+                ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+
+                Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
+                    @Override
+                    public void onThumbnailReady(String hash, File thumbnail) {
+                        System.out.println("FILE created at : " + thumbnail.getAbsolutePath());
+                    }
+
+                    @Override
+                    public void onThumbnailFailed(String hash, String message, int code) {
+
+                    }
+                });
             }
-        } catch (FileDoesNotExistException e) {
-            e.printStackTrace();
-        } catch (ThumbnailerException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

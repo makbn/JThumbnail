@@ -21,11 +21,12 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-import org.apache.tika.Tika;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,22 +41,32 @@ import java.util.Map;
  */
 public class MimeTypeDetector {
 
-
     private List<MimeTypeIdentifier> extraIdentifiers;
     private Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
+    private static Map<String, String> outputThumbnailExtensionCache;
     private static Logger mLog = Logger.getLogger(MimeTypeDetector.class);
-    private final Tika tika;
-
     /**
      * Create a MimeType Detector and init it.
      */
     public MimeTypeDetector() {
         extraIdentifiers = new ArrayList<>();
-        tika = new Tika();
+
         addMimeTypeIdentifier(new Office2007FileIdentifier());
         addMimeTypeIdentifier(new PptFileIdentifier());
         addMimeTypeIdentifier(new XlsFileIdentifier());
         addMimeTypeIdentifier(new DocFileIdentifier());
+        addMimeTypeIdentifier(new MP3FileIdentifier());
+        addMimeTypeIdentifier(new MPEGFileIdentifier());
+
+        if(outputThumbnailExtensionCache == null){
+            outputThumbnailExtensionCache = new HashMap<>();
+
+            for(MimeTypeIdentifier identifier:extraIdentifiers){
+                List<String> exts = identifier.getExtensionsFor(null);
+                if(exts!= null)
+                    exts.forEach(ext -> outputThumbnailExtensionCache.put(ext,identifier.getThumbnailExtension()));
+            }
+        }
 
     }
 
@@ -79,16 +90,8 @@ public class MimeTypeDetector {
      */
     public String getMimeType(File file) throws IOException {
 
-        String mimeType =tika.detect(file);
+        String mimeType = Files.probeContentType(file.toPath());
 
-		/* I don't see any effect of this
-		if (mimeType != null && mimeType.equalsIgnoreCase("application/zip")) {
-			mLog.info("Is a zip-file. Try second round-detection ...");
-			// some new files like MS Office documents are zip files
-			// so rewrite the URL for the correct mimetype detection
-			mimeType = mimeTypeIdentifier.identify(bytes, null, new URIImpl("zip:mime:" + file_url));
-		}
-		*/
 
         if (mimeType != null && mimeType.length() == 0)
             mimeType = null;
@@ -120,7 +123,6 @@ public class MimeTypeDetector {
             return null;
         }
     }
-
 
     @SuppressWarnings("unchecked")
     protected List<String> getExtensionsCached(String mimeType) {
@@ -182,5 +184,32 @@ public class MimeTypeDetector {
             return false;
 
         return extensions.contains(extension);
+    }
+
+    /**
+     * get output file extension for different input file!
+     * after first time extension cached for next requests!
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public String getOutputExt(File file) throws IOException {
+        String ext = FilenameUtils.getExtension(file.getName());
+        String mime = getMimeType(file);
+
+        if(ext!=null) {
+            if(outputThumbnailExtensionCache.containsKey(ext))
+                return outputThumbnailExtensionCache.get(ext);
+
+            for (MimeTypeIdentifier identifier : extraIdentifiers) {
+                List<String> exts = identifier.getExtensionsFor(mime);
+                if (ext !=null && ext.contains(ext)) {
+                    String result = identifier.getThumbnailExtension();
+                    outputThumbnailExtensionCache.put(ext, result);
+                    return result;
+                }
+            }
+        }
+        return "png";
     }
 }

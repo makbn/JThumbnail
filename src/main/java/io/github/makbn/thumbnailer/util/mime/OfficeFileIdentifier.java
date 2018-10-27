@@ -50,7 +50,7 @@ public abstract class OfficeFileIdentifier implements MimeTypeIdentifier {
         if (PPT_MIME_TYPE.equals(mimeType)) {
             return ext;
         }
-        return null; // I don't know
+        return new ArrayList<>(); // I don't know
     }
 
     protected boolean isOfficeFile(String mimeType) {
