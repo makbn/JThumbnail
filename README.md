@@ -9,10 +9,10 @@ JThumbnail is a Java library for creating Thumbnails of common file types of fil
 ## How to use
 
 ```java
-try {
+ttry {
             AppSettings.init(args);
             Thumbnailer.start();
-            File in = new File("/files/pdf/test1.pdf");
+            File in = new File("/inputFile.docx");
             if(in.exists()) {
                 ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
@@ -28,10 +28,18 @@ try {
                     }
                 });
             }
-        } catch (IOException e) {
+        } catch (IOException | ThumbnailerException e) {
             e.printStackTrace();
         }
 ```
+
+## Configuration Args
+
+*   `openoffice_port` tcp port for open office.
+*   `openoffice_dir` open office home dir.
+*   `temp_dir temp` directory for saving thumb files.
+*   `thumb_height` thumbnail height size in px.
+*   `thumb_width` thumbnail width size in px.
 
 ## Requirements
 
