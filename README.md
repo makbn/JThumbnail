@@ -19,7 +19,7 @@ try {
       Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
          @Override
          public void onThumbnailReady(String hash, File thumbnail) {
-            System.out.println("FILE created at : " + thumbnail.getAbsolutePath());
+            System.out.println("FILE created in : " + thumbnail.getAbsolutePath());
          }
 
          @Override
@@ -66,4 +66,4 @@ try {
 
 ## Original project
 
-**JThumbnail** is based on an [old project](https://github.com/benjaminpick/java-thumbnailer) of the university of Siegen for the benefit of [come_IN Computerclubs](http://www.computerclub-comein.de). and thanks alot to @ benjaminpick
+**JThumbnail** is based on an [old project](https://github.com/benjaminpick/java-thumbnailer) of the university of Siegen for the benefit of [come_IN Computerclubs](http://www.computerclub-comein.de). and thanks alot to @benjaminpick
