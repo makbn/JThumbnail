@@ -3,8 +3,8 @@ package io.github.makbn.thumbnailer.thumbnailers;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class ImageThumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImageThumbnailer.class);
+    private static Logger mLog = LogManager.getLogger("ImageThumbnailer");
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
@@ -25,7 +25,7 @@ public class ImageThumbnailer extends AbstractThumbnailer {
                     .size(thumbWidth, thumbHeight)
                     .toFile(output);
         } catch (IOException e) {
-            logger.warn("ImageThumbnailer", e);
+            mLog.error(e);
             throw new ThumbnailerException();
         }
     }

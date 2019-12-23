@@ -57,10 +57,8 @@ public abstract class OfficeFileIdentifier implements MimeTypeIdentifier {
         if (mimeType == null)
             return false;
 
-        if (MS_OFFICE_MIME_TYPE.equals(mimeType) || mimeType.startsWith("application/vnd.ms")
-                || mimeType.startsWith("application/vnd.openxmlformats") )
-            return true;
+        return MS_OFFICE_MIME_TYPE.equals(mimeType) || mimeType.startsWith("application/vnd.ms")
+                || mimeType.startsWith("application/vnd.openxmlformats");
 
-        return false;
     }
 }

@@ -21,7 +21,10 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+
 import io.github.makbn.thumbnailer.util.IOUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -35,6 +38,8 @@ import java.util.zip.ZipFile;
  * Magic numbers don't help here, only introspection of the zip.
  */
 public class Office2007FileIdentifier implements MimeTypeIdentifier {
+
+    private static Logger mLog = LogManager.getLogger("Office2007FileIdentifier");
 
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {
@@ -62,6 +67,7 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
             } catch (ZipException e) {
                 return mimeType; // Zip file damaged or whatever. Silently give up.
             } catch (IOException e) {
+                mLog.error(e);
                 return mimeType; // Zip file damaged or whatever. Silently give up.
             } finally {
                 IOUtil.quietlyClose(zipFile);
@@ -83,7 +89,9 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
 
     @Override
     public List<String> getExtensionsFor(String mimeType) {
-        return new ArrayList<String>(){{add("docx");}};
+        return new ArrayList<String>() {{
+            add("docx");
+        }};
     }
 
     @Override

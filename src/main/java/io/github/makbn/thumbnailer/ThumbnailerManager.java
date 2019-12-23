@@ -21,13 +21,14 @@
 
 package io.github.makbn.thumbnailer;
 
+import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
 import io.github.makbn.thumbnailer.thumbnailers.Thumbnailer;
 import io.github.makbn.thumbnailer.util.ChainedHashMap;
 import io.github.makbn.thumbnailer.util.IOUtil;
-import io.github.makbn.thumbnailer.util.StringUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * The logger for this class
      */
-    private static Logger mLog = Logger.getLogger(ThumbnailerManager.class);
+    private static Logger mLog = LogManager.getLogger("ThumbnailerManager");
 
 
     /**

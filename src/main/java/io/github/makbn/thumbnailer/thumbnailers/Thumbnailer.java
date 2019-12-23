@@ -21,6 +21,7 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+
 import io.github.makbn.thumbnailer.ThumbnailerException;
 
 import java.io.Closeable;

@@ -26,12 +26,16 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 public class XlsFileIdentifier extends OfficeFileIdentifier {
+    private static Logger mLog = LogManager.getLogger("XlsFileIdentifier");
+
     public XlsFileIdentifier() {
         super();
         ext.add("xls");
@@ -49,7 +53,7 @@ public class XlsFileIdentifier extends OfficeFileIdentifier {
                     return XLS_MIME_TYPE;
                 }
             } catch (Throwable e) {
-
+                mLog.info(e);
             }
         }
 

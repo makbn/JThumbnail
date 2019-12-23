@@ -108,8 +108,8 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
      * as an Iterable usable an foreach loop.
      *
      * @param key
-     * @throws NullPointerException (if key null)
      * @return Iterable
+     * @throws NullPointerException (if key null)
      */
     public Iterable<V> getIterable(Object key) {
         final List<V> list = hashtable.get(key);
