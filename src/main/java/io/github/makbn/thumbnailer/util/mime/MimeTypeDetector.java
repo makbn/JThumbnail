@@ -22,7 +22,8 @@
 package io.github.makbn.thumbnailer.util.mime;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +42,13 @@ import java.util.Map;
  */
 public class MimeTypeDetector {
 
+    private static Map<String, String> outputThumbnailExtensionCache;
+    private static Logger mLog = LogManager.getLogger("MimeTypeDetector");
+    private static MimeTypeDetector mimeTypeDetector;
     private List<MimeTypeIdentifier> extraIdentifiers;
     private Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
-    private static Map<String, String> outputThumbnailExtensionCache;
-    private static Logger mLog = Logger.getLogger(MimeTypeDetector.class);
+
+
     /**
      * Create a MimeType Detector and init it.
      */
@@ -58,16 +62,22 @@ public class MimeTypeDetector {
         addMimeTypeIdentifier(new MP3FileIdentifier());
         addMimeTypeIdentifier(new MPEGFileIdentifier());
 
-        if(outputThumbnailExtensionCache == null){
+        if (outputThumbnailExtensionCache == null) {
             outputThumbnailExtensionCache = new HashMap<>();
 
-            for(MimeTypeIdentifier identifier:extraIdentifiers){
+            for (MimeTypeIdentifier identifier : extraIdentifiers) {
                 List<String> exts = identifier.getExtensionsFor(null);
-                if(exts!= null)
-                    exts.forEach(ext -> outputThumbnailExtensionCache.put(ext,identifier.getThumbnailExtension()));
+                if (exts != null)
+                    exts.forEach(ext -> outputThumbnailExtensionCache.put(ext, identifier.getThumbnailExtension()));
             }
         }
 
+    }
+
+    public static MimeTypeDetector getInstance() {
+        if (mimeTypeDetector == null)
+            mimeTypeDetector = new MimeTypeDetector();
+        return mimeTypeDetector;
     }
 
     /**
@@ -131,7 +141,7 @@ public class MimeTypeDetector {
             return extensions;
 
         extensions = new ArrayList<>();
-        switch (mimeType){
+        switch (mimeType) {
             case "application/vnd.openxmlformats-officedocument.wordprocessingml":
                 extensions.add("docx");
                 extensions.add("dotx");
@@ -189,6 +199,7 @@ public class MimeTypeDetector {
     /**
      * get output file extension for different input file!
      * after first time extension cached for next requests!
+     *
      * @param file
      * @return
      * @throws IOException
@@ -197,13 +208,13 @@ public class MimeTypeDetector {
         String ext = FilenameUtils.getExtension(file.getName());
         String mime = getMimeType(file);
 
-        if(ext!=null) {
-            if(outputThumbnailExtensionCache.containsKey(ext))
+        if (ext != null) {
+            if (outputThumbnailExtensionCache.containsKey(ext))
                 return outputThumbnailExtensionCache.get(ext);
 
             for (MimeTypeIdentifier identifier : extraIdentifiers) {
                 List<String> exts = identifier.getExtensionsFor(mime);
-                if (ext !=null && ext.contains(ext)) {
+                if (ext != null && ext.contains(ext)) {
                     String result = identifier.getThumbnailExtension();
                     outputThumbnailExtensionCache.put(ext, result);
                     return result;

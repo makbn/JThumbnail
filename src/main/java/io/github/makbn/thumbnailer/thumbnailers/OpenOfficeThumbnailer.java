@@ -21,12 +21,13 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -44,21 +45,20 @@ import java.util.zip.ZipFile;
  */
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenOfficeThumbnailer.class);
+    private static Logger mLog = LogManager.getLogger("OpenOfficeThumbnailer");
     private static PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        if(FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")){
-            pdfBoxThumbnailer.generateThumbnail(input,output);
-        }else {
+        if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
+            pdfBoxThumbnailer.generateThumbnail(input, output);
+        } else {
             BufferedInputStream in = null;
             ZipFile zipFile = null;
 
             try {
                 zipFile = new ZipFile(input);
             } catch (ZipException e) {
-                logger.warn("OpenOfficeThumbnailer", e);
                 throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice-File?", e);
             }
 

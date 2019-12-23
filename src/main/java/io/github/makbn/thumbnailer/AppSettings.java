@@ -43,12 +43,12 @@ public class AppSettings {
 
     private static Options getOptions() {
         Options options = new Options();
-        options.addOption("openoffice_port",true,"tcp port for open office.");
-        options.addOption("openoffice_dir",true,"open office home dir.");
-        options.addOption("temp_dir",true,"temp directory for saving thumb files.");
-        options.addOption("drive_dir",true,"drive directory to save thumb files.");
-        options.addOption("thumb_height",true," thumbnail height size in px.");
-        options.addOption("thumb_width", true, "thumbnail width size in px.");
+        options.addOption("p","openoffice_port",true,"tcp port for openoffice/libreoffice.");
+        options.addOption("od","openoffice_dir",true,"open office home dir.");
+        options.addOption("td","temp_dir",true,"temp directory for saving thumb files.");
+        options.addOption("dd","drive_dir",true,"drive directory to save thumb files.");
+        options.addOption("h","thumb_height",true," thumbnail height size in px.");
+        options.addOption("w","thumb_width", true, "thumbnail width size in px.");
         return options;
     }
 

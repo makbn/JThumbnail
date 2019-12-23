@@ -28,8 +28,8 @@ import io.github.makbn.thumbnailer.util.Platform;
 import io.github.makbn.thumbnailer.util.TemporaryFilesManager;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jodconverter.OfficeDocumentConverter;
 import org.jodconverter.office.LocalOfficeManager;
 import org.jodconverter.office.OfficeException;
@@ -44,8 +44,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     /**
      * How long may a service work take? (in ms)
      */
-    private static final long TIMEOUT = 3600000;
-    protected static Logger mLog = LogManager.getLogger(JODConverterThumbnailer.class.getName());
+    private static final long TIMEOUT = 300000;
+    private static Logger mLog = LogManager.getLogger("JODConverterThumbnailer");
     /**
      * JOD Office Manager
      */
@@ -63,7 +63,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected MimeTypeDetector mimeTypeDetector = null;
     private TemporaryFilesManager temporaryFilesManager = null;
-
+    private long counter = 0;
 
     public JODConverterThumbnailer() {
         ooo_thumbnailer = new OpenOfficeThumbnailer();
@@ -115,7 +115,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         officeManager = LocalOfficeManager.builder()
                 .portNumbers(AppSettings.DRIVE_OPENOFFICE_PORT)
                 .processTimeout(TIMEOUT)
-                .maxTasksPerProcess(1000)
+                .maxTasksPerProcess(50000)
+                .taskExecutionTimeout(TIMEOUT)
                 .killExistingProcess(true)
                 .disableOpengl(true)
                 .officeHome(AppSettings.DRIVE_OPENOFFICE_SERVER_PATH)
@@ -123,7 +124,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
         try {
             officeManager.start();
-            mLog.warn("openoffice server started!");
+            mLog.warn("OpenOffice/LibreOffice server started!");
         } catch (OfficeException e) {
             mLog.warn(e);
         }
@@ -150,7 +151,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @param input  Input file that should be processed
      * @param output File in which should be written
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailerException If the creating thumbnail process failed.
      */
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         if (!isConnected())
@@ -158,7 +159,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
         File outputTmp = null;
         try {
-            outputTmp = File.createTempFile("jodtemp",   "." + getStandardOpenOfficeExtension());
+            outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
 
             if (Platform.isWindows())
                 input = new File(input.getAbsolutePath().replace("\\\\", "\\"));

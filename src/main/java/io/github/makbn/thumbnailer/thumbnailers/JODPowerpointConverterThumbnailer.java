@@ -22,6 +22,8 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 /**
+ * Dummy class for converting Presentation documents into Openoffice-Textfiles.
+ *
  * @see JODConverterThumbnailer
  */
 public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {

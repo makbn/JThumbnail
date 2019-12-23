@@ -21,9 +21,11 @@
 
 package io.github.makbn.thumbnailer.util;
 
+
 import io.github.makbn.thumbnailer.ThumbnailerException;
-import io.github.makbn.thumbnailer.UnsupportedInputFileFormatException;
-import org.apache.log4j.Logger;
+import io.github.makbn.thumbnailer.exception.UnsupportedInputFileFormatException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -35,47 +37,39 @@ import java.io.InputStream;
 
 public class ResizeImage {
 
-    private static final Logger mLog = Logger.getLogger(ResizeImage.class);
-
-    private BufferedImage inputImage;
-    private boolean isProcessed = false;
-    private BufferedImage outputImage;
-
-    private int imageWidth;
-    private int imageHeight;
-    private int thumbWidth;
-    private int thumbHeight;
-
     /**
      * Scale input image so that width and height is equal (or smaller) to the output size.
      * The other dimension will be smaller or equal than the output size.
      */
     public static final int RESIZE_FIT_BOTH_DIMENSIONS = 2;
-
     /**
      * Scale input image so that width or height is equal to the output size.
      * The other dimension will be bigger or equal than the output size.
      */
     public static final int RESIZE_FIT_ONE_DIMENSION = 3;
-
     /**
      * Do not resize the image. Instead, crop the image (if smaller) or center it (if bigger)
      */
     public static final int NO_RESIZE_ONLY_CROP = 4;
-
     /**
      * Do not try to scale the image up, only down. If bigger, center it.
      */
     public static final int DO_NOT_SCALE_UP = 16;
-
     /**
      * If output image is bigger than input image, allow the output to be smaller than expected (the size of the input image)
      */
     public static final int ALLOW_SMALLER = 32;
+    private static Logger mLog = LogManager.getLogger("ResizeImage");
 
     public int resizeMethod = RESIZE_FIT_ONE_DIMENSION;
     public int extraOptions = DO_NOT_SCALE_UP;
-
+    private BufferedImage inputImage;
+    private boolean isProcessed = false;
+    private BufferedImage outputImage;
+    private int imageWidth;
+    private int imageHeight;
+    private int thumbWidth;
+    private int thumbHeight;
     private int scaledWidth;
     private int scaledHeight;
     private int offsetX;
@@ -194,10 +188,11 @@ public class ResizeImage {
                 mLog.warn("ResizeImage: Scaling is not yet complete!");
 
                 while (!observer.ready) {
-                    System.err.println("Waiting .4 sec...");
+                    mLog.warn("Waiting .4 sec...");
                     try {
                         Thread.sleep(400);
                     } catch (InterruptedException e) {
+                        mLog.error(e);
                     }
                 }
             }

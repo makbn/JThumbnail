@@ -22,6 +22,8 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 /**
+ * Dummy class for converting Html documents into Openoffice-Textfiles.
+ * <p>
  * (The preview won't be better than what OpenOffice can achieve. See also
  * issue https://github.com/benjamin4ruby/java-thumbnailer/issues/8)
  *

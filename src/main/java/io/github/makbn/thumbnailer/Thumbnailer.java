@@ -21,20 +21,17 @@
 
 package io.github.makbn.thumbnailer;
 
+
+import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
 import io.github.makbn.thumbnailer.listener.ThumbnailListener;
 import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
 import io.github.makbn.thumbnailer.thumbnailers.*;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -43,26 +40,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Thumbnailer {
 
-    private enum  ThumbnailState{ideal,running};
-
+    private static Logger mLog = LogManager.getLogger("Thumbnailer");
     private static ThumbnailerManager thumbnailer;
 
     private static String defaultOutputDir = AppSettings.TEMP_DIR;
-
-    protected static Logger mLog =  LogManager.getLogger(Thumbnailer.class.getName());
-
     private static ThumbnailState state;
     private static MimeTypeDetector typeDetector = new MimeTypeDetector();
-    private static ConcurrentHashMap<ThumbnailCandidate,ThumbnailListener> files;
+    private static ConcurrentHashMap<ThumbnailCandidate, ThumbnailListener> files;
+    private static Runnable taskRunner;
 
-
-    public static void start() throws FileDoesNotExistException, ThumbnailerException {
-        if(!AppSettings.isInit())
-            throw new ThumbnailerException("call AppSettings.init(args) first!");
-        if(files == null)
+    public static void start() throws FileDoesNotExistException {
+        if (files == null)
             files = new ConcurrentHashMap<>();
 
-        if(thumbnailer!= null)
+        if (thumbnailer != null)
             return;
         thumbnailer = new ThumbnailerManager();
         loadExistingThumbnailers();
@@ -70,34 +61,40 @@ public class Thumbnailer {
     }
 
 
-    public static void createThumbnail(File inputFile,File outputFile) throws IOException, ThumbnailerException {
-        if(thumbnailer!=null){
-            thumbnailer.generateThumbnail(inputFile,outputFile);
-        }else {
+    public static int getTaskQueueSize(){
+        if(files != null){
+            return files.size();
+        }
+        return 0;
+    }
+
+    public static void createThumbnail(File inputFile, File outputFile) throws IOException, ThumbnailerException {
+        if (thumbnailer != null) {
+            thumbnailer.generateThumbnail(inputFile, outputFile);
+        } else {
             start();
-            thumbnailer.generateThumbnail(inputFile,outputFile);
+            thumbnailer.generateThumbnail(inputFile, outputFile);
         }
     }
 
-    public static  File createThumbnail(File inputFile,String ext) throws IOException, ThumbnailerException {
-        if(thumbnailer!=null){
+    public static File createThumbnail(File inputFile, String ext) throws IOException, ThumbnailerException {
+        if (thumbnailer != null) {
             return thumbnailer.createThumbnail(inputFile, ext);
-        }else {
+        } else {
             start();
             return thumbnailer.createThumbnail(inputFile, ext);
         }
     }
 
+    public static void createThumbnail(ThumbnailCandidate candidate, ThumbnailListener listener) {
+        synchronized (files) {
 
-    public static void  createThumbnail(ThumbnailCandidate candidate, ThumbnailListener listener){
-        synchronized (files){
-
-            files.put(candidate,listener);
-            mLog.warn("file added to queue!");
-            if(state == ThumbnailState.ideal) {
+            files.put(candidate, listener);
+            mLog.info("file added to queue!");
+            if (state == ThumbnailState.ideal) {
                 runTasks();
-            }else {
-                mLog.warn("task is running!");
+            } else {
+                mLog.info("task is running!");
             }
         }
 
@@ -105,42 +102,40 @@ public class Thumbnailer {
 
     private static void runTasks() {
         synchronized (state) {
-            if(state == ThumbnailState.running) {
+            if (state == ThumbnailState.running) {
                 return;
             }
-            mLog.warn("task started!");
+            mLog.info("task started!");
             state = ThumbnailState.running;
-            Runnable taskRunner = () -> {
+            taskRunner = () -> {
                 while (!files.isEmpty()) {
                     files.entrySet().removeIf(e -> {
                         try {
                             e.getKey().setThumbExt(typeDetector.getOutputExt(e.getKey().getFile()));
                             File out = createThumbnail(e.getKey().getFile(), e.getKey().getThumbExt());
-                            e.getValue().onThumbnailReady(out.getName(), out);
+                            e.getValue().onThumbnailReady(e.getKey().getHash(), out);
                             return true;
-                        } catch (IOException | ThumbnailerException exp) {
-                            mLog.warn(exp);
-                            e.getValue().onThumbnailFailed(e.getKey().getHash(),exp.getMessage(),100);
+                        } catch (IOException | NullPointerException | ThumbnailerException exp) {
+                            mLog.error(exp);
+                            e.getValue().onThumbnailFailed(e.getKey().getHash(), exp.getMessage(), 100);
                             return true;
                         }
                     });
                 }
-                mLog.warn("task ended!");
+                mLog.info("task ended!");
                 state = ThumbnailState.ideal;
             };
             Thread taskThread = new Thread(taskRunner);
-            taskThread.setName("thumbnail-task-thread-"+taskThread.getId());
+            taskThread.setName("thumbnail-task-thread-" + taskThread.getId());
             taskThread.start();
         }
     }
-
 
     private static void setParameters() throws FileDoesNotExistException {
         thumbnailer.setThumbnailFolder(defaultOutputDir);
         thumbnailer.setImageSize(AppSettings.THUMB_WIDTH, AppSettings.THUMB_WIDTH, 0);
         state = ThumbnailState.ideal;
     }
-
 
     protected static void loadExistingThumbnailers() {
 
@@ -155,7 +150,11 @@ public class Thumbnailer {
         thumbnailer.registerThumbnailer(new MP3Thumbnailer());
         thumbnailer.registerThumbnailer(new DWGThumbnailer());
         thumbnailer.registerThumbnailer(new ImageThumbnailer());
+        thumbnailer.registerThumbnailer(new TextThumbnailer());
 
-        mLog.warn("Thumbnailers loaded!");
+        mLog.info("Thumbnailers loaded!");
     }
+
+
+    private enum ThumbnailState {ideal, running}
 }
