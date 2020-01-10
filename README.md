@@ -65,7 +65,7 @@ try {
 **Step 1**. Add the JitPack repository to your build file
 
 
-```
+```xml
 	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -76,7 +76,7 @@ try {
 
 **Step 2**. Add the dependency
 
-```
+```xml
 	<dependency>
 	    <groupId>com.github.makbn</groupId>
 	    <artifactId>JThumbnail</artifactId>
@@ -89,7 +89,7 @@ try {
 
 **Step 1**. Add it in your root build.gradle at the end of repositories:
 
-```
+```xml
 	allprojects {
 		repositories {
 			...
@@ -99,7 +99,7 @@ try {
 ```
 **Step 2. Add the dependency
 
-```
+```xml
 	dependencies {
 	        implementation 'com.github.makbn:JThumbnail:master-SNAPSHOT'
 	}
