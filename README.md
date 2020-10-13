@@ -71,7 +71,7 @@ try {
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
 		</repository>
-	</repositories>Copy
+	</repositories>
 ```
 
 **Step 2**. Add the dependency
