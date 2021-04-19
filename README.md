@@ -1,16 +1,15 @@
 ## JThumbnail
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/17bbe0b4242d4f02a5d1a0288a6e6cbb)](https://app.codacy.com/app/makbn/JThumbnail?utm_source=github.com&utm_medium=referral&utm_content=makbn/JThumbnail&utm_campaign=Badge_Grade_Dashboard) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail?ref=badge_shield)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/17bbe0b4242d4f02a5d1a0288a6e6cbb)](https://app.codacy.com/app/makbn/JThumbnail?utm_source=github.com&utm_medium=referral&utm_content=makbn/JThumbnail&utm_campaign=Badge_Grade_Dashboard)
 
 [![](https://jitpack.io/v/makbn/JThumbnail.svg)](https://jitpack.io/#makbn/JThumbnail)
-
 
 JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` and etc. [full list](#supported-file-formats)
 
 *   **Project is under development!**
 
 ## How to use
-
+---
 ```java
 try {
    AppSettings.init(args);   
@@ -45,7 +44,7 @@ try {
 *   `thumb_width` thumbnail width size in px.
 
 ## Requirements
-
+---
 *   Java JRE 1.8
 *   (optional) OpenOffice 4 or LibreOffice
 
@@ -59,12 +58,11 @@ try {
 *   MP3 files (user album-art as thumbnail)
 *   MPEG files (generate gif file)
 
-## How to Use
-
+## Adding Repository 
+---
 ### Maven
 
 **Step 1**. Add the JitPack repository to your build file
-
 
 ```xml
 	<repositories>
@@ -84,7 +82,6 @@ try {
 	    <version>master-SNAPSHOT</version>
 	</dependency>
 ```
-
 
 ### Gradle
 
@@ -107,7 +104,7 @@ try {
 ```
 
 ## TODO
-
+---
 *   [x] Update all dependenciesfrom jar to maven
 *   [x] update project old and deprecated depencencies
 *   [x] Change the structure of project
@@ -117,7 +114,3 @@ try {
 ## Original project
 
 **JThumbnail** is based on an [old project](https://github.com/benjaminpick/java-thumbnailer) of the university of Siegen for the benefit of [come_IN Computerclubs](http://www.computerclub-comein.de). and thanks alot to @benjaminpick
-
-
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail?ref=badge_large)
