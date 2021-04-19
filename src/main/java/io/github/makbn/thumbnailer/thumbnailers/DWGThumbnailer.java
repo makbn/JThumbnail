@@ -13,30 +13,30 @@ import java.io.*;
 
 public class DWGThumbnailer extends AbstractThumbnailer {
 
-    private static Logger mLog = LogManager.getLogger("DWGThumbnailer");
+    private static final Logger mLog = LogManager.getLogger("DWGThumbnailer");
 
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         //GENERATE FROM EXISTING BITMAP IN DWG
         byte[] outputByte = new byte[4096];
 
         FileInputStream fis = null;
-
+        long ignored = 0;
         try {
             fis = new FileInputStream(input);
-            fis.skip(0x0D);
-            fis.read(outputByte, 0, 4);
+            ignored = fis.skip(0x0D);
+            ignored = fis.read(outputByte, 0, 4);
             int PosSentinel = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
-            fis.skip(PosSentinel - 0x0D - 4 + 30);
+            ignored = fis.skip(PosSentinel - 0x0D - 4 + 30);
             outputByte[1] = 0;
-            fis.read(outputByte, 0, 1);
+            ignored = fis.read(outputByte, 0, 1);
             int TypePreview = ((outputByte[0]) & 0xFF);
             if (TypePreview == 2) {
-                fis.read(outputByte, 0, 4);
+                ignored = fis.read(outputByte, 0, 4);
                 int PosBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
-                fis.read(outputByte, 0, 4);
+                ignored = fis.read(outputByte, 0, 4);
                 int LenBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
-                fis.skip(PosBMP - (PosSentinel + 30) - 1 - 4 - 4 + 14);
-                fis.read(outputByte, 0, 2);
+                ignored = fis.skip(PosBMP - (PosSentinel + 30) - 1 - 4 - 4 + 14);
+                ignored = fis.read(outputByte, 0, 2);
                 int biBitCount = (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
                 fis.skip(-16);
                 int bisSize = 0;
@@ -66,7 +66,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(outputByte, 0, 14);
-                while ((LenBMP > 0) && ((bisSize = fis.read(outputByte, 0, (LenBMP > 4096 ? 4096 : LenBMP))) != -1)) {
+                while ((LenBMP > 0) && ((bisSize = fis.read(outputByte, 0, (Math.min(LenBMP, 4096)))) != -1)) {
                     baos.write(outputByte, 0, bisSize);
                     LenBMP -= bisSize;
                 }
