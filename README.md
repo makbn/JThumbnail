@@ -8,7 +8,7 @@ JThumbnail is a Java library for creating Thumbnails of common types of file inc
 *   **Project is under development!**
 
 ## How to use
----
+
 ```java
 try {
    AppSettings.init(args);   
@@ -43,7 +43,7 @@ try {
 *   `thumb_width` thumbnail width size in px.
 
 ## Requirements
----
+
 *   Java JRE 1.8
 *   (optional) OpenOffice 4 or LibreOffice
 
@@ -58,9 +58,9 @@ try {
 *   MPEG files (generate gif file)
 
 ## Adding Repository 
----
-### Maven
 
+### Maven
+---
 **Step 1**. Add the JitPack repository to your build file
 
 ```xml
@@ -83,7 +83,7 @@ try {
 ```
 
 ### Gradle
-
+---
 **Step 1**. Add it in your root build.gradle at the end of repositories:
 
 ```gradle
@@ -103,7 +103,7 @@ try {
 ```
 
 ## TODO
----
+
 *   [x] Update all dependenciesfrom jar to maven
 *   [x] update project old and deprecated depencencies
 *   [x] Change the structure of project
