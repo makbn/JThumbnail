@@ -14,15 +14,13 @@ import java.awt.image.ImageObserver;
  */
 public class ThumbnailReadyObserver implements ImageObserver {
 
-    private final Thread toNotify;
-
     /**
      * The logger for this class
      */
-    private static Logger mLog = LogManager.getLogger("ThumbnailReadyObserver");
+    private static final Logger mLog = LogManager.getLogger("ThumbnailReadyObserver");
 
     public volatile boolean ready = false;
-    private Thread toNotify;
+    private final Thread toNotify;
 
     public ThumbnailReadyObserver(Thread toNotify) {
         this.toNotify = toNotify;
