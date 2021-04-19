@@ -9,10 +9,12 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -53,8 +55,8 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
 
         for (int ig = 0; ig < frame_count; ig += g.getLengthInFrames() / 10) {
             if (ig > 0) g.setFrameNumber(ig);
-            opencv_core.IplImage i = g.grab();
-            BufferedImage bi = i.getBufferedImage();
+
+            BufferedImage bi = createImageFromBytes(g.grabImage().data.array());
 
             if (gifSequenceWriter == null)
                 gifSequenceWriter = new GifSequenceWriter(output, bi.getType(), 500, true);
@@ -97,5 +99,15 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         g2d.dispose();
 
         return scaleBI;
+    }
+
+
+    private BufferedImage createImageFromBytes(byte[] imageData) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+        try {
+            return ImageIO.read(bais);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
