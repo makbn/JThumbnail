@@ -30,10 +30,12 @@ import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.jodconverter.OfficeDocumentConverter;
-import org.jodconverter.office.LocalOfficeManager;
-import org.jodconverter.office.OfficeException;
-import org.jodconverter.office.OfficeManager;
+import org.jodconverter.core.office.OfficeException;
+import org.jodconverter.local.LocalConverter;
+import org.jodconverter.local.office.ExistingProcessAction;
+import org.jodconverter.local.office.LocalOfficeManager;
+
+
 
 import java.io.File;
 import java.io.IOException;
@@ -49,11 +51,11 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     /**
      * JOD Office Manager
      */
-    protected static OfficeManager officeManager = null;
+    protected static LocalOfficeManager officeManager = null;
     /**
      * JOD Converter
      */
-    protected static OfficeDocumentConverter officeConverter = null;
+    protected static LocalConverter officeConverter = null;
     /**
      * Thumbnail Extractor for OpenOffice Files
      */
@@ -116,7 +118,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 .portNumbers(AppSettings.DRIVE_OPENOFFICE_PORT)
                 .processTimeout(TIMEOUT)
                 .maxTasksPerProcess(1000)
-                .killExistingProcess(true)
+                .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
                 .disableOpengl(true)
                 .officeHome(AppSettings.DRIVE_OPENOFFICE_SERVER_PATH)
                 .build();
@@ -127,7 +129,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         } catch (OfficeException e) {
             mLog.warn(e);
         }
-        officeConverter = new OfficeDocumentConverter(officeManager);
+        officeConverter = LocalConverter.builder()
+                .officeManager(officeManager)
+                .build();
     }
 
     public void close() throws IOException {
@@ -164,7 +168,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 input = new File(input.getAbsolutePath().replace("\\\\", "\\"));
 
             try {
-                officeConverter.convert(input, outputTmp);
+                officeConverter.convert(input)
+                        .to(outputTmp)
+                        .execute();
             } catch (OfficeException e) {
                 mLog.warn(e);
                 throw new ThumbnailerException();
