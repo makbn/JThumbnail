@@ -17,7 +17,7 @@ public class Test {
         try {
             AppSettings.init(args);
             Thumbnailer.start();
-            File in = new File("/inputFile.docx");
+            File in = new File("/Users/makbn/Documents/test.docx");
             if(in.exists()) {
                 ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
@@ -29,7 +29,7 @@ public class Test {
 
                     @Override
                     public void onThumbnailFailed(String hash, String message, int code) {
-
+                        System.out.println(message);
                     }
                 });
             }
