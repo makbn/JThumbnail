@@ -17,7 +17,7 @@ public class Test {
         try {
             AppSettings.init(args);
             Thumbnailer.start();
-            File in = new File("/Users/makbn/Documents/test.docx");
+            File in = new File("/Users/mehdiakbarian-rastaghi/Documents/Projects/Sakku/gharardad.docx");
             if(in.exists()) {
                 ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
@@ -33,7 +33,7 @@ public class Test {
                     }
                 });
             }
-        } catch (IOException | ThumbnailerException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

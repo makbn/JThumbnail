@@ -1,6 +1,7 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.GifSequenceWriter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.slf4j.Logger;
@@ -104,7 +105,8 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         try {
             return ImageIO.read(bais);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.debug(e.getMessage());
         }
+        throw new ThumbnailerRuntimeException("Error in generating thumbnail for MPEG file.");
     }
 }
