@@ -45,7 +45,7 @@ import java.util.zip.ZipFile;
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenOfficeThumbnailer.class);
-    private static PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
+    private static final PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {

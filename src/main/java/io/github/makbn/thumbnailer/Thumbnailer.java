@@ -25,16 +25,11 @@ import io.github.makbn.thumbnailer.listener.ThumbnailListener;
 import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
 import io.github.makbn.thumbnailer.thumbnailers.*;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -43,16 +38,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Thumbnailer {
 
-    private enum  ThumbnailState{ideal,running};
+    private static final String defaultOutputDir = AppSettings.TEMP_DIR;
 
     private static ThumbnailerManager thumbnailer;
-
-    private static String defaultOutputDir = AppSettings.TEMP_DIR;
+    private static final MimeTypeDetector typeDetector = new MimeTypeDetector();
 
     protected static Logger mLog =  LogManager.getLogger(Thumbnailer.class.getName());
 
     private static ThumbnailState state;
-    private static MimeTypeDetector typeDetector = new MimeTypeDetector();
+
+    private enum ThumbnailState {ideal, running}
     private static ConcurrentHashMap<ThumbnailCandidate,ThumbnailListener> files;
 
 

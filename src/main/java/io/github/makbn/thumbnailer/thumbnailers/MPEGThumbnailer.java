@@ -3,9 +3,7 @@ package io.github.makbn.thumbnailer.thumbnailers;
 
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.GifSequenceWriter;
-import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.FrameGrabber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +41,7 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
      * @Author Iman Akbari
      */
     public void getThumb(String inputPath, String outputPath)
-            throws IOException, InterruptedException, FrameGrabber.Exception {
+            throws IOException, InterruptedException {
         FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
         ImageOutputStream output = new FileImageOutputStream(new File(outputPath));
 

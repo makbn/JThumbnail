@@ -27,8 +27,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class StringUtil {
-    private static Random rand = new Random();
-    private static String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private static final Random rand = new Random();
+    private static final String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
      * Create a random ASCII-String consisting of a certain number of chars.
