@@ -1,11 +1,17 @@
 package io.github.makbn.thumbnailer.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipFile;
 
 public class IOUtil {
+
+    private static Logger mLog = LogManager.getLogger("IOUtil");
+
     /**
      * Close, ignoring IOExceptions
      *
@@ -16,7 +22,7 @@ public class IOUtil {
             if (stream != null)
                 stream.close();
         } catch (IOException e) {
-            // Ignore
+            mLog.error(e);
         }
     }
 
@@ -25,7 +31,7 @@ public class IOUtil {
             if (zipFile != null)
                 zipFile.close();
         } catch (IOException e) {
-            // Ignore
+            mLog.error(e);
         }
     }
 
@@ -34,6 +40,7 @@ public class IOUtil {
             file.deleteOnExit();
         }
     }
+
     /**
      * Simplistic version: return the substring after the base
      */

@@ -25,12 +25,18 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hwpf.HWPFDocument;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 public class DocFileIdentifier extends OfficeFileIdentifier {
+
+    private static Logger mLog = LogManager.getLogger("DocFileIdentifier");
+
+
     public DocFileIdentifier() {
         super();
         ext.add("doc");
@@ -48,6 +54,7 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
                     return DOC_MIME_TYPE;
                 }
             } catch (Throwable e) {
+                mLog.info(e);
             }
         }
 

@@ -22,6 +22,10 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 /**
+ * Dummy class for converting Text documents into Openoffice-Textfiles.
+ * <p>
+ * Tika could be used to detect ms-word-files, but quite a heavy library. Maybe it would be useful as a preperator as well?
+ *
  * @see JODConverterThumbnailer
  */
 public class JODWordConverterThumbnailer extends JODConverterThumbnailer {
@@ -41,8 +45,6 @@ public class JODWordConverterThumbnailer extends JODConverterThumbnailer {
 
     public String[] getAcceptedMIMETypes() {
         return new String[]{
-                "text/plain",
-                "text/rtf",
                 "application/vnd.ms-word",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml",
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

@@ -1,10 +1,11 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
+
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -12,7 +13,7 @@ import java.io.*;
 
 public class DWGThumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DWGThumbnailer.class);
+    private static Logger mLog = LogManager.getLogger("DWGThumbnailer");
 
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         //GENERATE FROM EXISTING BITMAP IN DWG
@@ -79,8 +80,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 resizer.writeOutput(output);
             }
         } catch (ThumbnailerException e) {
-            logger.warn("DWGThumbnailer", e);
-            throw new ThumbnailerException();
+            throw new ThumbnailerException(e);
         } finally {
             IOUtil.quietlyClose(fis);
         }
@@ -91,4 +91,3 @@ public class DWGThumbnailer extends AbstractThumbnailer {
     }
 
 }
-
