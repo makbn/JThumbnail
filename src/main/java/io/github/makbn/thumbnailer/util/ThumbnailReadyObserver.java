@@ -1,6 +1,7 @@
 package io.github.makbn.thumbnailer.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -18,9 +19,10 @@ public class ThumbnailReadyObserver implements ImageObserver {
     /**
      * The logger for this class
      */
-    private final static Logger mLog = Logger.getLogger(ThumbnailReadyObserver.class);
+    private static Logger mLog = LogManager.getLogger("ThumbnailReadyObserver");
 
     public volatile boolean ready = false;
+    private Thread toNotify;
 
     public ThumbnailReadyObserver(Thread toNotify) {
         this.toNotify = toNotify;

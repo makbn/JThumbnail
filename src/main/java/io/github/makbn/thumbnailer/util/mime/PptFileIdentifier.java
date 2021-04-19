@@ -26,6 +26,8 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 
 import java.io.File;
@@ -33,6 +35,8 @@ import java.io.FileInputStream;
 
 
 public class PptFileIdentifier extends OfficeFileIdentifier {
+    private static Logger mLog = LogManager.getLogger("PptFileIdentifier");
+
     public PptFileIdentifier() {
         super();
         ext.add("ppt");
@@ -51,7 +55,7 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
                     return PPT_MIME_TYPE;
                 }
             } catch (Throwable e) {
-                //ignored
+                mLog.info(e);
             }
         }
 

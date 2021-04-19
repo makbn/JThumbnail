@@ -1,10 +1,13 @@
 ## JThumbnail
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/17bbe0b4242d4f02a5d1a0288a6e6cbb)](https://app.codacy.com/app/makbn/JThumbnail?utm_source=github.com&utm_medium=referral&utm_content=makbn/JThumbnail&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/17bbe0b4242d4f02a5d1a0288a6e6cbb)](https://app.codacy.com/app/makbn/JThumbnail?utm_source=github.com&utm_medium=referral&utm_content=makbn/JThumbnail&utm_campaign=Badge_Grade_Dashboard) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail?ref=badge_shield)
 
-JThumbnail is a Java library for creating Thumbnails of common file types of file line `.doc`, `.docx`, `.pdf` , `.mp4` and ...[full list](#supported-file-formats)
+[![](https://jitpack.io/v/makbn/JThumbnail.svg)](https://jitpack.io/#makbn/JThumbnail)
 
-*   Project is under development! maven and gradle will be out soon.
+
+JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` and etc. [full list](#supported-file-formats)
+
+*   **Project is under development!**
 
 ## How to use
 
@@ -56,6 +59,53 @@ try {
 *   MP3 files (user album-art as thumbnail)
 *   MPEG files (generate gif file)
 
+## How to Use
+
+### Maven
+
+**Step 1**. Add the JitPack repository to your build file
+
+
+```xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+
+**Step 2**. Add the dependency
+
+```xml
+	<dependency>
+	    <groupId>com.github.makbn</groupId>
+	    <artifactId>JThumbnail</artifactId>
+	    <version>master-SNAPSHOT</version>
+	</dependency>
+```
+
+
+### Gradle
+
+**Step 1**. Add it in your root build.gradle at the end of repositories:
+
+```gradle
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+**Step 2. Add the dependency
+
+```gradle
+	dependencies {
+	        implementation 'com.github.makbn:JThumbnail:master-SNAPSHOT'
+	}
+```
+
 ## TODO
 
 *   [x] Update all dependenciesfrom jar to maven
@@ -67,3 +117,7 @@ try {
 ## Original project
 
 **JThumbnail** is based on an [old project](https://github.com/benjaminpick/java-thumbnailer) of the university of Siegen for the benefit of [come_IN Computerclubs](http://www.computerclub-comein.de). and thanks alot to @benjaminpick
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmakbn%2FJThumbnail?ref=badge_large)

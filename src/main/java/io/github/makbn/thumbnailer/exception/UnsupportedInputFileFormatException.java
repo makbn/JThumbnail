@@ -1,4 +1,4 @@
-package io.github.makbn.thumbnailer;
+package io.github.makbn.thumbnailer.exception;
 
 import java.io.IOException;
 

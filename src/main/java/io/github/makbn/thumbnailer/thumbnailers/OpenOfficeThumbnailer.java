@@ -21,6 +21,7 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
@@ -49,9 +50,9 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        if(FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")){
-            pdfBoxThumbnailer.generateThumbnail(input,output);
-        }else {
+        if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
+            pdfBoxThumbnailer.generateThumbnail(input, output);
+        } else {
             BufferedInputStream in = null;
             ZipFile zipFile = null;
 

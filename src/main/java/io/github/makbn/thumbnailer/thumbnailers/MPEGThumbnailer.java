@@ -1,6 +1,5 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
-
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.GifSequenceWriter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
