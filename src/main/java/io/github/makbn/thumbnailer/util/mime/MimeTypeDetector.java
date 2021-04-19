@@ -45,7 +45,7 @@ public class MimeTypeDetector {
 
     private static final Logger mLog = Logger.getLogger(MimeTypeDetector.class);
     private final List<MimeTypeIdentifier> extraIdentifiers;
-    private static Map<String, String> outputThumbnailExtensionCache;
+    private final static Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
     private final Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
 
     /**
@@ -61,13 +61,11 @@ public class MimeTypeDetector {
         addMimeTypeIdentifier(new MP3FileIdentifier());
         addMimeTypeIdentifier(new MPEGFileIdentifier());
 
-        if(outputThumbnailExtensionCache == null){
-            outputThumbnailExtensionCache = new HashMap<>();
-
-            for(MimeTypeIdentifier identifier:extraIdentifiers){
+        if (outputThumbnailExtensionCache.isEmpty()) {
+            for (MimeTypeIdentifier identifier : extraIdentifiers) {
                 List<String> exts = identifier.getExtensionsFor(null);
-                if(exts!= null)
-                    exts.forEach(ext -> outputThumbnailExtensionCache.put(ext,identifier.getThumbnailExtension()));
+                if (exts != null)
+                    exts.forEach(ext -> outputThumbnailExtensionCache.put(ext, identifier.getThumbnailExtension()));
             }
         }
 
