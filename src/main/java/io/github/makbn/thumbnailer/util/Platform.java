@@ -39,7 +39,7 @@ public class Platform {
     public static final int BSD = 12;
     public static final int UNIX_END = 19;
 
-    private static int detectedPlatform;
+    private static final int detectedPlatform;
 
     static {
         String os = System.getProperty("os.name");

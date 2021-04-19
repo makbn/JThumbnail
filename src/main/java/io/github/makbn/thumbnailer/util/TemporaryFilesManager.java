@@ -31,7 +31,7 @@ import java.util.HashMap;
  * Keep a list of temporary files so that the same file needn't be copied twice.
  */
 public class TemporaryFilesManager {
-    private HashMap<File, File> files = new HashMap<File, File>();
+    private final HashMap<File, File> files = new HashMap<File, File>();
 
     /**
      * Create a new, read-only temporary file.

@@ -42,7 +42,7 @@ public interface MimeTypeIdentifier {
      * @param file     Filename of the File to detect
      * @return MIME Type detected.
      */
-    public String identify(String mimeType, byte[] bytes, File file);
+    String identify(String mimeType, byte[] bytes, File file);
 
     /**
      * Get File Extensions for a known MIME Type.
@@ -50,7 +50,7 @@ public interface MimeTypeIdentifier {
      * @param mimeType
      * @return List of file extensions (main extension first).
      */
-    public List<String> getExtensionsFor(String mimeType);
+    List<String> getExtensionsFor(String mimeType);
 
-    public String getThumbnailExtension();
+    String getThumbnailExtension();
 }

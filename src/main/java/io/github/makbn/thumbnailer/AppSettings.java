@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  * created by Mehdi Akbarian-Rastaghi 2018-10-21
  */
 public class AppSettings {
-    private static ResourceBundle rb = ResourceBundle.getBundle("application");
+    private static final ResourceBundle rb = ResourceBundle.getBundle("application");
 
     public static  int DRIVE_OPENOFFICE_PORT;
     public static String DRIVE_OPENOFFICE_SERVER_PATH;

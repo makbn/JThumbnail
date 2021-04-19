@@ -43,10 +43,11 @@ import java.util.Map;
  */
 public class MimeTypeDetector {
 
-    private List<MimeTypeIdentifier> extraIdentifiers;
-    private Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
+    private static final Logger mLog = Logger.getLogger(MimeTypeDetector.class);
+    private final List<MimeTypeIdentifier> extraIdentifiers;
     private static Map<String, String> outputThumbnailExtensionCache;
-    private static Logger mLog = Logger.getLogger(MimeTypeDetector.class);
+    private final Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
+
     /**
      * Create a MimeType Detector and init it.
      */

@@ -24,7 +24,6 @@ package io.github.makbn.thumbnailer;
 import io.github.makbn.thumbnailer.thumbnailers.Thumbnailer;
 import io.github.makbn.thumbnailer.util.ChainedHashMap;
 import io.github.makbn.thumbnailer.util.IOUtil;
-import io.github.makbn.thumbnailer.util.StringUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -84,7 +83,7 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * The logger for this class
      */
-    private static Logger mLog = Logger.getLogger(ThumbnailerManager.class);
+    private static final Logger mLog = Logger.getLogger(ThumbnailerManager.class);
 
 
     /**
@@ -100,7 +99,7 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Magic Mime Detection ... a wrapper class to Aperature's Mime thingies.
      */
-    private MimeTypeDetector mimeTypeDetector;
+    private final MimeTypeDetector mimeTypeDetector;
 
     /**
      * Initialise Thumbnail Manager

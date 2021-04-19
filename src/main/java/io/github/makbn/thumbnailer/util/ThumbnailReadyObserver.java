@@ -13,7 +13,7 @@ import java.awt.image.ImageObserver;
  */
 public class ThumbnailReadyObserver implements ImageObserver {
 
-    private Thread toNotify;
+    private final Thread toNotify;
 
     /**
      * The logger for this class

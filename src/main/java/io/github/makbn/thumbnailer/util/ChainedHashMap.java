@@ -29,9 +29,9 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
     private static final int DEFAULT_HASHTABLE_SIZE = 20;
 
     private static final int DEFAULT_LIST_SIZE = 10;
-    private int listSize;
+    private final int listSize;
 
-    private HashMap<K, List<V>> hashtable;
+    private final HashMap<K, List<V>> hashtable;
     private int size;
 
     public ChainedHashMap() {
