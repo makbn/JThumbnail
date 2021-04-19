@@ -23,7 +23,9 @@ package io.github.makbn.thumbnailer.util.mime;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.tika.Tika;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -91,6 +93,24 @@ public class MimeTypeDetector {
     public String getMimeType(File file) throws IOException {
 
         String mimeType = Files.probeContentType(file.toPath());
+
+
+        if(mimeType == null  || mimeType.isEmpty()) {
+            Tika tika = new Tika();
+            mimeType = tika.detect(file);
+        }
+
+        try {
+            if (mimeType == null || mimeType.isEmpty())
+                mimeType = file.toURI().toURL().openConnection().getContentType();
+            if (mimeType == null || mimeType.isEmpty())
+                mimeType = new MimetypesFileTypeMap().getContentType(file);
+
+        }catch (Exception e){
+            mLog.debug(e.getMessage());
+        }
+
+
 
 
         if (mimeType != null && mimeType.length() == 0)
