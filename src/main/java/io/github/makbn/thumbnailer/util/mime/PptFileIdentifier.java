@@ -26,7 +26,7 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
-import org.apache.poi.hslf.usermodel.SlideShow;
+import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,12 +45,13 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
         if (isOfficeFile(mimeType) && !PPT_MIME_TYPE.equals(mimeType)) {
             try {
                 FileInputStream stream = new FileInputStream(file);
-                SlideShow presentation = new SlideShow(stream);
+                HSLFSlideShow presentation = new HSLFSlideShow(stream);
 
-                if (presentation.getSlides().length != 0) {
+                if (presentation.getSlides().size() != 0) {
                     return PPT_MIME_TYPE;
                 }
             } catch (Throwable e) {
+                //ignored
             }
         }
 
