@@ -45,7 +45,7 @@ try {
 ## Requirements
 
 *   Java JRE 1.8
-*   (optional) OpenOffice 4 or LibreOffice
+*   OpenOffice 4 or LibreOffice *(optional)*
 
 ## Supported File Formats
 
