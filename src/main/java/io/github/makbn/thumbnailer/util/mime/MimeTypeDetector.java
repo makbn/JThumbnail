@@ -165,7 +165,7 @@ public class MimeTypeDetector {
                 extensions.add("xlsx");
                 extensions.add("xltx");
                 break;
-            case " application/vnd.ms-powerpoint":
+            case "application/vnd.ms-powerpoint":
                 extensions.add("ppt");
                 extensions.add("ppam");
                 extensions.add("sldm");
