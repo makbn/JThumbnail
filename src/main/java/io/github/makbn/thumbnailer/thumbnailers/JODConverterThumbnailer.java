@@ -54,6 +54,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * JOD Converter
      */
     protected static LocalConverter officeConverter = null;
+    private final long counter = 0;
     /**
      * Thumbnail Extractor for OpenOffice Files
      */
@@ -63,7 +64,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected MimeTypeDetector mimeTypeDetector = null;
     private TemporaryFilesManager temporaryFilesManager = null;
-    private final long counter = 0;
 
     public JODConverterThumbnailer() {
         ooo_thumbnailer = new OpenOfficeThumbnailer();

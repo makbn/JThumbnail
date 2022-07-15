@@ -18,8 +18,8 @@ public class Test {
             AppSettings.init(args);
             Thumbnailer.start();
             File in = new File("/Users/mehdiakbarian-rastaghi/Documents/Projects/Sakku/gharardad.docx");
-            if(in.exists()) {
-                ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+            if (in.exists()) {
+                ThumbnailCandidate candidate = new ThumbnailCandidate(in, "unique_code");
 
                 Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
                     @Override

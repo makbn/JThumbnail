@@ -34,7 +34,7 @@ import java.io.FileInputStream;
 
 public class DocFileIdentifier extends OfficeFileIdentifier {
 
-    private static Logger mLog = LogManager.getLogger("DocFileIdentifier");
+    private static final Logger mLog = LogManager.getLogger("DocFileIdentifier");
 
 
     public DocFileIdentifier() {

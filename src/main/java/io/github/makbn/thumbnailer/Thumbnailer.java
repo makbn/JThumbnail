@@ -40,12 +40,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Thumbnailer {
 
-    private static Logger mLog = LogManager.getLogger("Thumbnailer");
+    private static final Logger mLog = LogManager.getLogger("Thumbnailer");
     private static ThumbnailerManager thumbnailer;
 
-    private static String defaultOutputDir = AppSettings.TEMP_DIR;
+    private static final String defaultOutputDir = AppSettings.TEMP_DIR;
     private static ThumbnailState state;
-    private static MimeTypeDetector typeDetector = new MimeTypeDetector();
+    private static final MimeTypeDetector typeDetector = new MimeTypeDetector();
     private static ConcurrentHashMap<ThumbnailCandidate, ThumbnailListener> files;
     private static Runnable taskRunner;
 
@@ -61,8 +61,8 @@ public class Thumbnailer {
     }
 
 
-    public static int getTaskQueueSize(){
-        if(files != null){
+    public static int getTaskQueueSize() {
+        if (files != null) {
             return files.size();
         }
         return 0;

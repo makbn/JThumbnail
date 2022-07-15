@@ -6,7 +6,6 @@ import java.io.File;
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
 public class ThumbnailCandidate {
-
     private File file;
     private String hash;
     private String thumbExt;

@@ -39,7 +39,7 @@ import java.util.zip.ZipFile;
  */
 public class Office2007FileIdentifier implements MimeTypeIdentifier {
 
-    private static Logger mLog = LogManager.getLogger("Office2007FileIdentifier");
+    private static final Logger mLog = LogManager.getLogger("Office2007FileIdentifier");
 
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {

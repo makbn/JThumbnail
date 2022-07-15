@@ -18,9 +18,8 @@ public class ThumbnailReadyObserver implements ImageObserver {
      * The logger for this class
      */
     private static final Logger mLog = LogManager.getLogger("ThumbnailReadyObserver");
-
-    public volatile boolean ready = false;
     private final Thread toNotify;
+    public volatile boolean ready = false;
 
     public ThumbnailReadyObserver(Thread toNotify) {
         this.toNotify = toNotify;

@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 public class XlsFileIdentifier extends OfficeFileIdentifier {
-    private static Logger mLog = LogManager.getLogger("XlsFileIdentifier");
+    private static final Logger mLog = LogManager.getLogger("XlsFileIdentifier");
 
     public XlsFileIdentifier() {
         super();
