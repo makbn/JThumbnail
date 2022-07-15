@@ -15,17 +15,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.poi:poi:5.0.0'
-    implementation 'org.apache.poi:poi-scratchpad:5.2.1'
-    implementation 'commons-io:commons-io:2.8.0'
-    implementation 'log4j:log4j:1.2.17'
-    implementation 'org.semweb4j:rdf2go.api:5.0.0'
-    implementation 'org.jodconverter:jodconverter-core:4.4.2'
-    implementation 'org.jodconverter:jodconverter-local:4.4.2'
-    implementation 'org.jodconverter:jodconverter-online:4.2.4'
-    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    implementation 'org.slf4j:slf4j-log4j12:1.7.30'
+    implementation "org.apache.poi:poi:${apachepoi_ver}"
+    implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
+    implementation "commons-io:commons-io:${commonsio_ver}"
+    implementation "org.apache.logging.log4j:log4j-api:${log4j_ver}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4j_ver}"
+    //implementation 'org.semweb4j:rdf2go.api:5.0.0'
+    implementation "org.jodconverter:jodconverter-core:${jod_ver}"
+    implementation "org.jodconverter:jodconverter-local:${jod_ver}"
+    //implementation "org.jodconverter:jodconverter-online:${jod_ver}"
+    implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
     implementation 'org.apache.logging.log4j:log4j-to-slf4j:2.14.1'
     implementation 'org.bytedeco:javacv:1.5.5'
     implementation 'org.bytedeco:opencv:4.5.1-1.5.5'
@@ -39,7 +38,7 @@ dependencies {
 group = 'io.github.makbn'
 version = 'v1.0'
 description = 'jthumbnail'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_18
 
 publishing {
     publications {
