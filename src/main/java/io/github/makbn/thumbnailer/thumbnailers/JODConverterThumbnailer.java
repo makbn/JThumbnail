@@ -28,14 +28,12 @@ import io.github.makbn.thumbnailer.util.Platform;
 import io.github.makbn.thumbnailer.util.TemporaryFilesManager;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.local.LocalConverter;
 import org.jodconverter.local.office.ExistingProcessAction;
 import org.jodconverter.local.office.LocalOfficeManager;
-
-
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +45,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * How long may a service work take? (in ms)
      */
     private static final long TIMEOUT = 300000;
-    private static Logger mLog = LogManager.getLogger("JODConverterThumbnailer");
+    private static final Logger mLog = LogManager.getLogger("JODConverterThumbnailer");
     /**
      * JOD Office Manager
      */
@@ -65,7 +63,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected MimeTypeDetector mimeTypeDetector = null;
     private TemporaryFilesManager temporaryFilesManager = null;
-    private long counter = 0;
+    private final long counter = 0;
 
     public JODConverterThumbnailer() {
         ooo_thumbnailer = new OpenOfficeThumbnailer();

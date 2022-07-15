@@ -3,9 +3,9 @@ package io.github.makbn.thumbnailer.thumbnailers;
 import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.GifSequenceWriter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class MPEGThumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LoggerFactory.getLogger(MPEGThumbnailer.class);
+    private static final Logger logger = LogManager.getLogger(MPEGThumbnailer.class);
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
