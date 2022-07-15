@@ -6,8 +6,8 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import io.github.makbn.thumbnailer.ThumbnailerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,13 +21,12 @@ import java.io.IOException;
  */
 public class MP3Thumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LoggerFactory.getLogger(MP3Thumbnailer.class);
+    private static final Logger logger = LogManager.getLogger(MP3Thumbnailer.class);
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        Mp3File song = null;
         try {
-            song = new Mp3File(input.getPath());
+            var song = new Mp3File(input.getPath());
             if (song.hasId3v2Tag()) {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();
