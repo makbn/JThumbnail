@@ -49,16 +49,16 @@ import java.util.Queue;
 public class ThumbnailerManager implements Thumbnailer {
 
     /**
-     * @var Starting estimate of the number of mime types that the thumbnailer can manager
+     * Starting estimate of the number of mime types that the thumbnailer can manager
      */
     private static final int DEFAULT_NB_MIME_TYPES = 40;
     /**
-     * @var Starting estimate of the number of thumbnailers per mime type
+     * Starting estimate of the number of thumbnailers per mime type
      */
     private static final int DEFAULT_NB_THUMBNAILERS_PER_MIME = 5;
 
     /**
-     * @var MIME Type for "all MIME" within thumbnailers Hash
+     * MIME Type for "all MIME" within thumbnailers Hash
      */
     private static final String ALL_MIME_WILDCARD = "*/*";
     /**
@@ -70,15 +70,15 @@ public class ThumbnailerManager implements Thumbnailer {
      */
     private final MimeTypeDetector mimeTypeDetector;
     /**
-     * @var Width of thumbnail picture to create (in Pixel)
+     * Width of thumbnail picture to create (in Pixel)
      */
     private int thumbWidth;
     /**
-     * @var Height of thumbnail picture to create (in Pixel)
+     * Height of thumbnail picture to create (in Pixel)
      */
     private int thumbHeight;
     /**
-     * @var Options for image resizer (currently unused)
+     * Options for image resizer (currently unused)
      */
     private int thumbOptions = 0;
     /**
