@@ -112,18 +112,6 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
     }
 
     /**
-     * Call close() just in case the caller forgot.
-     */
-    protected void finalize() throws Throwable {
-        try {
-            super.finalize();
-        } finally {
-            if (!closed)
-                close();
-        }
-    }
-
-    /**
      * Get a list of all MIME Types that this Thumbnailer is ready to process.
      * You should override this method in order to give hints when which Thumbnailer is most appropriate.
      * If you do not override this method, the Thumbnailer will be called in any case - awaiting a ThumbnailException if
