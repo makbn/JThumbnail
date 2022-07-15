@@ -46,8 +46,8 @@ public class FileDoesNotExistException extends IOException {
     /**
      * Test if the file/directory exists and can be read.
      *
-     * @param f     File to be tested
-     * @param name  How the file is called.
+     * @param f    File to be tested
+     * @param name How the file is called.
      * @throws FileDoesNotExistException if it does not exists or cannot be read.
      */
     public static void check(File f, String name) throws FileDoesNotExistException {

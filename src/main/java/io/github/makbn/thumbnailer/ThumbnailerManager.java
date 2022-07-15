@@ -27,7 +27,8 @@ import io.github.makbn.thumbnailer.util.ChainedHashMap;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,47 +61,38 @@ public class ThumbnailerManager implements Thumbnailer {
      * @var MIME Type for "all MIME" within thumbnailers Hash
      */
     private static final String ALL_MIME_WILDCARD = "*/*";
-
-    /**
-     * @var Width of thumbnail picture to create (in Pixel)
-     */
-    private int thumbWidth;
-
-    /**
-     * @var Height of thumbnail picture to create (in Pixel)
-     */
-    private int thumbHeight;
-
-    /**
-     * @var Options for image resizer (currently unused)
-     */
-    private int thumbOptions = 0;
-
-    /**
-     * Folder under which new thumbnails should be filed
-     */
-    private File thumbnailFolder;
-
     /**
      * The logger for this class
      */
-    private static final Logger mLog = Logger.getLogger(ThumbnailerManager.class);
-
-
-    /**
-     * Thumbnailers per MIME-Type they accept (ALL_MIME_WILDCARD for all)
-     */
-    private ChainedHashMap<String, Thumbnailer> thumbnailers;
-
-    /**
-     * All Thumbnailers.
-     */
-    private Queue<Thumbnailer> allThumbnailers;
-
+    private static final Logger mLog = LogManager.getLogger(ThumbnailerManager.class);
     /**
      * Magic Mime Detection ... a wrapper class to Aperature's Mime thingies.
      */
     private final MimeTypeDetector mimeTypeDetector;
+    /**
+     * @var Width of thumbnail picture to create (in Pixel)
+     */
+    private int thumbWidth;
+    /**
+     * @var Height of thumbnail picture to create (in Pixel)
+     */
+    private int thumbHeight;
+    /**
+     * @var Options for image resizer (currently unused)
+     */
+    private int thumbOptions = 0;
+    /**
+     * Folder under which new thumbnails should be filed
+     */
+    private File thumbnailFolder;
+    /**
+     * Thumbnailers per MIME-Type they accept (ALL_MIME_WILDCARD for all)
+     */
+    private ChainedHashMap<String, Thumbnailer> thumbnailers;
+    /**
+     * All Thumbnailers.
+     */
+    private Queue<Thumbnailer> allThumbnailers;
 
     /**
      * Initialise Thumbnail Manager
@@ -126,7 +118,7 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Calculate a thumbnail filename (via hashing).
      *
-     * @param input      Input file
+     * @param input Input file
      * @return The chosen filename
      */
     public File chooseThumbnailFilename(File input, String ext) throws ThumbnailerException {
@@ -137,9 +129,9 @@ public class ThumbnailerManager implements Thumbnailer {
 
         File output;
 
-        String name= FilenameUtils.getBaseName(input.getName())+"_thumb";
+        String name = FilenameUtils.getBaseName(input.getName()) + "_thumb";
 
-        name = name+"."+ext;
+        name = name + "." + ext;
 
 
         output = new File(thumbnailFolder, name);
@@ -178,12 +170,12 @@ public class ThumbnailerManager implements Thumbnailer {
      * It is garantueed that an existing Thumbnail is not overwritten by this.
      *
      * @param input Input file that should be processed.
+     * @return Name of Thumbnail-File generated.
      * @throws FileDoesNotExistException
      * @throws IOException
      * @throws ThumbnailerException
-     * @return Name of Thumbnail-File generated.
      */
-    public File createThumbnail(File input,String ext) throws FileDoesNotExistException, IOException, ThumbnailerException {
+    public File createThumbnail(File input, String ext) throws FileDoesNotExistException, IOException, ThumbnailerException {
         File output = chooseThumbnailFilename(input, ext);
         generateThumbnail(input, output);
 
@@ -243,13 +235,13 @@ public class ThumbnailerManager implements Thumbnailer {
      * <li>First all Thumbnailers that declare to accept such a MIME Type are used
      * <li>Then all Thumbnailers that declare to accept all possible MIME Types.
      *
-     * @param input  Input file that should be processed
-     * @param output File in which should be written
+     * @param input    Input file that should be processed
+     * @param output   File in which should be written
+     * @param mimeType MIME-Type of input file (null if unknown)
      * @throws IOException          If file cannot be read/written.
      * @throws ThumbnailerException If the thumbnailing process failed
      *                              (i.e., no thumbnailer could generate an Thumbnail.
      *                              The last ThumbnailerException is re-thrown.)
-     * @param    mimeType    MIME-Type of input file (null if unknown)
      */
     public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
         FileDoesNotExistException.check(input, "The input file");
@@ -301,8 +293,8 @@ public class ThumbnailerManager implements Thumbnailer {
      * @param input            Input File that should be processed
      * @param output           Output file where the image shall be written.
      * @param detectedMimeType MIME Type that was returned by automatic MIME Detection
-     * @throws IOException Input file cannot be read, or output file cannot be written, or necessary temporary files could not be created.
      * @return True on success (1 thumbnailer could generate the output file).
+     * @throws IOException Input file cannot be read, or output file cannot be written, or necessary temporary files could not be created.
      */
     private boolean executeThumbnailers(String useMimeType, File input, File output, String detectedMimeType) throws IOException {
         for (Thumbnailer thumbnailer : thumbnailers.getIterable(useMimeType)) {

@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 public class NativeImageThumbnailer extends AbstractThumbnailer {
 
-    private static Logger mLog = LogManager.getLogger("NativeImageThumbnailer");
+    private static final Logger mLog = LogManager.getLogger("NativeImageThumbnailer");
 
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);

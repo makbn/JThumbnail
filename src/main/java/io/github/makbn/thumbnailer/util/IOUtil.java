@@ -10,7 +10,7 @@ import java.util.zip.ZipFile;
 
 public class IOUtil {
 
-    private static Logger mLog = LogManager.getLogger("IOUtil");
+    private static final Logger mLog = LogManager.getLogger("IOUtil");
 
     /**
      * Close, ignoring IOExceptions

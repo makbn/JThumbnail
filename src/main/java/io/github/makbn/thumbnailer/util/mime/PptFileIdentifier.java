@@ -35,7 +35,7 @@ import java.io.FileInputStream;
 
 
 public class PptFileIdentifier extends OfficeFileIdentifier {
-    private static Logger mLog = LogManager.getLogger("PptFileIdentifier");
+    private static final Logger mLog = LogManager.getLogger("PptFileIdentifier");
 
     public PptFileIdentifier() {
         super();

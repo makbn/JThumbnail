@@ -21,8 +21,8 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
 import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +40,8 @@ import java.io.IOException;
  * Renders the first page of a PDF file into a thumbnail.
  */
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    private static Logger mLog = LogManager.getLogger("PDFBoxThumbnailer");
+    private static final Logger mLog = LogManager.getLogger("PDFBoxThumbnailer");
+
     @Override
     public void generateThumbnail(File input, File output) throws IOException,
             ThumbnailerException {

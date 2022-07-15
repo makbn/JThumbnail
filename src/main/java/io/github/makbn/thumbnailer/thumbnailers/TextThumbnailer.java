@@ -9,11 +9,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class TextThumbnailer extends AbstractThumbnailer {
-    private static Charset charset = Charset.forName("UTF-8");
-    private static Logger mLog = LogManager.getLogger("TextThumbnailer");
+    private static final Charset charset = StandardCharsets.UTF_8;
+    private static final Logger mLog = LogManager.getLogger("TextThumbnailer");
+
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
 
@@ -44,7 +46,7 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
         int textW = g2d.getFontMetrics().stringWidth(text);
 
-        int lineCount = Math.max(1, textW/thumbWidth);
+        int lineCount = Math.max(1, textW / thumbWidth);
 
         int cc = text.length() / lineCount;
 
@@ -52,12 +54,12 @@ public class TextThumbnailer extends AbstractThumbnailer {
         ArrayList<String> lines = new ArrayList<>();
 
         while (index < text.length()) {
-            String sub =text.substring(index, Math.min(index + cc,text.length()));
+            String sub = text.substring(index, Math.min(index + cc, text.length()));
             lines.add(sub);
             index += cc;
         }
 
-        int y= fm.getAscent();
+        int y = fm.getAscent();
         for (String line : lines)
             g2d.drawString(line, 0, y += g2d.getFontMetrics().getHeight());
 
@@ -70,11 +72,11 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     private String readFile(File input) throws IOException {
         StringBuilder text = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
             String line;
             int linecount = 0;
-            while ((line = br.readLine()) != null && linecount++<5) {
-                text.append(line.replace("\n",""));
+            while ((line = br.readLine()) != null && linecount++ < 5) {
+                text.append(line.replace("\n", ""));
             }
         }
 

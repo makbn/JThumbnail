@@ -59,7 +59,7 @@ public class ResizeImage {
      * If output image is bigger than input image, allow the output to be smaller than expected (the size of the input image)
      */
     public static final int ALLOW_SMALLER = 32;
-    private static Logger mLog = LogManager.getLogger("ResizeImage");
+    private static final Logger mLog = LogManager.getLogger("ResizeImage");
 
     public int resizeMethod = RESIZE_FIT_ONE_DIMENSION;
     public int extraOptions = DO_NOT_SCALE_UP;

@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class ImageThumbnailer extends AbstractThumbnailer {
 
-    private static Logger mLog = LogManager.getLogger("ImageThumbnailer");
+    private static final Logger mLog = LogManager.getLogger("ImageThumbnailer");
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
