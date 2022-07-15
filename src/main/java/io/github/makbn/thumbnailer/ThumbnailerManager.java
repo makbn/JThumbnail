@@ -171,11 +171,10 @@ public class ThumbnailerManager implements Thumbnailer {
      *
      * @param input Input file that should be processed.
      * @return Name of Thumbnail-File generated.
-     * @throws FileDoesNotExistException
      * @throws IOException
      * @throws ThumbnailerException
      */
-    public File createThumbnail(File input, String ext) throws FileDoesNotExistException, IOException, ThumbnailerException {
+    public File createThumbnail(File input, String ext) throws IOException, ThumbnailerException {
         File output = chooseThumbnailFilename(input, ext);
         generateThumbnail(input, output);
 
