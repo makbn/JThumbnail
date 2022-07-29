@@ -1,6 +1,6 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

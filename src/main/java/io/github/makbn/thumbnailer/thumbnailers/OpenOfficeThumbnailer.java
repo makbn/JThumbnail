@@ -22,12 +22,13 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -54,19 +55,19 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
             BufferedInputStream in = null;
-            ZipFile zipFile = null;
+            ZipFile zipFile;
 
             try {
                 zipFile = new ZipFile(input);
             } catch (ZipException e) {
                 logger.warn("OpenOfficeThumbnailer", e);
-                throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice-File?", e);
+                throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice file?", e);
             }
 
             try {
                 ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
                 if (entry == null)
-                    throw new ThumbnailerException("Zip file does not contain 'Thumbnails/thumbnail.png' . Is this really an OpenOffice-File?");
+                    throw new ThumbnailerException("Zip file does not contain 'Thumbnails/thumbnail.png' . Is this really an OpenOffice file?");
 
                 in = new BufferedInputStream(zipFile.getInputStream(entry));
 
@@ -75,6 +76,10 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 resizer.writeOutput(output);
 
                 in.close();
+            } catch (RuntimeException re) {
+                throw new ThumbnailerRuntimeException(re);
+            } catch (Exception e) {
+                throw new ThumbnailerException(e.getMessage());
             } finally {
                 IOUtil.quietlyClose(in);
                 IOUtil.quietlyClose(zipFile);

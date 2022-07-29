@@ -5,7 +5,7 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
     @Override
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
         try {
-            var song = new Mp3File(input.getPath());
+            Mp3File song = new Mp3File(input.getPath());
             if (song.hasId3v2Tag()) {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();

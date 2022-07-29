@@ -22,7 +22,7 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.UnsupportedInputFileFormatException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.logging.log4j.LogManager;

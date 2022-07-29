@@ -22,18 +22,23 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 import io.github.makbn.thumbnailer.AppSettings;
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.util.IOUtil;
-import io.github.makbn.thumbnailer.util.Platform;
+import io.github.makbn.thumbnailer.util.MacProcessManager;
 import io.github.makbn.thumbnailer.util.TemporaryFilesManager;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tika.utils.SystemUtils;
+import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
+import org.jodconverter.core.office.OfficeManager;
+import org.jodconverter.core.office.OfficeUtils;
 import org.jodconverter.local.LocalConverter;
 import org.jodconverter.local.office.ExistingProcessAction;
 import org.jodconverter.local.office.LocalOfficeManager;
+import org.jodconverter.local.office.LocalOfficeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,16 +49,13 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     /**
      * How long may a service work take? (in ms)
      */
-    private static final long TIMEOUT = 300000;
+    private static final long TIMEOUT = 3000000;
     private static final Logger mLog = LogManager.getLogger("JODConverterThumbnailer");
     /**
      * JOD Office Manager
      */
-    protected static LocalOfficeManager officeManager = null;
-    /**
-     * JOD Converter
-     */
-    protected static LocalConverter officeConverter = null;
+    protected static OfficeManager officeManager = null;
+
     private final long counter = 0;
     /**
      * Thumbnail Extractor for OpenOffice Files
@@ -64,6 +66,17 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected MimeTypeDetector mimeTypeDetector = null;
     private TemporaryFilesManager temporaryFilesManager = null;
+
+    static {
+        initializeOfficeManager(false);
+        if (!isConnected())
+            try {
+                officeManager.start();
+                mLog.warn("OpenOffice/LibreOffice server started!");
+            } catch (OfficeException e) {
+                mLog.warn(e);
+            }
+    }
 
     public JODConverterThumbnailer() {
         ooo_thumbnailer = new OpenOfficeThumbnailer();
@@ -76,14 +89,42 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      *
      * @return True if connected.
      */
-    public static boolean isConnected() {
+    protected static boolean isConnected() {
         return officeManager != null && officeManager.isRunning();
+    }
+
+    /**
+     * Start OpenOffice-Service and connect to it.
+     *
+     * @param forceReconnect Connect even if he is already connected.
+     */
+    protected static void initializeOfficeManager(boolean forceReconnect) {
+        if (!forceReconnect && officeManager != null)
+            return;
+
+        if (forceReconnect && isConnected() && officeManager != null) {
+            OfficeUtils.stopQuietly(officeManager);
+        }
+
+        officeManager = LocalOfficeManager.builder()
+                .portNumbers(AppSettings.OPENOFFICE_PORTS)
+                .processTimeout(TIMEOUT)
+                .processManager(SystemUtils.IS_OS_MAC ? new MacProcessManager() : LocalOfficeUtils.findBestProcessManager())
+                .taskExecutionTimeout(TIMEOUT / 10)
+                .maxTasksPerProcess(25)
+                .existingProcessAction(ExistingProcessAction.KILL)
+                .disableOpengl(true)
+                .officeHome(AppSettings.OPENOFFICE_PATH)
+                .install()
+                .build();
+
+        mLog.info("openoffice server initialized!");
     }
 
     /**
      * Stop the OpenOffice Process and disconnect.
      */
-    public static void disconnect() {
+    protected void disconnect() {
         // close the connection
         if (officeManager != null) {
             try {
@@ -93,43 +134,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             }
         }
         officeManager = null;
-    }
-
-    /**
-     * Start OpenOffice-Service and connect to it.
-     * (Does not reconnect if already connected.)
-     */
-    public void connect() {
-        connect(false);
-    }
-
-    /**
-     * Start OpenOffice-Service and connect to it.
-     *
-     * @param forceReconnect Connect even if he is already connected.
-     */
-    public void connect(boolean forceReconnect) {
-        if (!forceReconnect && isConnected())
-            return;
-
-        officeManager = LocalOfficeManager.builder()
-                .portNumbers(AppSettings.DRIVE_OPENOFFICE_PORT)
-                .processTimeout(TIMEOUT)
-                .maxTasksPerProcess(1000)
-                .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
-                .disableOpengl(true)
-                .officeHome(AppSettings.DRIVE_OPENOFFICE_SERVER_PATH)
-                .build();
-
-        try {
-            officeManager.start();
-            mLog.warn("OpenOffice/LibreOffice server started!");
-        } catch (OfficeException e) {
-            mLog.warn(e);
-        }
-        officeConverter = LocalConverter.builder()
-                .officeManager(officeManager)
-                .build();
     }
 
     public void close() throws IOException {
@@ -145,7 +149,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         }
     }
 
-
     /**
      * Generates a thumbnail of Office files.
      *
@@ -155,23 +158,27 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @throws ThumbnailerException If the creating thumbnail process failed.
      */
     public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
-        if (!isConnected())
-            connect();
-
         File outputTmp = null;
         try {
             outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
 
-            if (Platform.isWindows())
+            if (SystemUtils.IS_OS_WINDOWS)
                 input = new File(input.getAbsolutePath().replace("\\\\", "\\"));
 
             try {
-                officeConverter.convert(input)
+                DocumentConverter converter =
+                        LocalConverter.builder()
+                                .officeManager(officeManager)
+                                .build();
+                mLog.info("converter created");
+
+                converter.convert(input)
                         .to(outputTmp)
                         .execute();
+
             } catch (OfficeException e) {
                 mLog.warn(e);
-                throw new ThumbnailerException();
+                throw new ThumbnailerException(e.getMessage());
 
             }
             if (outputTmp.length() == 0) {
@@ -179,7 +186,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             }
 
             ooo_thumbnailer.generateThumbnail(outputTmp, output);
-
 
         } finally {
             IOUtil.deleteQuietlyForce(outputTmp);
@@ -222,5 +228,21 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     public void setImageSize(int thumbWidth, int thumbHeight, int imageResizeOptions) {
         super.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
         ooo_thumbnailer.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
+    }
+
+    @Override
+    public String[] getAcceptedMIMETypes() {
+        return new String[]{
+                "application/vnd.oasis.opendocument.text",
+                "application/vnd.oasis.opendocument.text-template",
+                "application/vnd.oasis.opendocument.text-web",
+                "application/vnd.oasis.opendocument.text-master",
+                "application/vnd.oasis.opendocument.graphics",
+                "application/vnd.oasis.opendocument.graphics-template",
+                "application/vnd.oasis.opendocument.presentation",
+                "application/vnd.oasis.opendocument.presentation-template",
+                "application/vnd.oasis.opendocument.spreadsheet",
+                "application/vnd.oasis.opendocument.spreadsheet-template",
+        };
     }
 }
