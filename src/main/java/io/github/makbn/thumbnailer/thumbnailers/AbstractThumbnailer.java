@@ -22,7 +22,7 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 import io.github.makbn.thumbnailer.AppSettings;
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 
 import java.io.File;
 import java.io.IOException;

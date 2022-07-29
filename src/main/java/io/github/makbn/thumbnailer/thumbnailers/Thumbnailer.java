@@ -22,7 +22,7 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 
 import java.io.Closeable;
 import java.io.File;

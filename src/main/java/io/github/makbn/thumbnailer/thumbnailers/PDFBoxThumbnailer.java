@@ -21,8 +21,9 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +45,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws IOException,
-            ThumbnailerException {
+            ThumbnailerException, ThumbnailerRuntimeException {
         FileDoesNotExistException.check(input);
         if (input.length() == 0)
             throw new FileDoesNotExistException("File is empty");
@@ -69,6 +70,8 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
                 resizer.setInputImage(tmpImage);
                 resizer.writeOutput(output);
             }
+        } catch (IllegalArgumentException e) {
+            throw new ThumbnailerRuntimeException(e.getMessage());
         } finally {
             if (document != null) {
                 try {
@@ -90,7 +93,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
     private BufferedImage writeImageFirstPage(PDDocument document) throws IOException {
 
         PDFRenderer pdfRenderer = new PDFRenderer(document);
-        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 72, ImageType.RGB);
 
         return bim;
     }
