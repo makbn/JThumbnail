@@ -49,22 +49,6 @@ public class ChainedHashMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>
         size = 0;
     }
 
-    public ChainedHashMap(Map<? extends K, ? extends V> map) {
-        this();
-
-        if (map instanceof ChainedHashMap) {
-            // Copy-constructor
-            ChainedHashMap<? extends K, ? extends V> hashtable = (ChainedHashMap<? extends K, ? extends V>) map;
-            for (K key : hashtable.keySet()) {
-                for (V value : hashtable.getList(key)) {
-                    put(key, value);
-                }
-            }
-        } else
-            putAll(map);
-    }
-
-
     public int size() {
         return size;
     }
