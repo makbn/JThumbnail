@@ -11,8 +11,7 @@ JThumbnail is a Java library for creating Thumbnails of common types of file inc
 
 ```java
 try {
-   AppSettings.init(args);   
-   Thumbnailer.start();
+   AppSettings.init(args);
    File in = new File("/inputFile.docx");
    if(in.exists()) {
       ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
@@ -104,11 +103,13 @@ try {
 
 ## TODO
 
-- [x]  Update all dependenciesfrom jar to maven
-- [x]  update project old and deprecated depencencies
+- [x]  Update all dependencies from jar to maven
+- [x]  update project old and deprecated dependencies
 - [x]  Change the structure of project
-- [X]  Add new Configuration method to confige OpenOffice dir and port 
-- [ ]  Add Async multi-thread support
+- [X]  Add new Configuration method to config OpenOffice dir and port
+- [X]  Add Async multi-thread support
+- [X]  replace Thumbnailers for Microsoft Office documents with e-iceblue
+- [ ]  Improve current Exception handling system
 
 ## Original project
 
