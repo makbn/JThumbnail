@@ -22,7 +22,7 @@
 package io.github.makbn.thumbnailer.util;
 
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.UnsupportedInputFileFormatException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -172,23 +172,20 @@ public class ResizeImage {
         graphics2D.fillRect(0, 0, thumbWidth, thumbHeight);
 
         // Enable smooth, high-quality resampling
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
 
         ThumbnailReadyObserver observer = new ThumbnailReadyObserver(Thread.currentThread());
         boolean scalingComplete = graphics2D.drawImage(inputImage, offsetX, offsetY, scaledWidth, scaledHeight, observer);
 
-        if (!scalingComplete && observer != null) {
+        if (!scalingComplete) {
             // ImageObserver must wait for ready
-            if (mLog.isDebugEnabled())
-                throw new ThumbnailerException("Scaling is not yet complete!");
-            else {
-                mLog.warn("ResizeImage: Scaling is not yet complete!");
-
+            if (mLog.isDebugEnabled()) {
+                mLog.debug("ResizeImage: Scaling is not yet complete!");
                 while (!observer.ready) {
-                    mLog.warn("Waiting .4 sec...");
+                    mLog.debug("Waiting .4 sec...");
                     try {
                         Thread.sleep(400);
                     } catch (InterruptedException e) {
