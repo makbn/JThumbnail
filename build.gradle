@@ -8,18 +8,26 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+
+    maven {
+        url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
+        content {
+            includeGroup "e-iceblue"
+        }
+    }
 }
 
 dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    implementation("e-iceblue:spire.office.free:5.3.1")
+    implementation("e-iceblue:spire.xls.free:5.1.0")
     implementation "org.apache.poi:poi:${apachepoi_ver}"
     implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
     implementation "commons-io:commons-io:${commonsio_ver}"
     implementation "org.apache.logging.log4j:log4j-api:${log4j_ver}"
     implementation "org.apache.logging.log4j:log4j-core:${log4j_ver}"
-    //implementation 'org.semweb4j:rdf2go.api:5.0.0'
-    implementation "org.jodconverter:jodconverter-core:${jod_ver}"
     implementation "org.jodconverter:jodconverter-local:${jod_ver}"
-    //implementation "org.jodconverter:jodconverter-online:${jod_ver}"
     implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
     implementation "org.bytedeco:javacv:${javacv_ver}"
     implementation "org.bytedeco:opencv:${opencv_ver}"
@@ -33,7 +41,7 @@ dependencies {
 group = 'io.github.makbn'
 version = 'v1.1'
 description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
-java.sourceCompatibility = JavaVersion.VERSION_18
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
     publications {
@@ -41,4 +49,13 @@ publishing {
             from(components.java)
         }
     }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    maxHeapSize = '1G'
 }
