@@ -30,7 +30,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
@@ -59,7 +58,7 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailerException {
         generateThumbnail(input, output);
     }
 
