@@ -10,51 +10,50 @@ JThumbnail is a Java library for creating Thumbnails of common types of file inc
 ## How to use
 
 ```java
-try {
-   AppSettings.init(args);
-   File in = new File("/inputFile.docx");
-   if(in.exists()) {
-      ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
-      Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
-         @Override
-         public void onThumbnailReady(String hash, File thumbnail) {
-            System.out.println("FILE created in : " + thumbnail.getAbsolutePath());
-         }
+AppSettings.init(args);
 
-         @Override
-         public void onThumbnailFailed(String hash, String message, int code) {
+File in = new File("/inputFile.docx");
 
-         }
-      });
-   }
-   } catch (IOException | ThumbnailerException e) {
-         e.printStackTrace();
-   }
+ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+
+Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
+     @Override
+     public void onThumbnailReady(String hash, File thumbnail) {
+        System.out.println("FILE created in : " + thumbnail.getAbsolutePath());
+     }
+
+     @Override
+     public void onThumbnailFailed(String hash, String message, int code) {
+
+     }
+});
+
 ```
 
 ## Configuration Args
 
-*   `openoffice_port` tcp port for open office.
-*   `openoffice_dir` open office home dir.
+* `openoffice_ports` tcp ports for open office.
+* `openoffice_dir` open office home dir.
 *   `temp_dir temp` directory for saving thumb files.
 *   `thumb_height` thumbnail height size in px.
 *   `thumb_width` thumbnail width size in px.
 
 ## Requirements
 
-*   Java JRE 1.8
-*   OpenOffice 4 or LibreOffice *(optional)*
+* Java JRE **18**
+* OpenOffice 4 or LibreOffice *(optional)*
 
 ## Supported File Formats
 
-*   Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
-*   OpenOffice files (all of them)
-*   Text files (`txt`, `pdf`, `rtf`, `html`)
-*   Image files (`jpg`, `png`, `bmp`, `gif`)
-*   AutoCad files (`dwg`)
-*   MP3 files (user album-art as thumbnail)
-*   MPEG files (generate gif file)
+* Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
+    * There is a problem with most xlsx files
+* OpenOffice files (all of them)
+* Text files (`txt`, `pdf`, `rtf`, `html`)
+* Image files (`jpg`, `png`, `bmp`, `gif`)
+* AutoCad files (`dwg`)
+* MP3 files (user album-art as thumbnail)
+* MPEG files (generate gif file)
 
 ## Adding Repository 
 
@@ -109,6 +108,9 @@ try {
 - [X]  Add new Configuration method to config OpenOffice dir and port
 - [X]  Add Async multi-thread support
 - [X]  replace Thumbnailers for Microsoft Office documents with e-iceblue
+- [ ]  Fix problem with Java 1.8 (current version is 18)
+- [ ]  Fix problem with xlsx files
+- [ ]  Improve code quality
 - [ ]  Improve current Exception handling system
 
 ## Original project
