@@ -19,7 +19,7 @@
  * Contact: Come_IN-Team <come_in-team@listserv.uni-siegen.de>
  */
 
-package io.github.makbn.thumbnailer;
+package io.github.makbn.thumbnailer.exception;
 
 /**
  * Thrown if Thumbnailing process failed.
