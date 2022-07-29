@@ -21,6 +21,7 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -186,7 +187,7 @@ public class MimeTypeDetector {
     }
 
     /**
-     * Test if an given extension can contain a File of MIME-Type
+     * Test if a given extension can contain a File of MIME-Type
      *
      * @param extension Filename extension (e.g. "txt")
      * @param mimeType  MIME-Type		   (e.g. "text/plain")
@@ -202,18 +203,17 @@ public class MimeTypeDetector {
     }
 
     /**
-     * get output file extension for different input file!
+     * get output file extension for the current input file!
      * after first time extension cached for next requests!
      *
-     * @param file
-     * @return
-     * @throws IOException
+     * @param file input file for generating thumbnail.
+     * @return the identified extension or 'png' in other cases
+     * @throws ThumbnailerException if there is a problem on reading file
      */
-    public String getOutputExt(File file) throws IOException {
-        String ext = FilenameUtils.getExtension(file.getName());
-        String mime = getMimeType(file);
-
-        if (ext != null) {
+    public String getOutputExt(File file) throws ThumbnailerException {
+        try {
+            String ext = FilenameUtils.getExtension(file.getName());
+            String mime = getMimeType(file);
             if (outputThumbnailExtensionCache.containsKey(ext))
                 return outputThumbnailExtensionCache.get(ext);
 
@@ -225,7 +225,10 @@ public class MimeTypeDetector {
                     return result;
                 }
             }
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         }
+
         return "png";
     }
 }
