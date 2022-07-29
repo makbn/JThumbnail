@@ -21,7 +21,6 @@ dependencies {
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     implementation("e-iceblue:spire.office.free:5.3.1")
-    implementation("e-iceblue:spire.xls.free:5.1.0")
     implementation "org.apache.poi:poi:${apachepoi_ver}"
     implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
     implementation "commons-io:commons-io:${commonsio_ver}"
