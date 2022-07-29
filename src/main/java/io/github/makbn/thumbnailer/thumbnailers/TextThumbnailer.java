@@ -17,10 +17,15 @@ public class TextThumbnailer extends AbstractThumbnailer {
     private static final Logger mLog = LogManager.getLogger("TextThumbnailer");
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
 
+        String text = null;
+        try {
+            text = readFile(input);
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
+        }
 
-        String text = readFile(input);
         BufferedImage img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
 

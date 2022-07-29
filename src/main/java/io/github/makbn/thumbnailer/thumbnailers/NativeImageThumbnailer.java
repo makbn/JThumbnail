@@ -23,7 +23,6 @@ package io.github.makbn.thumbnailer.thumbnailers;
 
 
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
-import io.github.makbn.thumbnailer.exception.UnsupportedInputFileFormatException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,16 +42,17 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
 
     private static final Logger mLog = LogManager.getLogger("NativeImageThumbnailer");
 
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
         try {
             resizer.setInputImage(input);
-        } catch (UnsupportedInputFileFormatException e) {
+            resizer.writeOutput(output);
+        } catch (IOException e) {
             mLog.error(e);
             throw new ThumbnailerException("File format could not be interpreted as image", e);
         }
-        resizer.writeOutput(output);
+
     }
 
     /**

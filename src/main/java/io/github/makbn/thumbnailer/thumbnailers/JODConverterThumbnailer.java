@@ -157,7 +157,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @throws IOException          If file cannot be read/written
      * @throws ThumbnailerException If the creating thumbnail process failed.
      */
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
         File outputTmp = null;
         try {
             outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
@@ -187,6 +187,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
             ooo_thumbnailer.generateThumbnail(outputTmp, output);
 
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         } finally {
             IOUtil.deleteQuietlyForce(outputTmp);
         }

@@ -50,7 +50,7 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
     private static final PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
@@ -62,6 +62,8 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
             } catch (ZipException e) {
                 logger.warn("OpenOfficeThumbnailer", e);
                 throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice file?", e);
+            } catch (IOException e) {
+                throw new ThumbnailerException(e);
             }
 
             try {

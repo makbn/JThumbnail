@@ -26,7 +26,6 @@ import com.spire.xls.Workbook;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Dummy class for converting Spreadsheet documents into Openoffice-Textfiles.
@@ -41,7 +40,7 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
 
         //Create a workbook instance
         try {

@@ -15,7 +15,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
 
     private static final Logger mLog = LogManager.getLogger("DWGThumbnailer");
 
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
         //GENERATE FROM EXISTING BITMAP IN DWG
         byte[] outputByte = new byte[4096];
 
@@ -79,7 +79,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 resizer.setInputImage(originalImage);
                 resizer.writeOutput(output);
             }
-        } catch (ThumbnailerException e) {
+        } catch (IOException e) {
             throw new ThumbnailerException(e);
         } finally {
             IOUtil.quietlyClose(fis);
