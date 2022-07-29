@@ -21,12 +21,47 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import com.spire.presentation.Presentation;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
  *
  * @see JODConverterThumbnailer
  */
-public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {
+public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
+    @Override
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+        Presentation ppt = new Presentation();
+        try {
+            ppt.loadFromFile(input.getAbsolutePath());
+            //Save PPT document to images
+            Image image = ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
+            //Re-write the image with a different color space
+            BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
+            newImg.getGraphics().drawImage(image, 0, 0, null);
+            ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
+
+        } catch (Exception e) {
+            throw new ThumbnailerRuntimeException(e);
+        } finally {
+            ppt.dispose();
+        }
+
+    }
+
+    @Override
+    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+        generateThumbnail(input, output);
+    }
 
     protected String getStandardOpenOfficeExtension() {
         return "pdf";
@@ -47,7 +82,7 @@ public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {
      * (ppt, pptx, pps, ppsx)
      *
      * @return MIME-Types
-     * @see http://www.artofsolving.com/opensource/jodconverter/guide/supportedformats
+     * @see <a href="http://www.artofsolving.com/opensource/jodconverter/guide/supportedformats">...</a>
      */
     public String[] getAcceptedMIMETypes() {
         return new String[]{

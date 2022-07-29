@@ -21,12 +21,47 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import com.spire.xls.FileFormat;
+import com.spire.xls.Workbook;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Dummy class for converting Spreadsheet documents into Openoffice-Textfiles.
  *
  * @see JODConverterThumbnailer
  */
-public class JODExcelConverterThumbnailer extends JODConverterThumbnailer {
+public class ExcelConverterThumbnailer extends AbstractThumbnailer {
+    private final OpenOfficeThumbnailer ooo_thumbnailer;
+
+    public ExcelConverterThumbnailer() {
+        ooo_thumbnailer = new OpenOfficeThumbnailer();
+    }
+
+    @Override
+    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+
+        //Create a workbook instance
+        try {
+            Workbook workbook = new Workbook();
+            //Load a sample Excel document
+            workbook.loadFromFile(input.getAbsolutePath());
+            //Fit all worksheets on one page (optional)
+            workbook.getConverterSetting().setSheetFitToPage(true);
+
+            File outputTmp = File.createTempFile("jthumbnailer", "." + "pdf");
+
+            //Save the workbook to PDF
+            workbook.saveToFile(outputTmp.getAbsolutePath(), FileFormat.PDF);
+            ooo_thumbnailer.generateThumbnail(outputTmp, output);
+            outputTmp.deleteOnExit();
+        } catch (Exception err) {
+            throw new ThumbnailerException(err);
+        }
+
+    }
 
     protected String getStandardOpenOfficeExtension() {
         return "ods";
@@ -48,6 +83,11 @@ public class JODExcelConverterThumbnailer extends JODConverterThumbnailer {
                 /*		"application/vnd.ms-office", // xls?
                         "application/zip" // xlsx? */
         };
+    }
+
+    public void setImageSize(int thumbWidth, int thumbHeight, int imageResizeOptions) {
+        super.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
+        ooo_thumbnailer.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
     }
 
 
