@@ -22,9 +22,11 @@
 package io.github.makbn.thumbnailer;
 
 import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
+import io.github.makbn.thumbnailer.model.ExecutionResult;
 import io.github.makbn.thumbnailer.thumbnailers.Thumbnailer;
 import io.github.makbn.thumbnailer.util.ChainedHashMap;
-import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.mime.MimeTypeDetector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+
 
 /**
  * This class manages all available Thumbnailers.
@@ -88,31 +91,21 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Thumbnailers per MIME-Type they accept (ALL_MIME_WILDCARD for all)
      */
-    private ChainedHashMap<String, Thumbnailer> thumbnailers;
+    private final ChainedHashMap<String, Thumbnailer> thumbnailers;
     /**
      * All Thumbnailers.
      */
-    private Queue<Thumbnailer> allThumbnailers;
+    private final Queue<Thumbnailer> allThumbnailers;
 
     /**
      * Initialise Thumbnail Manager
      */
     public ThumbnailerManager() {
-
-        final ThumbnailerManager self = this;
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                IOUtil.quietlyClose(self);
-            }
-        });
-
-        thumbnailers = new ChainedHashMap<>(DEFAULT_NB_MIME_TYPES, DEFAULT_NB_THUMBNAILERS_PER_MIME);
-        allThumbnailers = new LinkedList<>();
-
-        mimeTypeDetector = new MimeTypeDetector();
-
-        thumbHeight = AppSettings.THUMB_HEIGHT;
-        thumbWidth = AppSettings.THUMB_WIDTH;
+        this.thumbnailers = new ChainedHashMap<>(DEFAULT_NB_MIME_TYPES, DEFAULT_NB_THUMBNAILERS_PER_MIME);
+        this.allThumbnailers = new LinkedList<>();
+        this.mimeTypeDetector = new MimeTypeDetector();
+        this.thumbHeight = AppSettings.THUMB_HEIGHT;
+        this.thumbWidth = AppSettings.THUMB_WIDTH;
     }
 
     /**
@@ -167,14 +160,14 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Generate a Thumbnail.
      * The output file name is generated using a hashing scheme.
-     * It is garantueed that an existing Thumbnail is not overwritten by this.
+     * It is guaranteed that an existing Thumbnail is not overwritten by this.
      *
      * @param input Input file that should be processed.
      * @return Name of Thumbnail-File generated.
-     * @throws IOException
-     * @throws ThumbnailerException
+     * @throws ThumbnailerException        in case something known related to the thumbnail generation process happens
+     * @throws ThumbnailerRuntimeException in case something unknown related to the thumbnail generation process happens
      */
-    public File createThumbnail(File input, String ext) throws IOException, ThumbnailerException {
+    public File createThumbnail(File input, String ext) throws ThumbnailerRuntimeException, ThumbnailerException {
         File output = chooseThumbnailFilename(input, ext);
         generateThumbnail(input, output);
 
@@ -211,19 +204,19 @@ public class ThumbnailerManager implements Thumbnailer {
      * and Thumbnails can't be generated after calling this function.
      */
     public void close() {
-        if (allThumbnailers == null)
-            return; // Already closed
-
         for (Thumbnailer thumbnailer : allThumbnailers) {
             try {
+                if (thumbnailer instanceof ThumbnailerManager) {
+                    continue;
+                }
+                mLog.info(String.format("closing %s...", thumbnailer.getClass().getSimpleName()));
                 thumbnailer.close();
+
+
             } catch (IOException e) {
                 mLog.error("Error during close of Thumbnailer:", e);
             }
         }
-
-        thumbnailers = null;
-        allThumbnailers = null;
     }
 
     /**
@@ -237,32 +230,43 @@ public class ThumbnailerManager implements Thumbnailer {
      * @param input    Input file that should be processed
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)
-     * @throws IOException          If file cannot be read/written.
      * @throws ThumbnailerException If the thumbnailing process failed
      *                              (i.e., no thumbnailer could generate an Thumbnail.
      *                              The last ThumbnailerException is re-thrown.)
      */
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
-        FileDoesNotExistException.check(input, "The input file");
-        FileDoesNotExistException.checkWrite(output, "The output file", true, false);
+    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailerRuntimeException, ThumbnailerException {
+        try {
+            FileDoesNotExistException.check(input, "The input file");
+            FileDoesNotExistException.checkWrite(output, "The output file", true, false);
 
-        boolean generated = false;
-
-        // MIME might be known already (in case of recursive thumbnail managers)
-        if (mimeType == null) {
-            mimeType = mimeTypeDetector.getMimeType(input);
-            mLog.debug("Detected Mime-Typ: " + mimeType);
+            if (mimeType == null) {
+                mimeType = mimeTypeDetector.getMimeType(input);
+                mLog.debug(String.format("Detected MIME type: %s", mimeType));
+            }
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         }
 
-        if (mimeType != null)
-            generated = executeThumbnailers(mimeType, input, output, mimeType);
+        if (mimeType != null) {
+            ExecutionResult generated = executeThumbnailers(mimeType, input, output, mimeType);
+            // Try again using wildcard thumbnailers
+            if (!generated.isGenerated() && !generated.hasException())
+                generated = executeThumbnailers(ALL_MIME_WILDCARD, input, output, mimeType);
 
-        // Try again using wildcard thumbnailers
-        if (!generated)
-            generated = executeThumbnailers(ALL_MIME_WILDCARD, input, output, mimeType);
-
-        if (!generated)
-            throw new ThumbnailerException("No suitable Thumbnailer has been found. (File: " + input.getName() + " ; Detected MIME: " + mimeType + ")");
+            if (!generated.isGenerated()) {
+                Throwable exp = generated.getException();
+                if (exp instanceof ThumbnailerException)
+                    throw (ThumbnailerException) exp;
+                else if (exp instanceof ThumbnailerRuntimeException)
+                    throw (ThumbnailerRuntimeException) exp;
+                else if (exp instanceof RuntimeException)
+                    throw new RuntimeException(exp);
+                else
+                    throw new ThumbnailerException(exp);
+            }
+        } else {
+            throw new ThumbnailerException(String.format("Jthumbnailer failed on identifying the MIME type for: %s", input.getName()));
+        }
     }
 
     /**
@@ -275,12 +279,11 @@ public class ThumbnailerManager implements Thumbnailer {
      *
      * @param input  Input file that should be processed
      * @param output File in which should be written
-     * @throws IOException          If file cannot be read/written.
      * @throws ThumbnailerException If the thumbnailing process failed
      *                              (i.e., no thumbnailer could generate an Thumbnail.
      *                              The last ThumbnailerException is re-thrown.)
      */
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerRuntimeException, ThumbnailerException {
         generateThumbnail(input, output, null);
     }
 
@@ -293,24 +296,34 @@ public class ThumbnailerManager implements Thumbnailer {
      * @param output           Output file where the image shall be written.
      * @param detectedMimeType MIME Type that was returned by automatic MIME Detection
      * @return True on success (1 thumbnailer could generate the output file).
-     * @throws IOException Input file cannot be read, or output file cannot be written, or necessary temporary files could not be created.
      */
-    private boolean executeThumbnailers(String useMimeType, File input, File output, String detectedMimeType) throws IOException {
+    private ExecutionResult executeThumbnailers(String useMimeType, File input, File output, String detectedMimeType) {
+        ExecutionResult result = ExecutionResult.failed(new ThumbnailerException("No suitable Thumbnailer has been " +
+                "found for: " + input.getName()));
+
         for (Thumbnailer thumbnailer : thumbnailers.getIterable(useMimeType)) {
             try {
+                if (thumbnailer instanceof ThumbnailerManager)
+                    continue;
                 thumbnailer.generateThumbnail(input, output, detectedMimeType);
-                return true;
-            } catch (ThumbnailerException e) {
+                result = ExecutionResult.success();
+                return result;
+            } catch (ThumbnailerRuntimeException e) {
+                mLog.warn("pass runtime error to Thumbnailer");
+                result = ExecutionResult.failed(e);
+            } catch (ThumbnailerException | IOException e) {
                 // This Thumbnailer apparently wasn't suitable, so try next
-                mLog.warn("Warning: " + thumbnailer.getClass().getName() + " could not handle the file " + input.getName() + " (trying next)", e);
+                result = ExecutionResult.failed(e);
+            } catch (Error | Exception e) {
+                mLog.error("unknown exception occurred!");
+                result = ExecutionResult.failed(e);
             }
         }
-        return false;
+        return result;
     }
 
     /**
      * Set the image size of all following thumbnails.
-     * <p>
      * ThumbnailManager delegates this to all his containing Thumbailers.
      */
     public void setImageSize(int width, int height, int imageResizeOptions) {
@@ -329,7 +342,6 @@ public class ThumbnailerManager implements Thumbnailer {
 
     /**
      * Get the currently set Image Width of this Thumbnailer.
-     *
      * @return image width of created thumbnails.
      */
     public int getCurrentImageWidth() {
@@ -338,7 +350,6 @@ public class ThumbnailerManager implements Thumbnailer {
 
     /**
      * Get the currently set Image Height of this Thumbnailer.
-     *
      * @return image height of created thumbnails.
      */
     public int getCurrentImageHeight() {
@@ -348,7 +359,6 @@ public class ThumbnailerManager implements Thumbnailer {
 
     /**
      * Summarize all contained MIME Type Thumbnailers.
-     *
      * @return All accepted MIME Types, null if any.
      */
     public String[] getAcceptedMIMETypes() {
