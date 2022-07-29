@@ -42,7 +42,7 @@ import java.io.IOException;
 public class WordConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
 
         //Create a Document object
         Document doc = new Document();
@@ -59,7 +59,11 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
         BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
         newImg.getGraphics().drawImage(image, 0, 0, null);
 
-        ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
+        try {
+            ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
+        }
     }
 
     @Override

@@ -44,11 +44,14 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
     private static final Logger mLog = LogManager.getLogger("PDFBoxThumbnailer");
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException,
-            ThumbnailerException, ThumbnailerRuntimeException {
-        FileDoesNotExistException.check(input);
+    public void generateThumbnail(File input, File output) throws ThumbnailerException, ThumbnailerRuntimeException {
+        try {
+            FileDoesNotExistException.check(input);
+        } catch (FileDoesNotExistException e) {
+            throw new ThumbnailerException(e);
+        }
         if (input.length() == 0)
-            throw new FileDoesNotExistException("File is empty");
+            throw new ThumbnailerException("File is empty");
         FileUtils.deleteQuietly(output);
 
         PDDocument document = null;
@@ -72,6 +75,8 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
             }
         } catch (IllegalArgumentException e) {
             throw new ThumbnailerRuntimeException(e.getMessage());
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         } finally {
             if (document != null) {
                 try {

@@ -24,7 +24,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
     private static final Logger logger = LogManager.getLogger(MP3Thumbnailer.class);
 
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
         try {
             Mp3File song = new Mp3File(input.getPath());
             if (song.hasId3v2Tag()) {
@@ -35,7 +35,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
                 ImageIO.write(img, "png", output);
             }
 
-        } catch (UnsupportedTagException | InvalidDataException e) {
+        } catch (UnsupportedTagException | InvalidDataException | IOException e) {
             logger.warn("MP3Thumbnailer", e);
             throw new ThumbnailerException();
         }
