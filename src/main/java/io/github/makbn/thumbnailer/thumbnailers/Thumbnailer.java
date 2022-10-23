@@ -65,16 +65,6 @@ public interface Thumbnailer extends Closeable {
      */
     void close() throws IOException;
 
-
-    /**
-     * Set a new Thumbnail size. All following thumbnails will be generated in this size.
-     *
-     * @param width              Width in Pixel
-     * @param height             Height in Pixel
-     * @param imageResizeOptions Options for ResizeImage (currently ignored)
-     */
-    void setImageSize(int width, int height, int imageResizeOptions);
-
     /**
      * Get the currently set Image Width of this Thumbnailer.
      *
