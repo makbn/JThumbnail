@@ -1,49 +1,50 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
-import io.github.makbn.thumbnailer.util.IOUtil;
 import io.github.makbn.thumbnailer.util.ResizeImage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+@Component
 public class DWGThumbnailer extends AbstractThumbnailer {
-
-    private static final Logger mLog = LogManager.getLogger("DWGThumbnailer");
+    @Autowired
+    public DWGThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
 
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
         //GENERATE FROM EXISTING BITMAP IN DWG
         byte[] outputByte = new byte[4096];
 
-        FileInputStream fis = null;
-        long ignored = 0;
-        try {
-            fis = new FileInputStream(input);
-            ignored = fis.skip(0x0D);
+
+        try(FileInputStream fis = new FileInputStream(input)) {
+            long ignored = fis.skip(0x0D);
             ignored = fis.read(outputByte, 0, 4);
-            int PosSentinel = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
-            ignored = fis.skip(PosSentinel - 0x0D - 4 + 30);
+            int posSentinel = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
+            ignored = fis.skip(posSentinel - 0x0D - 4 + 30L);
             outputByte[1] = 0;
             ignored = fis.read(outputByte, 0, 1);
-            int TypePreview = ((outputByte[0]) & 0xFF);
-            if (TypePreview == 2) {
+            int typePreview = ((outputByte[0]) & 0xFF);
+            if (typePreview == 2) {
                 ignored = fis.read(outputByte, 0, 4);
-                int PosBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
+                int posBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
                 ignored = fis.read(outputByte, 0, 4);
-                int LenBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
-                ignored = fis.skip(PosBMP - (PosSentinel + 30) - 1 - 4 - 4 + 14);
+                int lenBMP = (((outputByte[3]) & 0xFF) * 256 * 256 * 256) + (((outputByte[2]) & 0xFF) * 256 * 256) + (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
+                ignored = fis.skip(posBMP - (posSentinel + 30) - 1 - 4 - 4 + 14L);
                 ignored = fis.read(outputByte, 0, 2);
                 int biBitCount = (((outputByte[1]) & 0xFF) * 256) + ((outputByte[0]) & 0xFF);
                 fis.skip(-16);
                 int bisSize = 0;
                 int bfSize = 0;
                 if (biBitCount < 9)
-                    bfSize = 54 + 4 * ((int) (Math.pow(2, biBitCount))) + LenBMP;
-                else bfSize = 54 + LenBMP;
+                    bfSize = 54 + 4 * ((int) (Math.pow(2, biBitCount))) + lenBMP;
+                else bfSize = 54 + lenBMP;
                 //WORD "BM"
                 outputByte[0] = 0x42;
                 outputByte[1] = 0x4D;
@@ -64,16 +65,17 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 outputByte[12] = 0x00;
                 outputByte[13] = 0x00;
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                baos.write(outputByte, 0, 14);
-                while ((LenBMP > 0) && ((bisSize = fis.read(outputByte, 0, (Math.min(LenBMP, 4096)))) != -1)) {
-                    baos.write(outputByte, 0, bisSize);
-                    LenBMP -= bisSize;
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bos.write(outputByte, 0, 14);
+
+                while ((lenBMP > 0) && ((bisSize = fis.read(outputByte, 0, (Math.min(lenBMP, 4096)))) != -1)) {
+                    bos.write(outputByte, 0, bisSize);
+                    lenBMP -= bisSize;
                 }
 
-                ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-                BufferedImage originalImage = ImageIO.read(bais);
+                BufferedImage originalImage = ImageIO.read(bis);
 
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
                 resizer.setInputImage(originalImage);
@@ -81,11 +83,10 @@ public class DWGThumbnailer extends AbstractThumbnailer {
             }
         } catch (IOException e) {
             throw new ThumbnailerException(e);
-        } finally {
-            IOUtil.quietlyClose(fis);
         }
     }
 
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{"image/x-dwg"};
     }
