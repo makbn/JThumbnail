@@ -23,8 +23,11 @@ package io.github.makbn.thumbnailer.thumbnailers;
 
 import com.spire.doc.Document;
 import com.spire.doc.documents.ImageType;
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,7 +42,13 @@ import java.io.IOException;
  *
  * @see JODConverterThumbnailer
  */
+@Component
 public class WordConverterThumbnailer extends AbstractThumbnailer {
+
+    @Autowired
+    public WordConverterThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
@@ -71,18 +80,7 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
         generateThumbnail(input, output);
     }
 
-    protected String getStandardOpenOfficeExtension() {
-        return "pdf";
-    }
-
-    protected String getStandardZipExtension() {
-        return "docx";
-    }
-
-    protected String getStandardOfficeExtension() {
-        return "doc";
-    }
-
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "application/vnd.ms-word",
