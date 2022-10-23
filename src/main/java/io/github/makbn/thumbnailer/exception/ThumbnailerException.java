@@ -21,11 +21,14 @@
 
 package io.github.makbn.thumbnailer.exception;
 
+import java.io.Serial;
+
 /**
  * Thrown if Thumbnailing process failed.
  */
 public class ThumbnailerException extends Exception {
 
+    @Serial
     private static final long serialVersionUID = -7988812285439060247L;
 
     public ThumbnailerException() {
