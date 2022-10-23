@@ -45,7 +45,7 @@ public class ApplicationConfig {
                 .processTimeout(settings.getTimeout())
                 .taskExecutionTimeout(settings.getTimeout())
                 .maxTasksPerProcess(settings.getMaxTaskPerProcess())
-                .existingProcessAction(ExistingProcessAction.KILL)
+                .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
                 .disableOpengl(true)
                 .officeHome(settings.getOpenOfficePath())
                 .install()
