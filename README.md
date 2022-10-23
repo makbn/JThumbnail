@@ -83,7 +83,7 @@ jThumbnailer.close();
 	<dependency>
 	    <groupId>com.github.makbn</groupId>
 	    <artifactId>JThumbnail</artifactId>
-	    <version>master-SNAPSHOT</version>
+	    <version>${project version}</version>
 	</dependency>
 ```
 
@@ -103,7 +103,7 @@ jThumbnailer.close();
 
 ```gradle
 	dependencies {
-	        implementation 'com.github.makbn:JThumbnail:master-SNAPSHOT'
+	        implementation 'com.github.makbn:JThumbnail:${project version}'
 	}
 ```
 
