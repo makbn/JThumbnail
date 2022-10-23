@@ -1,7 +1,6 @@
 package io.github.makbn.thumbnailer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
@@ -14,20 +13,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class SOfficeTest {
-    private static final Logger mLog = LogManager.getLogger("SOfficeTest");
+@Log4j2
+class SOfficeTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2002})
-    void run_soffice(int port) throws OfficeException, IOException {
-        mLog.info(String.format("SOffice will be running on port: %d", port));
+    void run_soffice(int port) {
+        log.info(String.format("SOffice will be running on port: %d", port));
         //Files.deleteIfExists(Path.of("test_results/test_docx_sample.pdf"));
         OfficeManager officeManager = LocalOfficeManager.builder()
                 .portNumbers(port)
@@ -39,7 +37,7 @@ public class SOfficeTest {
 
         try {
             officeManager.start();
-            mLog.warn("OpenOffice/LibreOffice server started!");
+            log.warn("OpenOffice/LibreOffice server started!");
         } catch (OfficeException e) {
             fail(e);
         }
