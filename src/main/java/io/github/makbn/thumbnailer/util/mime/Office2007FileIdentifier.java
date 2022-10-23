@@ -22,12 +22,10 @@
 package io.github.makbn.thumbnailer.util.mime;
 
 
-import io.github.makbn.thumbnailer.util.IOUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -44,12 +42,9 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {
         if (mimeType == null || mimeType.equals("application/zip") || mimeType.startsWith("application/vnd.")) {
-            ZipFile zipFile = null;
-            ZipEntry entry = null;
-            try {
-                zipFile = new ZipFile(file);
+            try(ZipFile zipFile = new ZipFile(file)) {
+                ZipEntry entry = zipFile.getEntry("word/document.xml");
 
-                entry = zipFile.getEntry("word/document.xml");
                 if (entry != null)
                     return "application/vnd.openxmlformats-officedocument.wordprocessingml";
 
@@ -69,8 +64,6 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
             } catch (IOException e) {
                 mLog.error(e);
                 return mimeType; // Zip file damaged or whatever. Silently give up.
-            } finally {
-                IOUtil.quietlyClose(zipFile);
             }
         }
 
@@ -79,19 +72,14 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
     }
 
     private String detectOpenOfficeMimeType(InputStream inputStream) throws IOException {
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+        try( BufferedReader in = new BufferedReader(new InputStreamReader(inputStream))) {
             return in.readLine();
-        } finally {
-            IOUtil.quietlyClose(inputStream);
         }
     }
 
     @Override
     public List<String> getExtensionsFor(String mimeType) {
-        return new ArrayList<String>() {{
-            add("docx");
-        }};
+        return List.of("docx");
     }
 
     @Override

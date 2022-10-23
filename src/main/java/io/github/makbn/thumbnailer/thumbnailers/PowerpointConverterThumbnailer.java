@@ -22,9 +22,12 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 import com.spire.presentation.Presentation;
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,7 +39,14 @@ import java.io.File;
  *
  * @see JODConverterThumbnailer
  */
+@Component
 public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
+
+    @Autowired
+    public PowerpointConverterThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
+
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
         Presentation ppt = new Presentation();
@@ -62,19 +72,6 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
         generateThumbnail(input, output);
     }
 
-    protected String getStandardOpenOfficeExtension() {
-        return "pdf";
-    }
-
-    protected String getStandardZipExtension() {
-        return "pptx";
-    }
-
-    protected String getStandardOfficeExtension() {
-        return "ppt";
-    }
-
-
     /**
      * Get a List of accepted File Types.
      * All Presentation Office Formats that OpenOffice understands are accepted.
@@ -83,13 +80,12 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
      * @return MIME-Types
      * @see <a href="http://www.artofsolving.com/opensource/jodconverter/guide/supportedformats">...</a>
      */
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "application/vnd.ms-powerpoint",
                 "application/vnd.openxmlformats-officedocument.presentationml",
                 "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                /*		"application/vnd.ms-office", // ppt?
-                        "application/zip" // pptx? */
 
         };
     }

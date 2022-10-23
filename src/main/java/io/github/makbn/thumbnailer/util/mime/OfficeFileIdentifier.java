@@ -41,8 +41,8 @@ public abstract class OfficeFileIdentifier implements MimeTypeIdentifier {
 
     protected List<String> ext;
 
-    public OfficeFileIdentifier() {
-        ext = new ArrayList<String>();
+    protected OfficeFileIdentifier() {
+        ext = new ArrayList<>();
     }
 
     @Override

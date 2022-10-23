@@ -11,7 +11,6 @@ public class MPEGFileIdentifier implements MimeTypeIdentifier {
 
     protected List<String> ext;
 
-
     public MPEGFileIdentifier() {
         ext = new ArrayList<>();
         ext.add("mp4");

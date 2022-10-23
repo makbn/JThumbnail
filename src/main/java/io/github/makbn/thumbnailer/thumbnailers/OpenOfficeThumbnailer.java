@@ -22,6 +22,7 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
 
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.IOUtil;
@@ -29,6 +30,8 @@ import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -44,17 +47,23 @@ import java.util.zip.ZipFile;
  * <li> <i>NOT</i> on OpenOffice, as the Thumbnail is already inside the file. (184x256px regardless of page orientation)
  * (So if the thumbnail generation is not correct, it's OpenOffice's fault, not our's :-)
  */
+@Component
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
 
     private static final Logger logger = LogManager.getLogger(OpenOfficeThumbnailer.class);
-    private static final PDFBoxThumbnailer pdfBoxThumbnailer = new PDFBoxThumbnailer();
+    private final PDFBoxThumbnailer pdfBoxThumbnailer;
+
+    @Autowired
+    public OpenOfficeThumbnailer(AppSettings appSettings, PDFBoxThumbnailer pdfBoxThumbnailer) {
+        super(appSettings);
+        this.pdfBoxThumbnailer = pdfBoxThumbnailer;
+    }
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
-            BufferedInputStream in = null;
             ZipFile zipFile;
 
             try {
@@ -65,25 +74,17 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
             } catch (IOException e) {
                 throw new ThumbnailerException(e);
             }
+            ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
 
-            try {
-                ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
-                if (entry == null)
-                    throw new ThumbnailerException("Zip file does not contain 'Thumbnails/thumbnail.png' . Is this really an OpenOffice file?");
-
-                in = new BufferedInputStream(zipFile.getInputStream(entry));
-
+            try(BufferedInputStream in = new BufferedInputStream(zipFile.getInputStream(entry))) {
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
                 resizer.setInputImage(in);
                 resizer.writeOutput(output);
-
-                in.close();
             } catch (RuntimeException re) {
                 throw new ThumbnailerRuntimeException(re);
             } catch (Exception e) {
                 throw new ThumbnailerException(e.getMessage());
             } finally {
-                IOUtil.quietlyClose(in);
                 IOUtil.quietlyClose(zipFile);
             }
         }
@@ -95,6 +96,7 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      *
      * @return MIME-Types
      */
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "application/vnd.sun.xml.writer",
