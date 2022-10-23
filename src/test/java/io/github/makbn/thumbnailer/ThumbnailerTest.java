@@ -2,6 +2,7 @@ package io.github.makbn.thumbnailer;
 
 import io.github.makbn.thumbnailer.listener.ThumbnailListener;
 import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,13 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
+@Log4j2
 class ThumbnailerTest {
 
     private static JThumbnailer jThumbnailer;
 
     @BeforeAll
     public static void init(){
-        System.out.println("Starting jThumbnailer ...");
+        log.info("Starting jThumbnailer ...");
         String[] args = new String[]{};
         jThumbnailer = JThumbnailerStarter.init(args);
     }
