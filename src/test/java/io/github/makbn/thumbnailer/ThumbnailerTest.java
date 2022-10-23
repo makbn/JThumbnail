@@ -27,7 +27,7 @@ class ThumbnailerTest {
     @BeforeAll
     public static void init(){
         System.out.println("Starting jThumbnailer ...");
-        String[] args = new String[]{"hi"};
+        String[] args = new String[]{};
         jThumbnailer = JThumbnailerStarter.init(args);
     }
 
