@@ -1,11 +1,13 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.GifSequenceWriter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
@@ -19,50 +21,51 @@ import java.io.IOException;
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-22
  */
+@Component
+@Log4j2
 public class MPEGThumbnailer extends AbstractThumbnailer {
 
-    private static final Logger logger = LogManager.getLogger(MPEGThumbnailer.class);
+    @Autowired
+    public MPEGThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
         try {
             getThumb(input.getPath(), output.getPath());
-        } catch (Exception e) {
-            logger.warn("MPEGThumbnailer", e);
-            throw new ThumbnailerException();
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         }
     }
 
     /**
      * get thumbnail from multimedia files
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @Author Iman Akbari
      */
     public void getThumb(String inputPath, String outputPath)
-            throws IOException, InterruptedException {
-        FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
-        ImageOutputStream output = new FileImageOutputStream(new File(outputPath));
+            throws IOException {
 
-        g.setFormat("mp4");
-        g.start();
-        int frame_count = g.getLengthInFrames();
+        try( FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
+             ImageOutputStream output = new FileImageOutputStream(new File(outputPath))) {
+            g.setFormat("mp4");
+            g.start();
+            int frameCount = g.getLengthInFrames();
 
-        GifSequenceWriter gifSequenceWriter = null;
+            GifSequenceWriter gifSequenceWriter = null;
 
-        for (int ig = 0; ig < frame_count; ig += g.getLengthInFrames() / 10) {
-            if (ig > 0) g.setFrameNumber(ig);
+            for (int ig = 0; ig < frameCount; ig += g.getLengthInFrames() / 10) {
+                if (ig > 0) g.setFrameNumber(ig);
 
-            BufferedImage bi = createImageFromBytes(g.grabImage().data.array());
+                BufferedImage bi = createImageFromBytes(g.grabImage().data.array());
 
-            if (gifSequenceWriter == null)
-                gifSequenceWriter = new GifSequenceWriter(output, bi.getType(), 500, true);
-            gifSequenceWriter.writeToSequence(getScaledBI(bi));
+                if (gifSequenceWriter == null)
+                    gifSequenceWriter = new GifSequenceWriter(output, bi.getType(), 500, true);
+                gifSequenceWriter.writeToSequence(getScaledBI(bi));
+                g.stop();
+                gifSequenceWriter.close();
+            }
         }
-
-        g.stop();
-        gifSequenceWriter.close();
     }
 
 
@@ -72,6 +75,7 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
      *
      * @return MIME-Types
      */
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "video/mp4",
@@ -105,7 +109,7 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         try {
             return ImageIO.read(bais);
         } catch (IOException e) {
-            logger.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
         throw new ThumbnailerRuntimeException("Error in generating thumbnail for MPEG file.");
     }
