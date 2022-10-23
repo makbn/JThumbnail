@@ -41,14 +41,14 @@ dependencies {
     implementation "org.bytedeco.javacpp-presets:opencv-platform:${opencvplat_ver}"
     implementation "commons-cli:commons-cli:${commonscli_ver}"
     implementation "org.apache.tika:tika-core:${tika_ver}"
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "org.springframework.boot:spring-boot-starter"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly "org.projectlombok:lombok:${lombok_ver}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 }
 
 group = 'io.github.makbn'
