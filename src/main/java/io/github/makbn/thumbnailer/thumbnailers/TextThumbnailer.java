@@ -1,50 +1,66 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.ThumbnailerException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.github.makbn.thumbnailer.config.AppSettings;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+@Component
 public class TextThumbnailer extends AbstractThumbnailer {
-    private static Charset charset = Charset.forName("UTF-8");
-    private static Logger mLog = LogManager.getLogger("TextThumbnailer");
+    private static final Charset charset = StandardCharsets.UTF_8;
+
+    @Autowired
+    public TextThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
+
     @Override
-    public void generateThumbnail(File input, File output) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailerException {
 
+        String text;
+        try {
+            text = readFile(input);
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
+        }
 
-        String text = readFile(input);
         BufferedImage img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = img.createGraphics();
+
+        Graphics2D graphics = img.createGraphics();
 
         Font font = new Font("Arial", Font.PLAIN, 11);
-        g2d.setFont(font);
-        FontMetrics fm = g2d.getFontMetrics();
+        graphics.setFont(font);
 
-        g2d.dispose();
+        graphics.dispose();
 
         img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
-        g2d = img.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        g2d.setFont(font);
-        fm = g2d.getFontMetrics();
-        g2d.setColor(Color.BLACK);
+        graphics = img.createGraphics();
+        graphics.setPaint (Color.WHITE);
+        graphics.fillRect (0, 0, thumbWidth, thumbHeight);
+        graphics.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        graphics.setFont(font);
+        FontMetrics fm = graphics.getFontMetrics();
+        graphics.setColor(Color.BLACK);
 
-        int textW = g2d.getFontMetrics().stringWidth(text);
+        int textW = graphics.getFontMetrics().stringWidth(text);
 
-        int lineCount = Math.max(1, textW/thumbWidth);
+
+        int lineCount = Math.max(1, textW / thumbWidth);
 
         int cc = text.length() / lineCount;
 
@@ -52,14 +68,16 @@ public class TextThumbnailer extends AbstractThumbnailer {
         ArrayList<String> lines = new ArrayList<>();
 
         while (index < text.length()) {
-            String sub =text.substring(index, Math.min(index + cc,text.length()));
+            String sub = text.substring(index, Math.min(index + cc, text.length()));
             lines.add(sub);
             index += cc;
         }
 
-        int y= fm.getAscent();
-        for (String line : lines)
-            g2d.drawString(line, 0, y += g2d.getFontMetrics().getHeight());
+        int y = fm.getAscent();
+        for (String line : lines) {
+            y += graphics.getFontMetrics().getHeight();
+            graphics.drawString(line, 0, y);
+        }
 
         try {
             ImageIO.write(img, "png", output);
@@ -70,18 +88,18 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     private String readFile(File input) throws IOException {
         StringBuilder text = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
             String line;
             int linecount = 0;
-            while ((line = br.readLine()) != null && linecount++<5) {
-                text.append(line.replace("\n",""));
+            while ((line = br.readLine()) != null && linecount++ < 50) {
+                text.append(line.replace("\n", ""));
             }
         }
 
         return charset.decode(charset.encode(text.toString())).toString();
     }
 
-
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "text/plain",

@@ -21,11 +21,12 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tika.Tika;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,16 +38,13 @@ import java.util.Map;
 
 /**
  * Wrapper class for MIME Identification of Files.
- * <p>
- * Depends:
- * <li>Aperture (for MIME-Detection)
  */
 public class MimeTypeDetector {
 
-    private static final Logger mLog = Logger.getLogger(MimeTypeDetector.class);
+    private static final Logger mLog = LogManager.getLogger(MimeTypeDetector.class);
+    private static final Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
     private final List<MimeTypeIdentifier> extraIdentifiers;
-    private final static Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
-    private final Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
+    private final Map<String, List<String>> extensionsCache = new HashMap<>();
 
     /**
      * Create a MimeType Detector and init it.
@@ -94,7 +92,7 @@ public class MimeTypeDetector {
         String mimeType = Files.probeContentType(file.toPath());
 
 
-        if(mimeType == null  || mimeType.isEmpty()) {
+        if (mimeType == null || mimeType.isEmpty()) {
             Tika tika = new Tika();
             mimeType = tika.detect(file);
         }
@@ -102,14 +100,10 @@ public class MimeTypeDetector {
         try {
             if (mimeType == null || mimeType.isEmpty())
                 mimeType = file.toURI().toURL().openConnection().getContentType();
-            if (mimeType == null || mimeType.isEmpty())
-                mimeType = new MimetypesFileTypeMap().getContentType(file);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             mLog.debug(e.getMessage());
         }
-
-
 
 
         if (mimeType != null && mimeType.length() == 0)
@@ -119,7 +113,7 @@ public class MimeTypeDetector {
         for (MimeTypeIdentifier identifier : extraIdentifiers)
             mimeType = identifier.identify(mimeType, null, file);
 
-        mLog.info("Detected MIME-Type of " + file.getName() + " is " + mimeType);
+        mLog.info("Detected MIME-Type of {} is {}", file.getName(), mimeType);
         return mimeType;
     }
 
@@ -143,54 +137,49 @@ public class MimeTypeDetector {
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected List<String> getExtensionsCached(String mimeType) {
         List<String> extensions = extensionsCache.get(mimeType);
         if (extensions != null)
             return extensions;
 
         extensions = new ArrayList<>();
-        switch (mimeType){
-            case "application/vnd.openxmlformats-officedocument.wordprocessingml":
+        switch (mimeType) {
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml" -> {
                 extensions.add("docx");
                 extensions.add("dotx");
-                break;
-            case "application/vnd.openxmlformats-officedocument.presentationml":
+            }
+            case "application/vnd.openxmlformats-officedocument.presentationml" -> {
                 extensions.add("pptx");
                 extensions.add("sldx");
                 extensions.add("ppsx");
                 extensions.add("potx");
-                break;
-            case "application/vnd.openxmlformats-officedocument.spreadsheetml":
+            }
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml" -> {
                 extensions.add("xlsx");
                 extensions.add("xltx");
-                break;
-            case "application/vnd.ms-powerpoint":
+            }
+            case "application/vnd.ms-powerpoint" -> {
                 extensions.add("ppt");
                 extensions.add("ppam");
                 extensions.add("sldm");
                 extensions.add("pptm");
                 extensions.add("ppsm");
                 extensions.add("potm");
-                break;
-            case "application/msword":
+            }
+            case "application/msword" -> {
                 extensions.add("doc");
                 extensions.add("docm");
                 extensions.add("dotm");
-                break;
-            case "application/pdf":
-                extensions.add("pdf");
-                break;
-            default:
-                mLog.warn("no ext found!");
-                break;
+            }
+            case "application/pdf" -> extensions.add("pdf");
+            default -> mLog.warn("no ext found!");
         }
         extensionsCache.put(mimeType, extensions);
         return extensions;
     }
 
     /**
-     * Test if an given extension can contain a File of MIME-Type
+     * Test if a given extension can contain a File of MIME-Type
      *
      * @param extension Filename extension (e.g. "txt")
      * @param mimeType  MIME-Type		   (e.g. "text/plain")
@@ -206,29 +195,32 @@ public class MimeTypeDetector {
     }
 
     /**
-     * get output file extension for different input file!
+     * get output file extension for the current input file!
      * after first time extension cached for next requests!
-     * @param file
-     * @return
-     * @throws IOException
+     *
+     * @param file input file for generating thumbnail.
+     * @return the identified extension or 'png' in other cases
+     * @throws ThumbnailerException if there is a problem on reading file
      */
-    public String getOutputExt(File file) throws IOException {
-        String ext = FilenameUtils.getExtension(file.getName());
-        String mime = getMimeType(file);
-
-        if(ext!=null) {
-            if(outputThumbnailExtensionCache.containsKey(ext))
+    public String getOutputExt(File file) throws ThumbnailerException {
+        try {
+            String ext = FilenameUtils.getExtension(file.getName());
+            String mime = getMimeType(file);
+            if (outputThumbnailExtensionCache.containsKey(ext))
                 return outputThumbnailExtensionCache.get(ext);
 
             for (MimeTypeIdentifier identifier : extraIdentifiers) {
                 List<String> exts = identifier.getExtensionsFor(mime);
-                if (ext !=null && ext.contains(ext)) {
+                if (exts != null && exts.contains(ext)) {
                     String result = identifier.getThumbnailExtension();
                     outputThumbnailExtensionCache.put(ext, result);
                     return result;
                 }
             }
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         }
+
         return "png";
     }
 }

@@ -25,17 +25,15 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hwpf.HWPFDocument;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
+@Log4j2
 public class DocFileIdentifier extends OfficeFileIdentifier {
-
-    private static Logger mLog = LogManager.getLogger("DocFileIdentifier");
-
 
     public DocFileIdentifier() {
         super();
@@ -46,15 +44,15 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
     public String identify(String mimeType, byte[] bytes, File file) {
 
         if (isOfficeFile(mimeType) && !DOC_MIME_TYPE.equals(mimeType)) {
-            try {
-                FileInputStream stream = new FileInputStream(file);
-                HWPFDocument document = new HWPFDocument(stream);
+            try(FileInputStream stream = new FileInputStream(file);
+                HWPFDocument document = new HWPFDocument(stream)) {
+
 
                 if (document.getRange().getEndOffset() > 0) {
                     return DOC_MIME_TYPE;
                 }
-            } catch (Throwable e) {
-                mLog.info(e);
+            }  catch (IOException | RuntimeException e) {
+                log.debug(e);
             }
         }
 

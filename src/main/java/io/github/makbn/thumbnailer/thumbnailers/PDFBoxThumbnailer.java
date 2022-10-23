@@ -21,61 +21,60 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.exception.FileDoesNotExistException;
-import io.github.makbn.thumbnailer.ThumbnailerException;
+import io.github.makbn.thumbnailer.config.AppSettings;
+import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.thumbnailer.exception.ThumbnailerRuntimeException;
 import io.github.makbn.thumbnailer.util.ResizeImage;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Renders the first page of a PDF file into a thumbnail.
  */
+@Component
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    private static Logger mLog = LogManager.getLogger("PDFBoxThumbnailer");
+    @Autowired
+    public PDFBoxThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
+    private PDDocument getDocument(File input) throws IOException {
+        return PDDocument.load(input);
+    }
     @Override
-    public void generateThumbnail(File input, File output) throws IOException,
-            ThumbnailerException {
-        FileDoesNotExistException.check(input);
+    public void generateThumbnail(File input, File output) throws ThumbnailerException, ThumbnailerRuntimeException {
+        if(!Files.exists(input.toPath())){
+            throw new ThumbnailerException("input file does not exist");
+        }
+
         if (input.length() == 0)
-            throw new FileDoesNotExistException("File is empty");
+            throw new ThumbnailerException("File is empty");
         FileUtils.deleteQuietly(output);
 
-        PDDocument document = null;
-        try {
-            try {
-                document = PDDocument.load(input);
-            } catch (IOException e) {
-                mLog.error(e);
-                throw new ThumbnailerException("Could not load PDF File", e);
-            }
+    try( PDDocument document = getDocument(input)) {
+        BufferedImage tmpImage = writeImageFirstPage(document);
 
-            BufferedImage tmpImage = writeImageFirstPage(document);
-
-            if (tmpImage.getWidth() == thumbWidth) {
-                ImageIO.write(tmpImage, "PNG", output);
-            } else {
-                ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-                resizer.resizeMethod = ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS;
-                resizer.setInputImage(tmpImage);
-                resizer.writeOutput(output);
-            }
-        } finally {
-            if (document != null) {
-                try {
-                    document.close();
-                } catch (IOException e) {
-                    mLog.error(e);
-                }
-            }
+        if (tmpImage.getWidth() == thumbWidth) {
+            ImageIO.write(tmpImage, "PNG", output);
+        } else {
+            ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
+            resizer.setResizeMethod(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
+            resizer.setInputImage(tmpImage);
+            resizer.writeOutput(output);
+        }
+        } catch (IllegalArgumentException e) {
+            throw new ThumbnailerRuntimeException(e.getMessage());
+        } catch (IOException e) {
+            throw new ThumbnailerException(e);
         }
     }
 
@@ -84,14 +83,10 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
      *
      * @param document to generate image from first page
      * @return generated image
-     * @throws IOException
      */
     private BufferedImage writeImageFirstPage(PDDocument document) throws IOException {
-
         PDFRenderer pdfRenderer = new PDFRenderer(document);
-        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
-
-        return bim;
+        return pdfRenderer.renderImageWithDPI(0, 72, ImageType.RGB);
     }
 
     /**
@@ -100,6 +95,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
      *
      * @return MIME-Types
      */
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "application/pdf"
