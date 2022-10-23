@@ -6,28 +6,35 @@
 JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` and etc. [full list](#supported-file-formats)
 
 *   **Project is under development!**
+* Check the `v1` branch for Java 8 compatible version.
+* Check the `dev` branch for latest commits.
 
 ## How to use
 
 ```java
 
-AppSettings.init(args);
+String[] args = new String[]{};
+
+JThumbnailer jThumbnailer = JThumbnailerStarter.init(args);
 
 File in = new File("/inputFile.docx");
 
 ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
-Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
+jThumbnailer.run(candidate, new ThumbnailListener() {
      @Override
      public void onThumbnailReady(String hash, File thumbnail) {
-        System.out.println("FILE created in : " + thumbnail.getAbsolutePath());
+        Files.copy(thumbnail.toPath(), Path.of("my_thumbnail_folder", thumbnail.getName()), StandardCopyOption.REPLACE_EXISTING);
      }
 
      @Override
      public void onThumbnailFailed(String hash, String message, int code) {
-
+        // handle the situation
      }
 });
+
+// close thumbnailer
+jThumbnailer.close();
 
 ```
 
