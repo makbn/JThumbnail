@@ -21,7 +21,7 @@
 
 package io.github.makbn.thumbnailer.thumbnailers;
 
-import io.github.makbn.thumbnailer.AppSettings;
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 
 import java.io.File;
@@ -39,45 +39,26 @@ import java.io.IOException;
 public abstract class AbstractThumbnailer implements Thumbnailer {
 
     /**
-     * @var Height of thumbnail picture to create (in Pixel)
+     * Height of thumbnail picture to create (in Pixel)
      */
     protected int thumbHeight;
 
     /**
-     * @var Width of thumbnail picture to create (in Pixel)
+     *  Width of thumbnail picture to create (in Pixel)
      */
     protected int thumbWidth;
 
     /**
-     * @var Options for image resizer (currently unused)
-     */
-    protected int imageResizeOptions = 0;
-
-    /**
-     * @var Keep memory if this thumbnailer was closed before.
+     * Keep memory if this thumbnailer was closed before.
      */
     protected boolean closed = false;
 
     /**
      * Initialize the thumbnail size from default constants.
      */
-    public AbstractThumbnailer() {
-        thumbHeight = AppSettings.THUMB_HEIGHT;
-        thumbWidth = AppSettings.THUMB_WIDTH;
-    }
-
-    /**
-     * Set a new Thumbnail size. All following thumbnails will be generated in this size.
-     *
-     * @param thumbWidth         Width in Pixel
-     * @param thumbHeight        Height in Pixel
-     * @param imageResizeOptions Options for ResizeImage (currently ignored)
-     */
-    @Override
-    public void setImageSize(int thumbWidth, int thumbHeight, int imageResizeOptions) {
-        this.thumbHeight = thumbHeight;
-        this.thumbWidth = thumbWidth;
-        this.imageResizeOptions = imageResizeOptions;
+    protected AbstractThumbnailer(AppSettings appSettings) {
+        thumbHeight = appSettings.getThumbHeight();
+        thumbWidth = appSettings.getThumbWidth();
     }
 
     /**
@@ -106,7 +87,7 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * @throws IOException If some errors occured during finalising
      */
     @Override
-    public void close() throws IOException {
+    public synchronized void close() throws IOException {
         // Do nothing for now - other Thumbnailer may need cleanup code here.
         closed = true;
     }
@@ -120,7 +101,7 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * @return List of MIME Types. If null, all Files may be passed to this Thumbnailer.
      */
     public String[] getAcceptedMIMETypes() {
-        return null;
+        return new String[]{};
     }
 
     /**
