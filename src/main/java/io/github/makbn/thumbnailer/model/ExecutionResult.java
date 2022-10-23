@@ -4,8 +4,6 @@ public class ExecutionResult {
     private final boolean generated;
     private Throwable exception;
 
-    private boolean retry;
-
     public ExecutionResult(boolean generated) {
         this.generated = generated;
     }
@@ -21,14 +19,6 @@ public class ExecutionResult {
 
     public static ExecutionResult failed(Throwable e) {
         return new ExecutionResult(false, e);
-    }
-
-    public boolean isRetry() {
-        return retry;
-    }
-
-    public void setRetry(boolean retry) {
-        this.retry = retry;
     }
 
     public boolean isGenerated() {

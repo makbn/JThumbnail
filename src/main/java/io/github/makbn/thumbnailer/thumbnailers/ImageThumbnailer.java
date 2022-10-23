@@ -1,10 +1,12 @@
 package io.github.makbn.thumbnailer.thumbnailers;
 
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,9 +14,14 @@ import java.io.IOException;
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
+@Component
 public class ImageThumbnailer extends AbstractThumbnailer {
 
     private static final Logger mLog = LogManager.getLogger("ImageThumbnailer");
+
+    public ImageThumbnailer(AppSettings appSettings) {
+        super(appSettings);
+    }
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {

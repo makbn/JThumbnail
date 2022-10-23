@@ -23,20 +23,24 @@ package io.github.makbn.thumbnailer.thumbnailers;
 
 import com.spire.xls.FileFormat;
 import com.spire.xls.Workbook;
+import io.github.makbn.thumbnailer.config.AppSettings;
 import io.github.makbn.thumbnailer.exception.ThumbnailerException;
 
 import java.io.File;
 
 /**
- * Dummy class for converting Spreadsheet documents into Openoffice-Textfiles.
- *
+ * Class for converting Spreadsheet documents into Openoffice-Text files.
+ * @deprecated use {@link JODExcelThumbnailer} instead
  * @see JODConverterThumbnailer
  */
+@Deprecated(forRemoval = false)
 public class ExcelConverterThumbnailer extends AbstractThumbnailer {
-    private final OpenOfficeThumbnailer ooo_thumbnailer;
+    private final OpenOfficeThumbnailer ooThumbnailer;
 
-    public ExcelConverterThumbnailer() {
-        ooo_thumbnailer = new OpenOfficeThumbnailer();
+    //@Autowired
+    public ExcelConverterThumbnailer(AppSettings appSettings, OpenOfficeThumbnailer openOfficeThumbnailer) {
+        super(appSettings);
+        this.ooThumbnailer = openOfficeThumbnailer;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
 
             //Save the workbook to PDF
             workbook.saveToFile(outputTmp.getAbsolutePath(), FileFormat.PDF);
-            ooo_thumbnailer.generateThumbnail(outputTmp, output);
+            ooThumbnailer.generateThumbnail(outputTmp, output);
             outputTmp.deleteOnExit();
         } catch (Exception err) {
             throw new ThumbnailerException(err);
@@ -62,32 +66,13 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
 
     }
 
-    protected String getStandardOpenOfficeExtension() {
-        return "ods";
-    }
-
-    protected String getStandardZipExtension() {
-        return "xlsx";
-    }
-
-    protected String getStandardOfficeExtension() {
-        return "xls";
-    }
-
+    @Override
     public String[] getAcceptedMIMETypes() {
         return new String[]{
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                /*		"application/vnd.ms-office", // xls?
-                        "application/zip" // xlsx? */
         };
     }
-
-    public void setImageSize(int thumbWidth, int thumbHeight, int imageResizeOptions) {
-        super.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
-        ooo_thumbnailer.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
-    }
-
 
 }
