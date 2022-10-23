@@ -38,16 +38,13 @@ import java.util.Map;
 
 /**
  * Wrapper class for MIME Identification of Files.
- * <p>
- * Depends:
- * <li>Aperture (for MIME-Detection)
  */
 public class MimeTypeDetector {
 
     private static final Logger mLog = LogManager.getLogger(MimeTypeDetector.class);
-    private final static Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
+    private static final Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
     private final List<MimeTypeIdentifier> extraIdentifiers;
-    private final Map<String, List<String>> extensionsCache = new HashMap<String, List<String>>();
+    private final Map<String, List<String>> extensionsCache = new HashMap<>();
 
     /**
      * Create a MimeType Detector and init it.
@@ -116,7 +113,7 @@ public class MimeTypeDetector {
         for (MimeTypeIdentifier identifier : extraIdentifiers)
             mimeType = identifier.identify(mimeType, null, file);
 
-        mLog.info("Detected MIME-Type of " + file.getName() + " is " + mimeType);
+        mLog.info("Detected MIME-Type of {} is {}", file.getName(), mimeType);
         return mimeType;
     }
 
@@ -140,7 +137,6 @@ public class MimeTypeDetector {
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected List<String> getExtensionsCached(String mimeType) {
         List<String> extensions = extensionsCache.get(mimeType);
         if (extensions != null)
@@ -148,39 +144,35 @@ public class MimeTypeDetector {
 
         extensions = new ArrayList<>();
         switch (mimeType) {
-            case "application/vnd.openxmlformats-officedocument.wordprocessingml":
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml" -> {
                 extensions.add("docx");
                 extensions.add("dotx");
-                break;
-            case "application/vnd.openxmlformats-officedocument.presentationml":
+            }
+            case "application/vnd.openxmlformats-officedocument.presentationml" -> {
                 extensions.add("pptx");
                 extensions.add("sldx");
                 extensions.add("ppsx");
                 extensions.add("potx");
-                break;
-            case "application/vnd.openxmlformats-officedocument.spreadsheetml":
+            }
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml" -> {
                 extensions.add("xlsx");
                 extensions.add("xltx");
-                break;
-            case "application/vnd.ms-powerpoint":
+            }
+            case "application/vnd.ms-powerpoint" -> {
                 extensions.add("ppt");
                 extensions.add("ppam");
                 extensions.add("sldm");
                 extensions.add("pptm");
                 extensions.add("ppsm");
                 extensions.add("potm");
-                break;
-            case "application/msword":
+            }
+            case "application/msword" -> {
                 extensions.add("doc");
                 extensions.add("docm");
                 extensions.add("dotm");
-                break;
-            case "application/pdf":
-                extensions.add("pdf");
-                break;
-            default:
-                mLog.warn("no ext found!");
-                break;
+            }
+            case "application/pdf" -> extensions.add("pdf");
+            default -> mLog.warn("no ext found!");
         }
         extensionsCache.put(mimeType, extensions);
         return extensions;
