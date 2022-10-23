@@ -5,6 +5,10 @@ plugins {
     id 'maven-publish'
 }
 
+project.ext{
+    releaseVersionCode = 2.0
+}
+
 repositories {
     mavenLocal()
     maven {
