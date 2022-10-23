@@ -26,16 +26,16 @@
 
 package io.github.makbn.thumbnailer.util.mime;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
-
+@Log4j2
 public class PptFileIdentifier extends OfficeFileIdentifier {
-    private static final Logger mLog = LogManager.getLogger("PptFileIdentifier");
 
     public PptFileIdentifier() {
         super();
@@ -47,15 +47,12 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
     public String identify(String mimeType, byte[] bytes, File file) {
 
         if (isOfficeFile(mimeType) && !PPT_MIME_TYPE.equals(mimeType)) {
-            try {
-                FileInputStream stream = new FileInputStream(file);
-                HSLFSlideShow presentation = new HSLFSlideShow(stream);
-
-                if (presentation.getSlides().size() != 0) {
+            try(FileInputStream stream = new FileInputStream(file); HSLFSlideShow presentation = new HSLFSlideShow(stream)) {
+                if (!presentation.getSlides().isEmpty()) {
                     return PPT_MIME_TYPE;
                 }
-            } catch (Throwable e) {
-                mLog.info(e);
+            } catch (IOException | OfficeXmlFileException e) {
+                log.debug(e);
             }
         }
 
