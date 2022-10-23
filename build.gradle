@@ -1,0 +1,74 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+    id 'maven-publish'
+}
+
+project.ext{
+    releaseVersionCode = 2.0
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+
+    maven {
+        url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
+        content {
+            includeGroup "e-iceblue"
+        }
+    }
+}
+
+dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    implementation("e-iceblue:spire.office.free:5.3.1")
+    implementation "org.apache.poi:poi:${apachepoi_ver}"
+    implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
+    implementation "commons-io:commons-io:${commonsio_ver}"
+    implementation "org.apache.logging.log4j:log4j-api:${log4j_ver}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4j_ver}"
+    implementation "org.jodconverter:jodconverter-local:${jod_ver}"
+    implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
+    implementation "org.bytedeco:javacv:${javacv_ver}"
+    implementation "org.bytedeco:opencv:${opencv_ver}"
+    implementation "net.coobird:thumbnailator:${thumb_ver}"
+    implementation "com.mpatric:mp3agic:${mp3agic_ver}"
+    implementation "org.bytedeco.javacpp-presets:opencv-platform:${opencvplat_ver}"
+    implementation "commons-cli:commons-cli:${commonscli_ver}"
+    implementation "org.apache.tika:tika-core:${tika_ver}"
+    implementation "org.springframework.boot:spring-boot-starter"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    compileOnly "org.projectlombok:lombok:${lombok_ver}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+
+    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+}
+
+group = 'io.github.makbn'
+version = 'v1.1'
+description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
+java.sourceCompatibility = JavaVersion.VERSION_18
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    maxHeapSize = '1G'
+}

@@ -5,57 +5,62 @@
 
 JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` and etc. [full list](#supported-file-formats)
 
-*   **Project is under development! Checkout the [`dev`](https://github.com/makbn/JThumbnail/tree/dev) branch to have the latest commits.**
+*   **Project is under development!**
+* Check the `v1` branch for Java 8 compatible version.
+* Check the `dev` branch for latest commits.
 
 ## How to use
 
 ```java
-try {
-   AppSettings.init(args);   
-   Thumbnailer.start();
-   File in = new File("/inputFile.docx");
-   if(in.exists()) {
-      ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
 
-      Thumbnailer.createThumbnail(candidate, new ThumbnailListener() {
-         @Override
-         public void onThumbnailReady(String hash, File thumbnail) {
-            System.out.println("FILE created in : " + thumbnail.getAbsolutePath());
-         }
+String[] args = new String[]{};
 
-         @Override
-         public void onThumbnailFailed(String hash, String message, int code) {
+JThumbnailer jThumbnailer = JThumbnailerStarter.init(args);
 
-         }
-      });
-   }
-   } catch (IOException | ThumbnailerException e) {
-         e.printStackTrace();
-   }
+File in = new File("/inputFile.docx");
+
+ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+
+jThumbnailer.run(candidate, new ThumbnailListener() {
+     @Override
+     public void onThumbnailReady(String hash, File thumbnail) {
+        Files.copy(thumbnail.toPath(), Path.of("my_thumbnail_folder", thumbnail.getName()), StandardCopyOption.REPLACE_EXISTING);
+     }
+
+     @Override
+     public void onThumbnailFailed(String hash, String message, int code) {
+        // handle the situation
+     }
+});
+
+// close thumbnailer
+jThumbnailer.close();
+
 ```
 
 ## Configuration Args
 
-*   `openoffice_port` tcp port for open office.
-*   `openoffice_dir` open office home dir.
+* `openoffice_ports` tcp ports for open office.
+* `openoffice_dir` open office home dir.
 *   `temp_dir temp` directory for saving thumb files.
 *   `thumb_height` thumbnail height size in px.
 *   `thumb_width` thumbnail width size in px.
 
 ## Requirements
 
-*   Java JRE 1.8
-*   OpenOffice 4 or LibreOffice *(optional)*
+* Java JRE **18**
+* OpenOffice 4 or LibreOffice *(optional)*
 
 ## Supported File Formats
 
-*   Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
-*   OpenOffice files (all of them)
-*   Text files (`txt`, `pdf`, `rtf`, `html`)
-*   Image files (`jpg`, `png`, `bmp`, `gif`)
-*   AutoCad files (`dwg`)
-*   MP3 files (user album-art as thumbnail)
-*   MPEG files (generate gif file)
+* Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
+    * There is a problem with most xlsx files
+* OpenOffice files (all of them)
+* Text files (`txt`, `pdf`, `rtf`, `html`)
+* Image files (`jpg`, `png`, `bmp`, `gif`)
+* AutoCad files (`dwg`)
+* MP3 files (user album-art as thumbnail)
+* MPEG files (generate gif file)
 
 ## Adding Repository 
 
@@ -78,7 +83,7 @@ try {
 	<dependency>
 	    <groupId>com.github.makbn</groupId>
 	    <artifactId>JThumbnail</artifactId>
-	    <version>master-SNAPSHOT</version>
+	    <version>${project version}</version>
 	</dependency>
 ```
 
@@ -98,17 +103,22 @@ try {
 
 ```gradle
 	dependencies {
-	        implementation 'com.github.makbn:JThumbnail:master-SNAPSHOT'
+	        implementation 'com.github.makbn:JThumbnail:${project version}'
 	}
 ```
 
 ## TODO
 
-- [x]  Update all dependenciesfrom jar to maven
-- [x]  update project old and deprecated depencencies
+- [x]  Update all dependencies from jar to maven
+- [x]  update project old and deprecated dependencies
 - [x]  Change the structure of project
-- [X]  Add new Configuration method to confige OpenOffice dir and port 
-- [ ]  Add Async multi-thread support
+- [X]  Add new Configuration method to config OpenOffice dir and port
+- [X]  Add Async multi-thread support
+- [X]  replace Thumbnailers for Microsoft Office documents with e-iceblue
+- [ ]  Fix problem with Java 1.8 (current version is 18)
+- [ ]  Fix problem with xlsx files
+- [ ]  Improve code quality
+- [ ]  Improve current Exception handling system
 
 ## Original project
 
