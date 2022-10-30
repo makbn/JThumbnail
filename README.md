@@ -5,9 +5,9 @@
 
 JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` and etc. [full list](#supported-file-formats)
 
-- **Project is under development!**
-- Check the `v1` branch for Java 8 compatible version.
-- Check the `dev` branch for latest commits.
+-  **Project is under development!**
+-  Check the `v1` branch for Java 8 compatible version.
+-  Check the `dev` branch for latest commits.
 
 ## How to use
 
@@ -40,27 +40,27 @@ jThumbnailer.close();
 
 ## Configuration Args
 
-- `openoffice_ports` tcp ports for open office.
-- `openoffice_dir` open office home dir.
-- `temp_dir temp` directory for saving thumb files.
-- `thumb_height` thumbnail height size in px.
-- `thumb_width` thumbnail width size in px.
+-  `openoffice_ports` tcp ports for open office.
+-  `openoffice_dir` open office home dir.
+-  `temp_dir temp` directory for saving thumb files.
+-  `thumb_height` thumbnail height size in px.
+-  `thumb_width` thumbnail width size in px.
 
 ## Requirements
 
-- Java JRE **18**
-- OpenOffice 4 or LibreOffice _(optional)_
+-  Java JRE **18**
+-  OpenOffice 4 or LibreOffice _(optional)_
 
 ## Supported File Formats
 
-- Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
-  - There is a problem with most xlsx files
-- OpenOffice files (all of them)
-- Text files (`txt`, `pdf`, `rtf`, `html`)
-- Image files (`jpg`, `png`, `bmp`, `gif`)
-- AutoCad files (`dwg`)
-- MP3 files (user album-art as thumbnail)
-- MPEG files (generate gif file)
+-  Office files (`doc`, `docx`, `xls`, `xlsx`, `ppt`, `pptx`)
+  -  There is a problem with most xlsx files
+-  OpenOffice files (all of them)
+-  Text files (`txt`, `pdf`, `rtf`, `html`)
+-  Image files (`jpg`, `png`, `bmp`, `gif`)
+-  AutoCad files (`dwg`)
+-  MP3 files (user album-art as thumbnail)
+-  MPEG files (generate gif file)
 
 ## Adding Repository
 
@@ -114,16 +114,16 @@ jThumbnailer.close();
 
 ## TODO
 
-- [x] Update all dependencies from jar to maven
-- [x] update project old and deprecated dependencies
-- [x] Change the structure of project
-- [x] Add new Configuration method to config OpenOffice dir and port
-- [x] Add Async multi-thread support
-- [x] replace Thumbnailers for Microsoft Office documents with e-iceblue
-- [ ] Fix problem with Java 1.8 (current version is 18)
-- [ ] Fix problem with xlsx files
-- [ ] Improve code quality
-- [ ] Improve current Exception handling system
+-  [x] Update all dependencies from jar to maven
+-  [x] update project old and deprecated dependencies
+-  [x] Change the structure of project
+-  [x] Add new Configuration method to config OpenOffice dir and port
+-  [x] Add Async multi-thread support
+-  [x] replace Thumbnailers for Microsoft Office documents with e-iceblue
+-  [ ] Fix problem with Java 1.8 (current version is 18)
+-  [ ] Fix problem with xlsx files
+-  [ ] Improve code quality
+-  [ ] Improve current Exception handling system
 
 ## Original project
 
