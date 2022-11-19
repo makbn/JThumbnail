@@ -25,6 +25,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 
 /**
@@ -44,7 +45,7 @@ public class TemporaryFilesManager {
     public File createTempfileCopy(File file, String newExtension) throws IOException {
         File destFile = files.get(file);
         if (destFile == null) {
-            destFile = File.createTempFile("temp", "." + newExtension);
+            destFile = Files.createTempFile("temp", "." + newExtension).toFile();
             createNewCopy(file, destFile);
             destFile.setWritable(false, false);
         } else {

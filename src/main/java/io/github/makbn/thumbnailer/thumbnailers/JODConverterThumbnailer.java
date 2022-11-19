@@ -39,6 +39,7 @@ import org.jodconverter.local.office.LocalOfficeManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 
 public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
@@ -162,7 +163,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
         File outputTmp = null;
         try {
-            outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
+            outputTmp = Files.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension()).toFile();
 
             if (Platform.isWindows())
                 input = new File(input.getAbsolutePath().replace("\\\\", "\\"));
