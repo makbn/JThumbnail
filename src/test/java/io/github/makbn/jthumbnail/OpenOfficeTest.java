@@ -1,4 +1,4 @@
-package io.github.makbn.thumbnailer;
+package io.github.makbn.jthumbnail;
 
 import lombok.extern.log4j.Log4j2;
 import org.jodconverter.core.DocumentConverter;
@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
-class SOfficeTest {
+class OpenOfficeTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2002})
-    void run_soffice(int port) {
+    void testRunSOffice(int port) {
         log.info(String.format("SOffice will be running on port: %d", port));
         //Files.deleteIfExists(Path.of("test_results/test_docx_sample.pdf"));
         OfficeManager officeManager = LocalOfficeManager.builder()

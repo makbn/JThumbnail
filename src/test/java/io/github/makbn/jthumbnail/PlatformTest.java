@@ -1,14 +1,14 @@
-package io.github.makbn.thumbnailer;
+package io.github.makbn.jthumbnail;
 
 import org.apache.tika.utils.SystemUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OsTest {
+class PlatformTest {
 
     @Test
-    void is_mac() {
+    void testIsOSMac() {
         assertTrue(SystemUtils.IS_OS_MAC);
         assertTrue(SystemUtils.IS_OS_MAC_OSX);
     }

@@ -1,13 +1,17 @@
-package io.github.makbn.thumbnailer;
+package io.github.makbn.jthumbnail;
 
-import io.github.makbn.thumbnailer.listener.ThumbnailListener;
-import io.github.makbn.thumbnailer.model.ThumbnailCandidate;
+import io.github.makbn.jthumbnail.core.JThumbnailer;
+import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
+import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.modulith.core.ApplicationModules;
+import org.springframework.modulith.docs.Documenter;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +31,10 @@ class ThumbnailerTest {
     private static JThumbnailer jThumbnailer;
 
     @BeforeAll
-    public static void init(){
+    public static void init() throws IOException {
         log.info("Starting jThumbnailer ...");
         String[] args = new String[]{};
+        Files.createDirectories(Path.of("test_results"));
         jThumbnailer = JThumbnailerStarter.init(args);
     }
 
@@ -94,5 +99,24 @@ class ThumbnailerTest {
 
     }
 
+    @Test
+    void createApplicationModuleModel() {
+        ApplicationModules modules = ApplicationModules.of(JThumbnailerStarter.class);
+        modules.forEach(System.out::println);
+    }
+
+    @Test
+    void verifiesModularStructure() {
+        ApplicationModules modules = ApplicationModules.of(JThumbnailerStarter.class);
+        modules.verify();
+    }
+
+    @Test
+    void writeDocumentationSnippets() {
+
+        new Documenter(ApplicationModules.of(JThumbnailerStarter.class))
+                .writeModulesAsPlantUml()
+                .writeIndividualModulesAsPlantUml();
+    }
 
 }
