@@ -1,5 +1,8 @@
-package io.github.makbn.thumbnailer.model;
+package io.github.makbn.jthumbnail.core.model;
 
+import lombok.Data;
+
+@Data
 public class ExecutionResult {
     private final boolean generated;
     private Throwable exception;
@@ -19,18 +22,6 @@ public class ExecutionResult {
 
     public static ExecutionResult failed(Throwable e) {
         return new ExecutionResult(false, e);
-    }
-
-    public boolean isGenerated() {
-        return generated;
-    }
-
-    public Throwable getException() {
-        return exception;
-    }
-
-    public void setException(Throwable exception) {
-        this.exception = exception;
     }
 
     public boolean hasException() {
