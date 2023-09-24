@@ -1,7 +1,7 @@
-package io.github.makbn.thumbnailer.thumbnailers;
+package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.thumbnailer.config.AppSettings;
-import io.github.makbn.thumbnailer.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
 import org.apache.logging.log4j.LogManager;
