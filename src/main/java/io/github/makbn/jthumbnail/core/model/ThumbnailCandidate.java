@@ -1,4 +1,4 @@
-package io.github.makbn.thumbnailer.model;
+package io.github.makbn.jthumbnail.core.model;
 
 import java.io.File;
 
@@ -7,12 +7,12 @@ import java.io.File;
  */
 public class ThumbnailCandidate {
     private File file;
-    private String hash;
+    private String uid;
     private String thumbExt;
 
-    public ThumbnailCandidate(File file, String hash) {
+    public ThumbnailCandidate(File file, String uid) {
         this.file = file;
-        this.hash = hash;
+        this.uid = uid;
     }
 
     public File getFile() {
@@ -31,11 +31,11 @@ public class ThumbnailCandidate {
         this.thumbExt = thumbExt;
     }
 
-    public String getHash() {
-        return hash;
+    public String getUid() {
+        return uid;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
