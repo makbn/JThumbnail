@@ -1,5 +1,6 @@
-package io.github.makbn.thumbnailer;
+package io.github.makbn.jthumbnail;
 
+import io.github.makbn.jthumbnail.core.JThumbnailer;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,9 +13,10 @@ import java.util.Arrays;
 public class JThumbnailerStarter {
     private static JThumbnailer mInstance;
 
-    public JThumbnailerStarter(){
-        // we need this for spring
+    public static void main(String[] args){
+        init(args);
     }
+
     public static JThumbnailer init(String[] args) {
         if (mInstance == null || Arrays.stream(args).anyMatch(e->e.contains("force_init"))) {
             SpringApplication app = new SpringApplication(JThumbnailerStarter.class);
