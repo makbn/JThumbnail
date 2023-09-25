@@ -13,7 +13,7 @@ JThumbnail is a Java library for creating Thumbnails of common types of file inc
 
 ## How to use
 
-```java
+```jshelllanguage
 
 String[] args = new String[]{};
 
@@ -42,58 +42,27 @@ jThumbnailer.close();
 
 ## Configuration Args
 
-### OPENOFFICE Properties
-
-- **jthumbnailer.name:** Java Thumbnail Generator
-  - Description: A thumbnail generation Java library for Office, PDF, HTML, Text, MP3, MPEG, and Image documents.
-
-- **jthumbnailer.openoffice.port:** 2002, 2003, 2004
-  - Description: Ports used by OpenOffice for document conversion.
-
-- **jthumbnailer.openoffice.timeout:** 300,000 milliseconds (5 minutes)
-  - Description: Timeout for OpenOffice document conversion tasks.
-
-- **jthumbnailer.openoffice.max_tasks_per_process:** 25
-  - Description: Maximum number of conversion tasks allowed per OpenOffice process.
-
-- **jthumbnailer.openoffice.dir:** [OPEN_OFFICE_DIRECTORY]
-  - Description: Directory path to the OpenOffice installation.
-
-- **jthumbnailer.openoffice.tmp:** /private/tmp/jt
-  - Description: Directory path for temporary files used by OpenOffice.
-
-### JTHUMBNAILER Properties
-
-- **jthumbnailer.thumb_width:** 400
-  - Description: Width of generated thumbnails.
-
-- **jthumbnailer.thumb_height:** 535
-  - Description: Height of generated thumbnails.
-
-- **jthumbnailer.async.core_pool_size:** 10
-  - Description: Core pool size for the asynchronous processing tasks.
-
-- **jthumbnailer.async.max_pool_size:** 32
-  - Description: Maximum pool size for the asynchronous processing tasks.
-
-### Spring
-
-- **spring.servlet.multipart.max-file-size:** 30MB
-  - Description: Maximum allowed file size for multipart file uploads.
-
-- **spring.servlet.multipart.max-request-size:** 30MB
-  - Description: Maximum allowed request size for multipart file uploads.
-
-- **server.port:** 8081
-  - Description: Port on which the application will be hosted.
-
-### Spring Doc
-
-- **springdoc.api-docs.path:** /api-docs
-  - Description: Path for accessing the API documentation in JSON format.
-
-- **springdoc.swagger-ui.path:** /swagger-ui.html
-  - Description: Path for accessing the Swagger UI for interactive API documentation.
+| Configuration Args                       | Description                                                         |
+| ---------------------------------------- |---------------------------------------------------------------------|
+| **OPENOFFICE Properties**                |                                                                     |
+| jthumbnailer.name                        | Application name, e.g. Java Thumbnail Generator                     |
+| jthumbnailer.openoffice.port             | Ports used by OpenOffice for document conversion                    |
+| jthumbnailer.openoffice.timeout          | Timeout for OpenOffice document conversion tasks                    |
+| jthumbnailer.openoffice.max_tasks_per_process | Maximum number of conversion tasks allowed per OpenOffice process   |
+| jthumbnailer.openoffice.dir              | Directory path to the OpenOffice installation                       |
+| jthumbnailer.openoffice.tmp              | Directory path for temporary files generated and used by OpenOffice |
+| **JTHUMBNAILER Properties**              |                                                                     |
+| jthumbnailer.thumb_width                 | Width of generated thumbnails                                       |
+| jthumbnailer.thumb_height                | Height of generated thumbnails                                      |
+| jthumbnailer.async.core_pool_size        | Core pool size for the asynchronous processing tasks                |
+| jthumbnailer.async.max_pool_size          | Maximum pool size for the asynchronous processing tasks             |
+| **Spring**                                |                                                                     |
+| spring.servlet.multipart.max-file-size    | Maximum allowed file size for multipart file uploads                |
+| spring.servlet.multipart.max-request-size | Maximum allowed request size for multipart file uploads             |
+| server.port                               | Port on which the application will be hosted                        |
+| **Spring Doc**                            |                                                                     |
+| springdoc.api-docs.path                  | Path for accessing the API documentation in JSON format             |
+| springdoc.swagger-ui.path                | Path for accessing the Swagger UI for interactive API documentation |
 
 
 ## Requirements
