@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.core.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-21
@@ -17,6 +19,16 @@ import java.util.ResourceBundle;
 @Getter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AppSettings {
+    public static final String JTHUMBNAILER_OPENOFFICE_PORT = "jthumbnailer.openoffice.port";
+    public static final String JTHUMBNAILER_OPENOFFICE_DIR = "jthumbnailer.openoffice.dir";
+    public static final String JTHUMBNAILER_THUMB_HEIGHT = "jthumbnailer.thumb_height";
+    public static final String JTHUMBNAILER_THUMB_WIDTH = "jthumbnailer.thumb_width";
+    public static final String JTHUMBNAILER_ASYNC_CORE_POOL_SIZE = "jthumbnailer.async.core_pool_size";
+    public static final String JTHUMBNAILER_ASYNC_MAX_POOL_SIZE = "jthumbnailer.async.max_pool_size";
+    public static final String JTHUMBNAILER_OPENOFFICE_TIMEOUT = "jthumbnailer.openoffice.timeout";
+    public static final String JTHUMBNAILER_OPENOFFICE_MAX_TASKS_PER_PROCESS = "jthumbnailer.openoffice.max_tasks_per_process";
+    public static final String JTHUMBNAILER_OPENOFFICE_TMP = "jthumbnailer.openoffice.tmp";
+
     private final ResourceBundle rb = ResourceBundle.getBundle("application");
 
     /**
@@ -35,20 +47,24 @@ public class AppSettings {
     String uploadTemporaryDirectory;
 
     public AppSettings() {
-        openOfficePorts = Arrays.stream(getValue("jthumbnailer.openoffice.port").split(",")).mapToInt(Integer::valueOf).toArray();
-        openOfficePath = getValue("jthumbnailer.openoffice.dir");
-        thumbHeight = Integer.parseInt(getValue("jthumbnailer.thumb_height"));
-        thumbWidth = Integer.parseInt(getValue("jthumbnailer.thumb_width"));
-        asyncCorePoolSize = Integer.parseInt(getValue("jthumbnailer.async.core_pool_size"));
-        asyncMaxPoolSize = Integer.parseInt(getValue("jthumbnailer.async.max_pool_size"));
-        timeout = Long.parseLong(getValue("jthumbnailer.openoffice.timeout"));
-        maxTaskPerProcess = Integer.parseInt(getValue("jthumbnailer.openoffice.max_tasks_per_process"));
-        officeTemporaryDirectory = String.format("%s/office/%d/", getValue("jthumbnailer.openoffice.tmp"), System.currentTimeMillis());
-        uploadTemporaryDirectory = String.format("%s/upload/%d/", getValue("jthumbnailer.openoffice.tmp"), System.currentTimeMillis());
+        openOfficePorts = Arrays.stream(getValue(JTHUMBNAILER_OPENOFFICE_PORT).split(",")).mapToInt(Integer::valueOf).toArray();
+        openOfficePath = getValue(JTHUMBNAILER_OPENOFFICE_DIR);
+        thumbHeight = Integer.parseInt(getValue(JTHUMBNAILER_THUMB_HEIGHT));
+        thumbWidth = Integer.parseInt(getValue(JTHUMBNAILER_THUMB_WIDTH));
+        asyncCorePoolSize = Integer.parseInt(getValue(JTHUMBNAILER_ASYNC_CORE_POOL_SIZE));
+        asyncMaxPoolSize = Integer.parseInt(getValue(JTHUMBNAILER_ASYNC_MAX_POOL_SIZE));
+        timeout = Long.parseLong(getValue(JTHUMBNAILER_OPENOFFICE_TIMEOUT));
+        maxTaskPerProcess = Integer.parseInt(getValue(JTHUMBNAILER_OPENOFFICE_MAX_TASKS_PER_PROCESS));
+        officeTemporaryDirectory = String.format("%s/office/%d/", getValue(JTHUMBNAILER_OPENOFFICE_TMP), System.currentTimeMillis());
+        uploadTemporaryDirectory = String.format("%s/upload/%d/", getValue(JTHUMBNAILER_OPENOFFICE_TMP), System.currentTimeMillis());
     }
 
-    private String getValue(String key) {
-        return rb.getString(key);
+    private String getValue(@NonNull String key) {
+        String envKey = Arrays.stream(key.split("\\.")).map(part -> part.substring(0, 1).toUpperCase() + part.substring(1))
+                .collect(Collectors.joining(""));
+
+        String envValue = System.getenv(envKey);
+        return envValue != null ? envValue : rb.getString(key);
     }
 
     public File getUploadDirectory() throws IOException {
