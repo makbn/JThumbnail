@@ -5,10 +5,6 @@ plugins {
     id "maven-publish"
 }
 
-project.ext {
-    releaseVersionCode = 2.0
-}
-
 repositories {
     mavenLocal()
     maven {
@@ -36,6 +32,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.springframework.modulith:spring-modulith-starter-test"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 
     implementation "org.springframework.modulith:spring-modulith-starter-core"
     implementation "org.springframework:spring-tx"
@@ -57,24 +55,26 @@ dependencies {
     implementation "org.apache.tika:tika-core:${tika_ver}"
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_ver}"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
 
     compileOnly "org.projectlombok:lombok:${lombok_ver}"
     annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
-
-    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 }
 
 group = 'io.github.makbn'
-version = 'v2.0'
+version = 'v2.1.0'
 description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/makbn/JThumbnail"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
