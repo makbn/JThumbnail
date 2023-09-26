@@ -70,6 +70,10 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+
+            groupId = 'io.github.makbn'
+            artifactId = 'jthumbnail'
+            version = '2.1.0'
         }
     }
 
