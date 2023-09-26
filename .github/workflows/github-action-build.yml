@@ -1,4 +1,4 @@
-name: Java Leaflet Build
+name: Java JThumbnail Build
 #
 on: [ push ]
 #
