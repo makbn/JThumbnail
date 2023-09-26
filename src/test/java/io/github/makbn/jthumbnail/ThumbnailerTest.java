@@ -12,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.modulith.core.ApplicationModules;
-import org.springframework.modulith.docs.Documenter;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +39,7 @@ class ThumbnailerTest {
     }
 
     @AfterAll
-    public static void destroy(){
+    public static void destroy() {
         jThumbnailer.close();
     }
 
@@ -70,7 +69,7 @@ class ThumbnailerTest {
                     try {
                         Files.copy(thumbnail.toPath(), Path.of("test_results", thumbnail.getName()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
-                        fail(String.format("message: %s",e.getMessage()));
+                        fail(String.format("message: %s", e.getMessage()));
                     }
                     output[0] = thumbnail;
                     msg[0] = hash;
