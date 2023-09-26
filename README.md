@@ -89,49 +89,24 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 ### Maven
 
 ---
-
-**Step 1**. Add the JitPack repository to your build file
-
-```xml
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-```
-
-**Step 2**. Add the dependency
+**Step 1**. Add the dependency to the `pom` file:
 
 ```xml
-	<dependency>
-	    <groupId>com.github.makbn</groupId>
-	    <artifactId>JThumbnail</artifactId>
-	    <version>${project version}</version>
-	</dependency>
+<dependency>
+  <groupId>io.github.makbn</groupId>
+  <artifactId>jthumbnail</artifactId>
+  <version>2.1.0</version>
+</dependency>
 ```
 
 ### Gradle
 
 ---
 
-**Step 1**. Add it in your root build.gradle at the end of repositories:
+**Step 1**. Add the dependency to the `build.gradle` file:
 
 ```gradle
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-```
-
-**Step 2**. Add the dependency
-
-```gradle
-	dependencies {
-	        implementation 'com.github.makbn:JThumbnail:${project version}'
-	}
+compile "io.github.makbn:jthumbnail:2.1.0"
 ```
 
 ## TODO
@@ -146,6 +121,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 - [x] Improve code quality
 - [x] Improve current Exception handling system
 - [ ] Fix problem with Java 1.8 (current version is 17)
+- [ ] Fixing issue with running test with the GitHub action
 
 ## Original project
 
