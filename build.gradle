@@ -67,6 +67,12 @@ description = 'JThumbnail is a Java library for creating Thumbnails of common ty
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
     repositories {
         maven {
             name = "GitHubPackages"
