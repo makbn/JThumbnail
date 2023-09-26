@@ -64,6 +64,9 @@ jThumbnailer.close();
 | springdoc.api-docs.path                  | Path for accessing the API documentation in JSON format             |
 | springdoc.swagger-ui.path                | Path for accessing the Swagger UI for interactive API documentation |
 
+- All parameters can be passed through the environment variables. To pass a param as environment variable you need to
+remove the dots and make the first characters upper case. For example, `jthumbnailer.openoffice.dir` should be 
+`JthumbnailerOpenofficeDir`.
 
 ## Requirements
 
@@ -142,7 +145,7 @@ jThumbnailer.close();
 - [x] Fix problem with xlsx files
 - [x] Improve code quality
 - [x] Improve current Exception handling system
-- - [ ] Fix problem with Java 1.8 (current version is 17)
+- [ ] Fix problem with Java 1.8 (current version is 17)
 
 ## Original project
 
