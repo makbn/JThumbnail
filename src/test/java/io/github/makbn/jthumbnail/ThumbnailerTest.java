@@ -5,6 +5,7 @@ import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -103,6 +104,7 @@ class ThumbnailerTest {
     void createApplicationModuleModel() {
         ApplicationModules modules = ApplicationModules.of(JThumbnailerStarter.class);
         modules.forEach(System.out::println);
+        Assertions.assertEquals(2, modules.stream().count());
     }
 
     @Test
@@ -110,13 +112,4 @@ class ThumbnailerTest {
         ApplicationModules modules = ApplicationModules.of(JThumbnailerStarter.class);
         modules.verify();
     }
-
-    @Test
-    void writeDocumentationSnippets() {
-
-        new Documenter(ApplicationModules.of(JThumbnailerStarter.class))
-                .writeModulesAsPlantUml()
-                .writeIndividualModulesAsPlantUml();
-    }
-
 }
