@@ -209,7 +209,7 @@ public class ThumbnailController {
                     )
             )
     })
-    public @ResponseBody ResponseEntity<Resource> downloadThumbnail(@Parameter(
+    public ResponseEntity<Resource> downloadThumbnail(@Parameter(
             name = "uid",
             description = "The unique ID of the thumbnail to download",
             required = true

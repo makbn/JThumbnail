@@ -1,9 +1,8 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.tika.Tika;
 
 import java.io.File;
@@ -18,9 +17,8 @@ import java.util.Map;
 /**
  * Wrapper class for MIME Identification of Files.
  */
+@Slf4j
 public class MimeTypeDetector {
-
-    private static final Logger mLog = LogManager.getLogger(MimeTypeDetector.class);
     private static final Map<String, String> outputThumbnailExtensionCache = new HashMap<>();
     private final List<MimeTypeIdentifier> extraIdentifiers;
     private final Map<String, List<String>> extensionsCache = new HashMap<>();
@@ -81,18 +79,18 @@ public class MimeTypeDetector {
                 mimeType = file.toURI().toURL().openConnection().getContentType();
 
         } catch (Exception e) {
-            mLog.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
 
 
-        if (mimeType != null && mimeType.length() == 0)
+        if (mimeType != null && mimeType.isEmpty())
             mimeType = null;
 
         // Identifiers may re-write MIME.
         for (MimeTypeIdentifier identifier : extraIdentifiers)
             mimeType = identifier.identify(mimeType, null, file);
 
-        mLog.info("Detected MIME-Type of {} is {}", file.getName(), mimeType);
+        log.info("Detected MIME-Type of {} is {}", file.getName(), mimeType);
         return mimeType;
     }
 
@@ -151,7 +149,7 @@ public class MimeTypeDetector {
                 extensions.add("dotm");
             }
             case "application/pdf" -> extensions.add("pdf");
-            default -> mLog.warn("no ext found!");
+            default -> log.warn("no ext found!");
         }
         extensionsCache.put(mimeType, extensions);
         return extensions;

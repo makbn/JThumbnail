@@ -2,8 +2,8 @@ package io.github.makbn.jthumbnail.core.util;
 
 
 import io.github.makbn.jthumbnail.core.exception.UnsupportedInputFileFormatException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 
-
+@Slf4j
 public class ResizeImage {
 
     /**
@@ -35,8 +35,8 @@ public class ResizeImage {
      * If output image is bigger than input image, allow the output to be smaller than expected (the size of the input image)
      */
     public static final int ALLOW_SMALLER = 32;
-    private static final Logger mLog = LogManager.getLogger("ResizeImage");
     private static final int EXTRA_OPTIONS = DO_NOT_SCALE_UP;
+    @Setter
     private int resizeMethod = RESIZE_FIT_ONE_DIMENSION;
     private BufferedImage inputImage;
     private boolean isProcessed = false;
@@ -149,20 +149,16 @@ public class ResizeImage {
 
 
         CompletableFuture<Boolean> isImageReady = new CompletableFuture<>();
-        boolean scalingComplete = graphics2D.drawImage(inputImage, offsetX, offsetY, scaledWidth, scaledHeight, (img, flags, x, y, width, height)-> {
+        boolean scalingComplete = graphics2D.drawImage(inputImage, offsetX, offsetY, scaledWidth, scaledHeight, (img, flags, x, y, width, height) -> {
             isImageReady.complete(true);
             return true;
         });
 
         if (!scalingComplete) {
-            mLog.debug("ResizeImage: Scaling is not yet complete!");
+            log.debug("ResizeImage: Scaling is not yet complete!");
             CompletableFuture.allOf(isImageReady).join();
         }
 
         graphics2D.dispose();
-    }
-
-    public void setResizeMethod(int resizeFitBothDimensions) {
-        resizeMethod = resizeFitBothDimensions;
     }
 }

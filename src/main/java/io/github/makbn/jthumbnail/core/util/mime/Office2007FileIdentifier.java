@@ -1,8 +1,6 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.List;
@@ -14,9 +12,8 @@ import java.util.zip.ZipFile;
  * Add detection of Office2007 files (and OpenOffice files).
  * Magic numbers don't help here, only introspection of the zip.
  */
+@Slf4j
 public class Office2007FileIdentifier implements MimeTypeIdentifier {
-
-    private static final Logger mLog = LogManager.getLogger("Office2007FileIdentifier");
 
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {
@@ -41,7 +38,7 @@ public class Office2007FileIdentifier implements MimeTypeIdentifier {
             } catch (ZipException e) {
                 return mimeType; // Zip file damaged or whatever. Silently give up.
             } catch (IOException e) {
-                mLog.error(e);
+                log.error(e.getMessage(), e);
                 return mimeType; // Zip file damaged or whatever. Silently give up.
             }
         }

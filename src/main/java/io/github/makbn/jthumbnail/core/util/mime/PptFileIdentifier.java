@@ -19,7 +19,6 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
 
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {
-
         if (isOfficeFile(mimeType) && !PPT_MIME_TYPE.equals(mimeType)) {
             try(FileInputStream stream = new FileInputStream(file); HSLFSlideShow presentation = new HSLFSlideShow(stream)) {
                 if (!presentation.getSlides().isEmpty()) {

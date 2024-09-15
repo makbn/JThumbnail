@@ -42,8 +42,7 @@ dependencies {
     implementation "org.apache.poi:poi:${apachepoi_ver}"
     implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
     implementation "commons-io:commons-io:${commonsio_ver}"
-    implementation "org.apache.logging.log4j:log4j-api:${log4j_ver}"
-    implementation "org.apache.logging.log4j:log4j-core:${log4j_ver}"
+    implementation "org.slf4j:slf4j-api:${slf4j_ver}"
     implementation "org.jodconverter:jodconverter-local:${jod_ver}"
     implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
     implementation "org.bytedeco:javacv:${javacv_ver}"
@@ -73,7 +72,7 @@ publishing {
 
             groupId = 'io.github.makbn'
             artifactId = 'jthumbnail'
-            version = '2.1.0'
+            version = '2.2.0'
         }
     }
 

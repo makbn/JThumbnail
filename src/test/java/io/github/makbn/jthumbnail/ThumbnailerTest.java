@@ -15,6 +15,7 @@ import org.springframework.modulith.core.ApplicationModules;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -40,7 +41,11 @@ class ThumbnailerTest {
 
     @AfterAll
     public static void destroy() {
-        jThumbnailer.close();
+        try {
+            jThumbnailer.close();
+        }catch (Exception e) {
+            System.exit(0);
+        }
     }
 
     @ParameterizedTest
@@ -62,7 +67,7 @@ class ThumbnailerTest {
         final String[] msg = new String[2];
 
         if (in.exists()) {
-            ThumbnailCandidate candidate = new ThumbnailCandidate(in, uniqueCode);
+            ThumbnailCandidate candidate = ThumbnailCandidate.of(in, uniqueCode);
             jThumbnailer.run(candidate, new ThumbnailListener() {
                 @Override
                 public void onThumbnailReady(String hash, File thumbnail) {

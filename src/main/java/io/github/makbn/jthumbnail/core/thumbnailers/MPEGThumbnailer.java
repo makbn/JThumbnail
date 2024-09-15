@@ -4,7 +4,7 @@ import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ import java.io.IOException;
  * created by Mehdi Akbarian-Rastaghi 2018-10-22
  */
 @Component
-@Log4j2
+@Slf4j
 public class MPEGThumbnailer extends AbstractThumbnailer {
 
     @Autowired
@@ -41,12 +41,11 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
 
     /**
      * get thumbnail from multimedia files
-     *
      */
     public void getThumb(String inputPath, String outputPath)
             throws IOException {
 
-        try( FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
+        try (FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
              ImageOutputStream output = new FileImageOutputStream(new File(outputPath))) {
             g.setFormat("mp4");
             g.start();

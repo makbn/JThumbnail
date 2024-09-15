@@ -6,9 +6,8 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,24 +19,36 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
- * This class extracts Thumbnails from OpenOffice-Files.
- * <p>
- * Depends:
- * <li> <i>NOT</i> on OpenOffice, as the Thumbnail is already inside the file. (184x256px regardless of page orientation)
- * (So if the thumbnail generation is not correct, it's OpenOffice's fault, not our's :-)
+ * The OpenOfficeThumbnailer class is responsible for generating thumbnails for OpenOffice documents.
+ * It extends the AbstractThumbnailer class and can also handle PDF files by delegating to PDFBoxThumbnailer.
+ * If the file is not a PDF, it attempts to extract the thumbnail from an OpenOffice document, which is a zipped format.
  */
+@Slf4j
 @Component
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
-
-    private static final Logger logger = LogManager.getLogger(OpenOfficeThumbnailer.class);
     private final PDFBoxThumbnailer pdfBoxThumbnailer;
 
+    /**
+     * Constructor that initializes the OpenOfficeThumbnailer with the necessary app settings and PDFBoxThumbnailer.
+     *
+     * @param appSettings       Application settings used by the thumbnailer.
+     * @param pdfBoxThumbnailer An instance of PDFBoxThumbnailer for handling PDF files.
+     */
     @Autowired
     public OpenOfficeThumbnailer(AppSettings appSettings, PDFBoxThumbnailer pdfBoxThumbnailer) {
         super(appSettings);
         this.pdfBoxThumbnailer = pdfBoxThumbnailer;
     }
 
+    /**
+     * Generates a thumbnail for the provided input file and saves it to the specified output location.
+     * If the input file is a PDF, the method delegates thumbnail generation to PDFBoxThumbnailer.
+     * For OpenOffice files, it attempts to extract an embedded thumbnail image.
+     *
+     * @param input  The input file for which the thumbnail is to be generated.
+     * @param output The output file where the generated thumbnail will be saved.
+     * @throws ThumbnailerException If there are issues processing the file or extracting the thumbnail.
+     */
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
@@ -48,14 +59,14 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
             try {
                 zipFile = new ZipFile(input);
             } catch (ZipException e) {
-                logger.warn("OpenOfficeThumbnailer", e);
+                log.warn("OpenOfficeThumbnailer", e);
                 throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice file?", e);
             } catch (IOException e) {
                 throw new ThumbnailerException(e);
             }
             ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
 
-            try(BufferedInputStream in = new BufferedInputStream(zipFile.getInputStream(entry))) {
+            try (BufferedInputStream in = new BufferedInputStream(zipFile.getInputStream(entry))) {
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
                 resizer.setInputImage(in);
                 resizer.writeOutput(output);
@@ -70,10 +81,10 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
     }
 
     /**
-     * Get a List of accepted File Types.
-     * All OpenOffice Formats are accepted.
+     * Returns an array of MIME types that this thumbnailer accepts.
+     * It covers various OpenOffice document formats as well as PDFs and potential OpenOffice files in zip format.
      *
-     * @return MIME-Types
+     * @return An array of accepted MIME types.
      */
     @Override
     public String[] getAcceptedMIMETypes() {

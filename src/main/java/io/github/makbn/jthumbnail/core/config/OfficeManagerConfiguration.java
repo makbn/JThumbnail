@@ -15,8 +15,8 @@ import org.springframework.context.annotation.DependsOn;
 import java.io.File;
 import java.io.IOException;
 
-@Configuration("JTOfficeManagerConfiguration")
-@DependsOn("JTApplicationConfig")
+@Configuration("jtOfficeManagerConfiguration")
+@DependsOn("jtApplicationConfig")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class OfficeManagerConfiguration {
     OfficeManager officeManager;
@@ -43,7 +43,7 @@ public class OfficeManagerConfiguration {
         }
     }
 
-    @Bean("office_manager")
+    @Bean("officeManager")
     public OfficeManager getOfficeManager() {
         return officeManager;
     }
