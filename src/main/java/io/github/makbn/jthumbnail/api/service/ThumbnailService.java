@@ -47,7 +47,7 @@ public class ThumbnailService {
         File file = createTempFile(multipartFile);
         CompletableFuture<Thumbnail> completableFuture = new CompletableFuture<>();
         String uid = UUID.randomUUID().toString();
-        ThumbnailCandidate candidate = new ThumbnailCandidate(file, uid);
+        ThumbnailCandidate candidate = ThumbnailCandidate.of(file, uid);
         waitingMap.put(uid, completableFuture);
         temporaryFilesMap.put(uid, file);
         // after keeping the references, let's create the thumbnail

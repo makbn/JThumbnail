@@ -1,5 +1,8 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +10,12 @@ import java.util.List;
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MP3FileIdentifier implements MimeTypeIdentifier {
 
-    protected List<String> ext;
+    protected List<String> ext = new ArrayList<>();
 
     public MP3FileIdentifier() {
-        ext = new ArrayList<>();
         ext.add("mp3");
     }
 
@@ -23,7 +26,6 @@ public class MP3FileIdentifier implements MimeTypeIdentifier {
 
     @Override
     public List<String> getExtensionsFor(String mimeType) {
-
         return ext;
     }
 

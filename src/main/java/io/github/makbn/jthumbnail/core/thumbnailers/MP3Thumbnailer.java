@@ -7,8 +7,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +22,8 @@ import java.io.IOException;
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
 @Component
+@Slf4j
 public class MP3Thumbnailer extends AbstractThumbnailer {
-
-    private static final Logger logger = LogManager.getLogger(MP3Thumbnailer.class);
 
     @Autowired
     public MP3Thumbnailer(AppSettings appSettings) {
@@ -45,7 +43,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
             }
 
         } catch (UnsupportedTagException | InvalidDataException | IOException e) {
-            logger.warn("MP3Thumbnailer", e);
+            log.warn("MP3Thumbnailer", e);
             throw new ThumbnailerException();
         }
 

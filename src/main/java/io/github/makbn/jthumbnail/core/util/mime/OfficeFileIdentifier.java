@@ -1,5 +1,9 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,20 +13,15 @@ import java.util.List;
  * Requires:
  * - POI (version 3.7 or higher)
  */
+@FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class OfficeFileIdentifier implements MimeTypeIdentifier {
-
     protected static final String PPT_MIME_TYPE = "application/vnd.ms-powerpoint";
     protected static final String XLS_MIME_TYPE = "application/vnd.ms-excel";
     protected static final String DOC_MIME_TYPE = "application/vnd.ms-word";
-
     protected static final String MS_OFFICE_MIME_TYPE = "application/vnd.ms-office";
 
-
-    protected List<String> ext;
-
-    protected OfficeFileIdentifier() {
-        ext = new ArrayList<>();
-    }
+    List<String> ext = new ArrayList<>();
 
     @Override
     public List<String> getExtensionsFor(String mimeType) {

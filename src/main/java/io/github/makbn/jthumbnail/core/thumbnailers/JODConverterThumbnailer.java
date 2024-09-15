@@ -4,7 +4,7 @@ import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Component("jod_converter")
-@DependsOn("office_manager")
-@Log4j2
+@Slf4j
+@Component("jodConverter")
+@DependsOn("officeManager")
 public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     /**
@@ -88,8 +88,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             if (SystemUtils.IS_OS_WINDOWS)
                 workingFile = new File(workingFile.getAbsolutePath().replace("\\\\", "\\"));
 
-            if(!officeManager.isRunning()){
-                for (int i=0; i<10;i++){
+            if (!officeManager.isRunning()) {
+                for (int i = 0; i < 10; i++) {
                     Thread.sleep(1000);
                     log.info("waiting for office manager");
                     if (officeManager.isRunning())
@@ -107,7 +107,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                     .execute();
 
 
-
             if (outputTmp.length() == 0) {
                 throw new ThumbnailerException("Could not convert into OpenOffice-File (file was empty)...");
             }
@@ -117,7 +116,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         } catch (IOException e) {
             throw new ThumbnailerException(e);
         } catch (OfficeException e) {
-            log.warn(e);
+            log.warn(e.getMessage(), e);
             throw new ThumbnailerException(e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

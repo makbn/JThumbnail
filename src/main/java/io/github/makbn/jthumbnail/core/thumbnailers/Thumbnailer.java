@@ -37,10 +37,10 @@ public interface Thumbnailer extends Closeable {
 
     /**
      * This function will be called after all Thumbnails are generated.
-     * Note: This acts as a Deconstructor. Do not expect this object to work
+     * Note: This acts as a Deconstruct. Do not expect this object to work
      * after calling this method.
      *
-     * @throws IOException If some errors occured during finalising
+     * @throws IOException If some errors occurred during finalising
      */
     void close() throws IOException;
 
@@ -61,7 +61,7 @@ public interface Thumbnailer extends Closeable {
     /**
      * Get a list of all MIME Types that this Thumbnailer is ready to process.
      *
-     * @return List of MIME Types. If null, all Files may be passed to this Thumbnailer.
+     * @return Array of MIME Types. If null, all Files may be passed to this Thumbnailer.
      */
     String[] getAcceptedMIMETypes();
 }

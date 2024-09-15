@@ -10,14 +10,14 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 
 import java.io.Closeable;
 import java.io.File;
 
-@Configuration
+@Component
 @EnableAsync
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JThumbnailer implements Closeable {
@@ -32,21 +32,15 @@ public class JThumbnailer implements Closeable {
         this.typeDetector = new MimeTypeDetector();
     }
 
-    @Async("async_thread_pool_task_executor")
+    @Async("asyncThreadPoolTaskExecutor")
     public void run(ThumbnailCandidate candidate, ThumbnailListener listener) {
-        try {
-            candidate.setThumbExt(typeDetector.getOutputExt(candidate.getFile()));
-            File out = manager.createThumbnail(candidate.getFile(), candidate.getThumbExt());
-            listener.onThumbnailReady(candidate.getUid(), out);
-        } catch (ThumbnailerRuntimeException | ThumbnailerException re) {
-            listener.onThumbnailFailed(candidate.getUid(), re.getMessage(), 500);
-        }
+        internalRun(candidate, listener);
 
     }
 
-    @Async("async_thread_pool_task_executor")
+    @Async("asyncThreadPoolTaskExecutor")
     public void run(ThumbnailCandidate candidate) {
-        run(candidate, new ThumbnailListener() {
+        this.internalRun(candidate, new ThumbnailListener() {
             @Override
             public void onThumbnailReady(String hash, File thumbnail) {
                 events.publishEvent(ThumbnailEvent.builder()
@@ -65,6 +59,16 @@ public class JThumbnailer implements Closeable {
                         .build());
             }
         });
+    }
+
+    private void internalRun(ThumbnailCandidate candidate, ThumbnailListener listener) {
+        try {
+            candidate.setThumbExt(typeDetector.getOutputExt(candidate.getFile()));
+            File out = manager.createThumbnail(candidate.getFile(), candidate.getThumbExt());
+            listener.onThumbnailReady(candidate.getUid(), out);
+        } catch (ThumbnailerRuntimeException | ThumbnailerException re) {
+            listener.onThumbnailFailed(candidate.getUid(), re.getMessage(), 500);
+        }
     }
 
     @Override

@@ -1,5 +1,8 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +10,11 @@ import java.util.List;
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MPEGFileIdentifier implements MimeTypeIdentifier {
-
-    protected List<String> ext;
+    List<String> ext = new ArrayList<>();
 
     public MPEGFileIdentifier() {
-        ext = new ArrayList<>();
         ext.add("mp4");
         ext.add("mkv");
         ext.add("ts");

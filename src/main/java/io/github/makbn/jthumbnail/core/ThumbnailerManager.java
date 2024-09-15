@@ -5,7 +5,10 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.model.ExecutionResult;
 import io.github.makbn.jthumbnail.core.thumbnailers.Thumbnailer;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.extern.log4j.Log4j2;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -35,9 +38,10 @@ import java.util.stream.Collectors;
  */
 @Component
 @DependsOn({"DWGThumbnailer", "JODExcelThumbnailer", "PDFBoxThumbnailer", "MPEGThumbnailer",
-        "openOfficeThumbnailer", "jod_converter", "MP3Thumbnailer", "powerpointConverterThumbnailer",
+        "openOfficeThumbnailer", "jodConverter", "MP3Thumbnailer", "powerpointConverterThumbnailer",
         "JODHtmlConverterThumbnailer", "nativeImageThumbnailer", "textThumbnailer", "imageThumbnailer", "wordConverterThumbnailer"})
-@Log4j2
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ThumbnailerManager implements Thumbnailer {
 
     /**
@@ -48,16 +52,17 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Magic Mime Detection ... a wrapper class to Aperature's Mime thingies.
      */
-    private final MimeTypeDetector mimeTypeDetector;
+    MimeTypeDetector mimeTypeDetector;
     /**
      * Thumbnailers per MIME-Type they accept (ALL_MIME_WILDCARD for all)
      */
-    private final Map<String, List<Thumbnailer>> thumbnailers;
+    Map<String, List<Thumbnailer>> thumbnailers;
 
     /**
      * Folder under which new thumbnails should be filed
      */
-    private File thumbnailFolder;
+    @NonFinal
+    File thumbnailFolder;
 
     /**
      * Initialise Thumbnail Manager
@@ -85,17 +90,7 @@ public class ThumbnailerManager implements Thumbnailer {
         if (input == null)
             throw new IllegalArgumentException("Input file may not be null");
 
-        File output;
-
-        String name = FilenameUtils.getBaseName(input.getName()) + "_thumb";
-
-        name = name + "." + ext;
-
-
-        output = new File(thumbnailFolder, name);
-
-
-        return output;
+        return new File(thumbnailFolder, String.format("%s%s.%s", FilenameUtils.getBaseName(input.getName()), "_thumb", ext));
     }
 
     /**
@@ -182,7 +177,7 @@ public class ThumbnailerManager implements Thumbnailer {
      */
     @Override
     public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailerRuntimeException, ThumbnailerException {
-        if(!Files.exists(input.toPath())){
+        if (!Files.exists(input.toPath())) {
             throw new ThumbnailerException("the input file does not exist");
         }
 

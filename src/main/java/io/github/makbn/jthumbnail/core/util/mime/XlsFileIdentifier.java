@@ -1,6 +1,7 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
@@ -8,7 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@Log4j2
+@Slf4j
 public class XlsFileIdentifier extends OfficeFileIdentifier {
 
     public XlsFileIdentifier() {
@@ -25,7 +26,7 @@ public class XlsFileIdentifier extends OfficeFileIdentifier {
                     return XLS_MIME_TYPE;
                 }
             }  catch (IOException | OfficeXmlFileException e) {
-                log.debug(e);
+                log.debug(e.getMessage(), e);
             }
         }
 

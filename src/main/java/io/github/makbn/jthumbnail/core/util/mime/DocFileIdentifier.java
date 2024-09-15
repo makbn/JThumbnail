@@ -19,14 +19,14 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
     public String identify(String mimeType, byte[] bytes, File file) {
 
         if (isOfficeFile(mimeType) && !DOC_MIME_TYPE.equals(mimeType)) {
-            try(FileInputStream stream = new FileInputStream(file);
-                HWPFDocument document = new HWPFDocument(stream)) {
+            try (FileInputStream stream = new FileInputStream(file);
+                 HWPFDocument document = new HWPFDocument(stream)) {
 
 
                 if (document.getRange().getEndOffset() > 0) {
                     return DOC_MIME_TYPE;
                 }
-            }  catch (IOException | RuntimeException e) {
+            } catch (IOException | RuntimeException e) {
                 log.debug(e);
             }
         }
