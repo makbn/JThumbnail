@@ -29,7 +29,7 @@ public class AppSettings {
     public static final String JTHUMBNAILER_OPENOFFICE_MAX_TASKS_PER_PROCESS = "jthumbnailer.openoffice.max_tasks_per_process";
     public static final String JTHUMBNAILER_OPENOFFICE_TMP = "jthumbnailer.openoffice.tmp";
 
-    private final ResourceBundle rb = ResourceBundle.getBundle("application");
+    ResourceBundle rb = ResourceBundle.getBundle("application");
 
     /**
      * How long may a service work take? (in ms)

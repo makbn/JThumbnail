@@ -15,7 +15,6 @@ import org.springframework.modulith.core.ApplicationModules;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -32,7 +31,7 @@ class ThumbnailerTest {
     private static JThumbnailer jThumbnailer;
 
     @BeforeAll
-    public static void init() throws IOException {
+    static void init() throws IOException {
         log.info("Starting jThumbnailer ...");
         String[] args = new String[]{};
         Files.createDirectories(Path.of("test_results"));
@@ -40,7 +39,7 @@ class ThumbnailerTest {
     }
 
     @AfterAll
-    public static void destroy() {
+    static void destroy() {
         try {
             jThumbnailer.close();
         }catch (Exception e) {

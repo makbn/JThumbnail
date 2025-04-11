@@ -13,7 +13,8 @@ import java.nio.file.Files;
  * @deprecated use {@link JODExcelThumbnailer} instead
  * @see JODConverterThumbnailer
  */
-@Deprecated(forRemoval = false)
+@Deprecated(since = "v2")
+@SuppressWarnings("java:S1133")
 public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     private final OpenOfficeThumbnailer ooThumbnailer;
 
