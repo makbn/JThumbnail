@@ -11,6 +11,8 @@ JThumbnail is a Java library for creating Thumbnails of common types of file inc
 - Check the `release/**` branches for stable release versions
 - `master` branch will always point to the latest available release version
 
+Project Source: https://github.com/makbn/JThumbnail
+
 ## How to use
 
 ```jshelllanguage

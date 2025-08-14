@@ -1,6 +1,6 @@
 name: Java JThumbnail Build
 #
-on: [ push ]
+on: [ push, workflow_dispatch ]
 #
 jobs:
   build:
