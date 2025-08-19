@@ -16,10 +16,11 @@ jobs:
       - name: Download and extract OpenOffice
         run: |
           # Define the OpenOffice version you want to download
-          OO_VERSION=4.1.14
+          OO_VERSION=4.1.15
 
-          # Define the URL for the OpenOffice installation package
-          OO_URL=https://downloads.apache.org/openoffice/${OO_VERSION}/binaries/en-US/Apache_OpenOffice_${OO_VERSION}_Linux_x86-64_install-deb_en-US.tar.gz
+          # Define the URL for the OpenOffice installation package ${OO_VERSION}
+          OO_URL=https://downloads.apache.org/openoffice/${OO_VERSION}/binaries/en-US/Apache_OpenOffice_${OO_VERSION}_Linux_x86_install-rpm_en-US.tar.gz
+          
 
           # Create the target directory
           mkdir -p ~/tools/soffice/
