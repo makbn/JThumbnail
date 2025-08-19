@@ -122,8 +122,8 @@ compile "io.github.makbn:jthumbnail:2.2.0"
 - [x] Fix problem with xlsx files
 - [x] Improve code quality
 - [x] Improve current Exception handling system
-- [ ] Fix problem with Java 1.8 (current version is 17)
-- [ ] Fixing issue with running test with the GitHub action
+- [ ] Fixing issue with running test with the GitHub action: use `UNIX domain sockets` instead of TCP to run openoffice for tests
+- [ ] add rate limit to the project API 
 
 ## Original project
 
