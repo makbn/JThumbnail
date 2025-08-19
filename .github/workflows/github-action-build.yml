@@ -19,7 +19,8 @@ jobs:
           OO_VERSION=4.1.15
 
           # Define the URL for the OpenOffice installation package ${OO_VERSION}
-          OO_URL=https://downloads.apache.org/openoffice/${OO_VERSION}/binaries/en-US/Apache_OpenOffice_${OO_VERSION}_Linux_x86_install-deb_en-US.tar.gz
+          OO_URL=https://downloads.apache.org/openoffice/${OO_VERSION}/binaries/en-US/Apache_OpenOffice_${OO_VERSION}_Linux_x86-64_install-deb_en-US.tar.gz
+          
           
           
 
