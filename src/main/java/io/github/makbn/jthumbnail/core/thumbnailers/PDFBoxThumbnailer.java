@@ -12,7 +12,6 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.github.makbn.jthumbnail.core.config.AppSettings;
@@ -25,7 +24,6 @@ import io.github.makbn.jthumbnail.core.util.ResizeImage;
  */
 @Component
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    @Autowired
     public PDFBoxThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

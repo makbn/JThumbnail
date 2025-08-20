@@ -1,22 +1,24 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.springframework.stereotype.Component;
+
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-22
@@ -25,7 +27,6 @@ import java.io.IOException;
 @Slf4j
 public class MPEGThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
     public MPEGThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

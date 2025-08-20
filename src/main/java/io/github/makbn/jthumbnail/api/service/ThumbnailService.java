@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +35,6 @@ public class ThumbnailService {
     // can be replaced with LoadingCache to prevent OOM
     Map<String, File> temporaryFilesMap;
 
-    @Autowired
     public ThumbnailService(JThumbnailer thumbnailer, AppSettings settings) {
         this.thumbnailer = thumbnailer;
         this.settings = settings;

@@ -1,16 +1,17 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.springframework.stereotype.Component;
+
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * This class generates image thumbnails using native Java libraries.
@@ -22,7 +23,6 @@ import java.io.IOException;
 @Component
 public class NativeImageThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
     public NativeImageThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

@@ -1,19 +1,5 @@
 package io.github.makbn.jthumbnail.core;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.model.ExecutionResult;
-import io.github.makbn.jthumbnail.core.thumbnailers.Thumbnailer;
-import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +9,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
+
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.model.ExecutionResult;
+import io.github.makbn.jthumbnail.core.thumbnailers.Thumbnailer;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -67,7 +67,6 @@ public class ThumbnailerManager implements Thumbnailer {
     /**
      * Initialise Thumbnail Manager
      */
-    @Autowired
     public ThumbnailerManager(List<? extends Thumbnailer> thumbnailers) {
         this.thumbnailers = registerThumbnailer(thumbnailers);
         this.mimeTypeDetector = new MimeTypeDetector();

@@ -1,19 +1,19 @@
 package io.github.makbn.jthumbnail.core.config;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import java.io.File;
+import java.io.IOException;
+
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.office.ExistingProcessAction;
 import org.jodconverter.local.office.LocalOfficeManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import java.io.File;
-import java.io.IOException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 @Configuration("jtOfficeManagerConfiguration")
 @DependsOn("jtApplicationConfig")
@@ -21,7 +21,6 @@ import java.io.IOException;
 public class OfficeManagerConfiguration {
     OfficeManager officeManager;
 
-    @Autowired
     public OfficeManagerConfiguration(AppSettings settings) throws IOException {
         File dir = settings.getOfficeDirectory();
 
@@ -43,7 +42,7 @@ public class OfficeManagerConfiguration {
     }
 
     @Bean("officeManager")
-    public OfficeManager getOfficeManager() {
+    OfficeManager getOfficeManager() {
         return officeManager;
     }
 

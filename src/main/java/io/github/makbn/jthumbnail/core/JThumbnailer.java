@@ -1,5 +1,13 @@
 package io.github.makbn.jthumbnail.core;
 
+import java.io.Closeable;
+import java.io.File;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
+
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
@@ -8,14 +16,6 @@ import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
-
-import java.io.Closeable;
-import java.io.File;
 
 @Component
 @EnableAsync
@@ -25,7 +25,6 @@ public class JThumbnailer implements Closeable {
     MimeTypeDetector typeDetector;
     ApplicationEventPublisher events;
 
-    @Autowired
     public JThumbnailer(ThumbnailerManager manager, ApplicationEventPublisher events) {
         this.manager = manager;
         this.events = events;

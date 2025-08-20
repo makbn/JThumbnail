@@ -1,22 +1,22 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.util.IOUtil;
-import io.github.makbn.jthumbnail.core.util.ResizeImage;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
+
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.util.IOUtil;
+import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The OpenOfficeThumbnailer class is responsible for generating thumbnails for OpenOffice documents.
@@ -34,7 +34,6 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      * @param appSettings       Application settings used by the thumbnailer.
      * @param pdfBoxThumbnailer An instance of PDFBoxThumbnailer for handling PDF files.
      */
-    @Autowired
     public OpenOfficeThumbnailer(AppSettings appSettings, PDFBoxThumbnailer pdfBoxThumbnailer) {
         super(appSettings);
         this.pdfBoxThumbnailer = pdfBoxThumbnailer;
