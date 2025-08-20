@@ -1,21 +1,24 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.util.ResizeImage;
 
 /**
  * Renders the first page of a PDF file into a thumbnail.
@@ -27,7 +30,7 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
         super(appSettings);
     }
     private PDDocument getDocument(File input) throws IOException {
-        return PDDocument.load(input);
+        return Loader.loadPDF(input);
     }
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException, ThumbnailerRuntimeException {

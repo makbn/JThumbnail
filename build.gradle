@@ -1,6 +1,6 @@
 plugins {
-    id "org.springframework.boot" version "3.1.3"
-    id "io.spring.dependency-management" version "1.1.3"
+    id "org.springframework.boot" version "3.5.4"
+    id "io.spring.dependency-management" version "1.1.7"
     id "java-library"
     id "maven-publish"
 }
@@ -21,7 +21,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.modulith:spring-modulith-bom:1.0.0'
+        mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.2'
     }
 }
 
@@ -36,9 +36,12 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 
     implementation "org.springframework.modulith:spring-modulith-starter-core"
+    implementation "org.springframework.modulith:spring-modulith-events-api"
     implementation "org.springframework:spring-tx"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "e-iceblue:spire.office.free:${iceblue_ver}"
+    implementation api("e-iceblue:spire.office.free:${iceblue_ver}@pom") {
+        transitive = true
+    }
     implementation "org.apache.poi:poi:${apachepoi_ver}"
     implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
     implementation "commons-io:commons-io:${commonsio_ver}"
@@ -61,9 +64,9 @@ dependencies {
 }
 
 group = 'io.github.makbn'
-version = 'v2.2.0'
+version = 'v2.2.1'
 description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 publishing {
     publications {
@@ -72,7 +75,7 @@ publishing {
 
             groupId = 'io.github.makbn'
             artifactId = 'jthumbnail'
-            version = '2.2.0'
+            version = '2.2.1'
         }
     }
 
@@ -86,6 +89,11 @@ publishing {
             }
         }
     }
+}
+
+jar {
+   enabled = true
+   archiveClassifier = '' //use empty string
 }
 
 test {

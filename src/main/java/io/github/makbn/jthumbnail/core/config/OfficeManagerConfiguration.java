@@ -32,7 +32,6 @@ public class OfficeManagerConfiguration {
                 .taskExecutionTimeout(settings.getTimeout())
                 .maxTasksPerProcess(settings.getMaxTaskPerProcess())
                 .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
-                .disableOpengl(true)
                 .officeHome(settings.getOpenOfficePath())
                 .install()
                 .build();
