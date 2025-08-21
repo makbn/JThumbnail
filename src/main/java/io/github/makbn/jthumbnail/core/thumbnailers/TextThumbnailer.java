@@ -1,5 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,13 +16,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-
 import org.springframework.stereotype.Component;
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 
 @Component
 public class TextThumbnailer extends AbstractThumbnailer {
@@ -51,9 +48,10 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
         img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
         graphics = img.createGraphics();
-        graphics.setPaint (Color.WHITE);
-        graphics.fillRect (0, 0, thumbWidth, thumbHeight);
-        graphics.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        graphics.setPaint(Color.WHITE);
+        graphics.fillRect(0, 0, thumbWidth, thumbHeight);
+        graphics.setRenderingHint(
+                RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         graphics.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
@@ -66,7 +64,6 @@ public class TextThumbnailer extends AbstractThumbnailer {
         graphics.setColor(Color.BLACK);
 
         int textW = graphics.getFontMetrics().stringWidth(text);
-
 
         int lineCount = Math.max(1, textW / thumbWidth);
 
@@ -96,7 +93,8 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     private String readFile(File input) throws IOException {
         StringBuilder text = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
+        try (BufferedReader br =
+                new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
             String line;
             int linecount = 0;
             while ((line = br.readLine()) != null && linecount++ < 50) {
@@ -109,9 +107,8 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "text/plain",
-                "text/rtf",
+        return new String[] {
+            "text/plain", "text/rtf",
         };
     }
 }

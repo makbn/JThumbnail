@@ -23,7 +23,6 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -103,7 +102,7 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * Thumbnailer.
      */
     public String[] getAcceptedMIMETypes() {
-        return new String[]{};
+        return new String[] {};
     }
 
     /**

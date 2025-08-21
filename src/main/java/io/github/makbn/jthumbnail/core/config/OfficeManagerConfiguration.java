@@ -1,8 +1,10 @@
 package io.github.makbn.jthumbnail.core.config;
 
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import java.io.File;
 import java.io.IOException;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.office.ExistingProcessAction;
@@ -10,10 +12,6 @@ import org.jodconverter.local.office.LocalOfficeManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 
 @Configuration("jtOfficeManagerConfiguration")
 @DependsOn("jtApplicationConfig")
@@ -45,5 +43,4 @@ public class OfficeManagerConfiguration {
     OfficeManager getOfficeManager() {
         return officeManager;
     }
-
 }

@@ -1,10 +1,14 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.util.IOUtil;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -13,12 +17,6 @@ import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.LocalConverter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.util.IOUtil;
-import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("jodConverter")
@@ -41,7 +39,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     private final String officeDir;
 
-    protected JODConverterThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
+    protected JODConverterThumbnailer(
+            AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
         super(settings);
         this.officeDir = settings.getOfficeTemporaryDirectory();
         this.ooThumbnailer = openOfficeThumbnailer;
@@ -82,7 +81,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         File outputTmp = null;
         File workingFile = input;
         try {
-            outputTmp = Files.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension()).toFile();
+            outputTmp = Files.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension())
+                    .toFile();
 
             if (SystemUtils.IS_OS_WINDOWS)
                 workingFile = new File(workingFile.getAbsolutePath().replace("\\\\", "\\"));
@@ -91,20 +91,14 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 for (int i = 0; i < 10; i++) {
                     Thread.sleep(1000);
                     log.info("waiting for office manager");
-                    if (officeManager.isRunning())
-                        break;
+                    if (officeManager.isRunning()) break;
                 }
             }
             DocumentConverter converter =
-                    LocalConverter.builder()
-                            .officeManager(officeManager)
-                            .build();
+                    LocalConverter.builder().officeManager(officeManager).build();
             log.info("converter created");
 
-            converter.convert(workingFile)
-                    .to(outputTmp)
-                    .execute();
-
+            converter.convert(workingFile).to(outputTmp).execute();
 
             if (outputTmp.length() == 0) {
                 throw new ThumbnailerException("Could not convert into OpenOffice-File (file was empty)...");
@@ -140,12 +134,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         String ext = FilenameUtils.getExtension(workingFile.getName());
         if (!mimeTypeDetector.doesExtensionMatchMimeType(ext, mimeType)) {
             String newExt;
-            if ("application/zip".equals(mimeType))
-                newExt = getStandardZipExtension();
-            else if ("application/vnd.ms-office".equals(mimeType))
-                newExt = getStandardOfficeExtension();
-            else
-                newExt = mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
+            if ("application/zip".equals(mimeType)) newExt = getStandardZipExtension();
+            else if ("application/vnd.ms-office".equals(mimeType)) newExt = getStandardOfficeExtension();
+            else newExt = mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
 
             workingFile = Files.createTempFile(workingFile.getName(), newExt).toFile();
         }
@@ -161,17 +152,17 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.oasis.opendocument.text",
-                "application/vnd.oasis.opendocument.text-template",
-                "application/vnd.oasis.opendocument.text-web",
-                "application/vnd.oasis.opendocument.text-master",
-                "application/vnd.oasis.opendocument.graphics",
-                "application/vnd.oasis.opendocument.graphics-template",
-                "application/vnd.oasis.opendocument.presentation",
-                "application/vnd.oasis.opendocument.presentation-template",
-                "application/vnd.oasis.opendocument.spreadsheet",
-                "application/vnd.oasis.opendocument.spreadsheet-template",
+        return new String[] {
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.oasis.opendocument.text-template",
+            "application/vnd.oasis.opendocument.text-web",
+            "application/vnd.oasis.opendocument.text-master",
+            "application/vnd.oasis.opendocument.graphics",
+            "application/vnd.oasis.opendocument.graphics-template",
+            "application/vnd.oasis.opendocument.presentation",
+            "application/vnd.oasis.opendocument.presentation-template",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.oasis.opendocument.spreadsheet-template",
         };
     }
 }

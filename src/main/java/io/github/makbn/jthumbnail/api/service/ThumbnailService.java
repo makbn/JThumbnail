@@ -1,5 +1,10 @@
 package io.github.makbn.jthumbnail.api.service;
 
+import io.github.makbn.jthumbnail.api.model.Thumbnail;
+import io.github.makbn.jthumbnail.core.JThumbnailer;
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
+import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,20 +14,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
-import org.springframework.modulith.events.ApplicationModuleListener;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import io.github.makbn.jthumbnail.api.model.Thumbnail;
-import io.github.makbn.jthumbnail.core.JThumbnailer;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
-import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Log4j2
@@ -60,13 +58,16 @@ public class ThumbnailService {
             if (waitingMap.get(uid).isDone()) {
                 try {
                     return Optional.ofNullable(waitingMap.get(uid).get());
-                }catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     log.debug(e);
                     Thread.currentThread().interrupt();
                 }
 
             } else {
-                return Optional.of(Thumbnail.builder().uid(uid).status(Thumbnail.Status.WAITING).build());
+                return Optional.of(Thumbnail.builder()
+                        .uid(uid)
+                        .status(Thumbnail.Status.WAITING)
+                        .build());
             }
         }
         return Optional.empty();
@@ -101,7 +102,8 @@ public class ThumbnailService {
     @ApplicationModuleListener
     void onThumbnailEvent(ThumbnailEvent event) {
         if (waitingMap.containsKey(event.getUid())) {
-            waitingMap.get(event.getUid())
+            waitingMap
+                    .get(event.getUid())
                     .complete(Thumbnail.builder()
                             .status(Thumbnail.Status.valueOf(event.getStatus().name()))
                             .uid(event.getUid())
@@ -136,7 +138,11 @@ public class ThumbnailService {
      * @throws IOException If an I/O error occurs during file creation.
      */
     private File createTempFile(@NonNull MultipartFile multipartFile) throws IOException {
-        File tempFile = Files.createTempFile(settings.getUploadDirectory().toPath(), UUID.randomUUID().toString(), multipartFile.getOriginalFilename()).toFile();
+        File tempFile = Files.createTempFile(
+                        settings.getUploadDirectory().toPath(),
+                        UUID.randomUUID().toString(),
+                        multipartFile.getOriginalFilename())
+                .toFile();
         multipartFile.transferTo(tempFile);
         return tempFile;
     }

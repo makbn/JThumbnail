@@ -1,9 +1,21 @@
 package io.github.makbn.jthumbnail.api.controller;
 
+import io.github.makbn.jthumbnail.api.model.JThumbnailApiResponse;
+import io.github.makbn.jthumbnail.api.model.Thumbnail;
+import io.github.makbn.jthumbnail.api.service.ThumbnailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
-
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,20 +32,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.github.makbn.jthumbnail.api.model.JThumbnailApiResponse;
-import io.github.makbn.jthumbnail.api.model.Thumbnail;
-import io.github.makbn.jthumbnail.api.service.ThumbnailService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/")
@@ -49,15 +47,18 @@ public class ThumbnailController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(
             summary = "Upload a file and request a thumbnail",
-            description = "This endpoint allows users to upload a file and request a thumbnail from it."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Thumbnail request successful",
-                    content = @Content(
-                            examples = {
-                                    @ExampleObject(value = """
+            description = "This endpoint allows users to upload a file and request a thumbnail from it.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Thumbnail request successful",
+                        content =
+                                @Content(
+                                        examples = {
+                                            @ExampleObject(
+                                                    value =
+                                                            """
                                             {
                                               "code": 200,
                                               "message": "OK",
@@ -65,17 +66,18 @@ public class ThumbnailController {
                                               "error": false,
                                               "total": 0
                                             }""")
-                            },
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ApiResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            examples = {
-                                    @ExampleObject(value = """
+                                        },
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiResponse.class))),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Internal server error",
+                        content =
+                                @Content(
+                                        examples = {
+                                            @ExampleObject(
+                                                    value =
+                                                            """
                                             {
                                               "timestamp": "2023-09-24T00:26:34.890+00:00",
                                               "status": 500,
@@ -83,39 +85,39 @@ public class ThumbnailController {
                                               "path": "/"
                                             }
                                             """,
-                                            description = "if the error is generated by the web server")
-                            },
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ApiResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            examples = {
-                                    @ExampleObject(value = """
+                                                    description = "if the error is generated by the web server")
+                                        },
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiResponse.class))),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Internal server error",
+                        content =
+                                @Content(
+                                        examples = {
+                                            @ExampleObject(
+                                                    value =
+                                                            """
                                             {
                                               "code": 500,
                                               "message": "Our server is on a coffee break",
                                               "result": "",
                                               "error": false,
                                               "total": 0
-                                            }""", description = "if the error is generated at by the application")
-                            },
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ApiResponse.class)
-                    )
-            ),
-
-    })
-    public ResponseEntity<JThumbnailApiResponse<String>> uploadFile(@Parameter(
-            name = "file",
-            description = "The file to be uploaded for thumbnail generation",
-            required = true,
-
-            content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    ) @RequestPart("file") MultipartFile file) {
+                                            }""",
+                                                    description = "if the error is generated at by the application")
+                                        },
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = ApiResponse.class))),
+            })
+    public ResponseEntity<JThumbnailApiResponse<String>> uploadFile(
+            @Parameter(
+                            name = "file",
+                            description = "The file to be uploaded for thumbnail generation",
+                            required = true,
+                            content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE))
+                    @RequestPart("file")
+                    MultipartFile file) {
         try {
             String uid = service.requestThumbnail(file);
             return ResponseEntity.ok(JThumbnailApiResponse.<String>builder()
@@ -136,39 +138,38 @@ public class ThumbnailController {
     @GetMapping
     @Operation(
             summary = "Check the status of a thumbnail",
-            description = "This endpoint allows users to check the status of a thumbnail by providing its unique ID."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Thumbnail status retrieved successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = JThumbnailApiResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "202",
-                    description = "Thumbnail status is waiting",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = JThumbnailApiResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Thumbnail not found or invalid UID",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = JThumbnailApiResponse.class)
-                    )
-            )
-    })
-    public ResponseEntity<JThumbnailApiResponse<String>> checkThumbnailStatus(@Parameter(
-            name = "uid",
-            description = "The unique ID of the thumbnail to check the status of",
-            required = true
-    ) @RequestParam("uid") String uid) {
+            description = "This endpoint allows users to check the status of a thumbnail by providing its unique ID.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Thumbnail status retrieved successfully",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = JThumbnailApiResponse.class))),
+                @ApiResponse(
+                        responseCode = "202",
+                        description = "Thumbnail status is waiting",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = JThumbnailApiResponse.class))),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Thumbnail not found or invalid UID",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = JThumbnailApiResponse.class)))
+            })
+    public ResponseEntity<JThumbnailApiResponse<String>> checkThumbnailStatus(
+            @Parameter(
+                            name = "uid",
+                            description = "The unique ID of the thumbnail to check the status of",
+                            required = true)
+                    @RequestParam("uid")
+                    String uid) {
         Optional<Thumbnail> thumbnail = service.getThumbnail(uid);
         if (thumbnail.isPresent() && thumbnail.get().getStatus() == Thumbnail.Status.GENERATED) {
             return ResponseEntity.ok(JThumbnailApiResponse.<String>builder()
@@ -195,39 +196,30 @@ public class ThumbnailController {
     @GetMapping(value = "/download/{uid}")
     @Operation(
             summary = "Download a generated thumbnail",
-            description = "This endpoint allows users to download a generated thumbnail by providing its unique ID."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Thumbnail downloaded successfully",
-                    content = @Content(
-                            mediaType = "image/png",
-                            schema = @Schema(implementation = Resource.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "No content available for download",
-                    content = @Content(
-                            mediaType = "image/png",
-                            schema = @Schema(implementation = Resource.class)
-                    )
-            )
-    })
-    public ResponseEntity<Resource> downloadThumbnail(@Parameter(
-            name = "uid",
-            description = "The unique ID of the thumbnail to download",
-            required = true
-    ) @PathVariable("uid") String uid) {
+            description = "This endpoint allows users to download a generated thumbnail by providing its unique ID.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Thumbnail downloaded successfully",
+                        content = @Content(mediaType = "image/png", schema = @Schema(implementation = Resource.class))),
+                @ApiResponse(
+                        responseCode = "204",
+                        description = "No content available for download",
+                        content = @Content(mediaType = "image/png", schema = @Schema(implementation = Resource.class)))
+            })
+    public ResponseEntity<Resource> downloadThumbnail(
+            @Parameter(name = "uid", description = "The unique ID of the thumbnail to download", required = true)
+                    @PathVariable("uid")
+                    String uid) {
         try {
             Optional<Thumbnail> thumbnail = service.getThumbnail(uid);
             if (thumbnail.isPresent() && thumbnail.get().getStatus() == Thumbnail.Status.GENERATED) {
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition",
-                        String.format("attachment; filename=thumbnail_%s.png", uid));
+                headers.add("Content-Disposition", String.format("attachment; filename=thumbnail_%s.png", uid));
 
-                ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(thumbnail.get().getThumbnailFile().toPath()));
+                ByteArrayResource resource = new ByteArrayResource(
+                        Files.readAllBytes(thumbnail.get().getThumbnailFile().toPath()));
 
                 return ResponseEntity.status(HttpStatus.OK)
                         .contentType(MediaType.IMAGE_PNG)
@@ -239,7 +231,6 @@ public class ThumbnailController {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .contentType(MediaType.IMAGE_PNG)
-                .body(new ByteArrayResource(new byte[]{}));
+                .body(new ByteArrayResource(new byte[] {}));
     }
-
 }

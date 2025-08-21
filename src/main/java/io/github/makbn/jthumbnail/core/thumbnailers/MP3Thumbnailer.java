@@ -1,25 +1,20 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
-import org.springframework.stereotype.Component;
-
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
@@ -39,7 +34,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
             if (song.hasId3v2Tag()) {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();
-                //converting the bytes to an image
+                // converting the bytes to an image
                 BufferedImage img = getScaledBI(ImageIO.read(new ByteArrayInputStream(imageData)));
                 ImageIO.write(img, "png", output);
             }
@@ -48,7 +43,6 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
             log.warn("MP3Thumbnailer", e);
             throw new ThumbnailerException();
         }
-
     }
 
     @SuppressWarnings("Duplicates")
@@ -65,11 +59,6 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "audio/mpeg",
-                "audio/mp3",
-                "audio/mp4",
-                "audio/vnd.wav"
-        };
+        return new String[] {"audio/mpeg", "audio/mp3", "audio/mp4", "audio/vnd.wav"};
     }
 }

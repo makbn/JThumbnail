@@ -1,19 +1,15 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Component;
-
 import com.spire.presentation.Presentation;
-
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
@@ -32,9 +28,10 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
         Presentation ppt = new Presentation();
         try {
             ppt.loadFromFile(input.getAbsolutePath());
-            //Save PPT document to images
-            Image image = ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
-            //Re-write the image with a different color space
+            // Save PPT document to images
+            Image image =
+                    ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
+            // Re-write the image with a different color space
             BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
             newImg.getGraphics().drawImage(image, 0, 0, null);
             ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
@@ -44,7 +41,6 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
         } finally {
             ppt.dispose();
         }
-
     }
 
     @Override
@@ -62,12 +58,10 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.ms-powerpoint",
-                "application/vnd.openxmlformats-officedocument.presentationml",
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-
+        return new String[] {
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         };
     }
-
 }

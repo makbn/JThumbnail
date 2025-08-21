@@ -1,12 +1,11 @@
 package io.github.makbn.jthumbnail.core.model;
 
+import java.io.File;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-
-import java.io.File;
 
 @Builder
 @Getter
@@ -15,7 +14,9 @@ import java.io.File;
 public class ThumbnailEvent {
 
     public enum Status {
-        GENERATED, WAITING, FAILED
+        GENERATED,
+        WAITING,
+        FAILED
     }
 
     String uid;
