@@ -72,7 +72,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 
 ## Requirements
 
-- Java JRE **17**
+- Java JRE **21**
 - OpenOffice 4.x or LibreOffice 7.x
 
 ## Supported File Formats
@@ -97,7 +97,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 <dependency>
   <groupId>io.github.makbn</groupId>
   <artifactId>jthumbnail</artifactId>
-  <version>2.2.0</version>
+  <version>2.2.1</version>
 </dependency>
 ```
 
@@ -108,7 +108,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 **Step 1**. Add the dependency to the `build.gradle` file:
 
 ```gradle
-compile "io.github.makbn:jthumbnail:2.2.0"
+compile "io.github.makbn:jthumbnail:2.2.1"
 ```
 
 ## TODO

@@ -1,19 +1,23 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.springframework.stereotype.Component;
+
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
 
 @Component
 public class DWGThumbnailer extends AbstractThumbnailer {
-    @Autowired
     public DWGThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

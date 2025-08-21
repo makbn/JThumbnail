@@ -1,24 +1,24 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.util.IOUtil;
-import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.LocalConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.util.IOUtil;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("jodConverter")
@@ -41,7 +41,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     private final String officeDir;
 
-    @Autowired
     protected JODConverterThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
         super(settings);
         this.officeDir = settings.getOfficeTemporaryDirectory();

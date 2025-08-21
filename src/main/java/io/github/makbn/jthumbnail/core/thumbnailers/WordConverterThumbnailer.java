@@ -1,18 +1,20 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import com.spire.doc.Document;
-import com.spire.doc.documents.ImageType;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
+
+import com.spire.doc.Document;
+import com.spire.doc.documents.ImageType;
+
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 
 /**
  * Dummy class for converting Text documents into Openoffice-Textfiles.
@@ -24,7 +26,6 @@ import java.io.IOException;
 @Component
 public class WordConverterThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
     public WordConverterThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

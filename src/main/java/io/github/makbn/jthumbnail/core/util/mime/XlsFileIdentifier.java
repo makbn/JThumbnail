@@ -1,13 +1,13 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
-import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class XlsFileIdentifier extends OfficeFileIdentifier {

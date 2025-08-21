@@ -1,17 +1,19 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
+
 import com.spire.presentation.Presentation;
+
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
@@ -21,7 +23,6 @@ import java.io.File;
 @Component
 public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
     public PowerpointConverterThumbnailer(AppSettings appSettings) {
         super(appSettings);
     }

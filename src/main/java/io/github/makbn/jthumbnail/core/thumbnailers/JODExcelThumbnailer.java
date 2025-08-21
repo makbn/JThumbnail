@@ -1,14 +1,13 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import org.jodconverter.core.office.OfficeManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import io.github.makbn.jthumbnail.core.config.AppSettings;
 
 @Component
 public class JODExcelThumbnailer extends JODConverterThumbnailer {
 
-    @Autowired
     public JODExcelThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
         super(settings, openOfficeThumbnailer, officeManager);
     }
