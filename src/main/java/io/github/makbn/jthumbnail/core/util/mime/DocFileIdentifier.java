@@ -1,11 +1,10 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
-import lombok.extern.log4j.Log4j2;
-import org.apache.poi.hwpf.HWPFDocument;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hwpf.HWPFDocument;
 
 @Log4j2
 public class DocFileIdentifier extends OfficeFileIdentifier {
@@ -20,8 +19,7 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
 
         if (isOfficeFile(mimeType) && !DOC_MIME_TYPE.equals(mimeType)) {
             try (FileInputStream stream = new FileInputStream(file);
-                 HWPFDocument document = new HWPFDocument(stream)) {
-
+                    HWPFDocument document = new HWPFDocument(stream)) {
 
                 if (document.getRange().getEndOffset() > 0) {
                     return DOC_MIME_TYPE;
@@ -38,5 +36,4 @@ public class DocFileIdentifier extends OfficeFileIdentifier {
     public String getThumbnailExtension() {
         return "png";
     }
-
 }

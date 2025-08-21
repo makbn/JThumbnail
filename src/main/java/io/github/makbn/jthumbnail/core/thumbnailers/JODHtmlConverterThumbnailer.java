@@ -1,9 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.config.AppSettings;
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.stereotype.Component;
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 
 /**
  * Dummy class for converting Html documents into Openoffice-Textfiles.
@@ -16,7 +15,8 @@ import io.github.makbn.jthumbnail.core.config.AppSettings;
 @Component
 public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
-    public JODHtmlConverterThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager manager) {
+    public JODHtmlConverterThumbnailer(
+            AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager manager) {
         super(settings, openOfficeThumbnailer, manager);
     }
 
@@ -34,9 +34,6 @@ public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "text/html"
-        };
+        return new String[] {"text/html"};
     }
-
 }

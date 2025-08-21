@@ -1,21 +1,19 @@
 package io.github.makbn.jthumbnail.core;
 
-import java.io.Closeable;
-import java.io.File;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
-
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
+import java.io.Closeable;
+import java.io.File;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 
 @Component
 @EnableAsync
@@ -34,7 +32,6 @@ public class JThumbnailer implements Closeable {
     @Async("asyncThreadPoolTaskExecutor")
     public void run(ThumbnailCandidate candidate, ThumbnailListener listener) {
         internalRun(candidate, listener);
-
     }
 
     @Async("asyncThreadPoolTaskExecutor")
@@ -74,5 +71,4 @@ public class JThumbnailer implements Closeable {
     public synchronized void close() {
         manager.close();
     }
-
 }

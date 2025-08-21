@@ -1,10 +1,6 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tika.Tika;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.Tika;
 
 /**
  * Wrapper class for MIME Identification of Files.
@@ -43,7 +41,6 @@ public class MimeTypeDetector {
                     exts.forEach(ext -> outputThumbnailExtensionCache.put(ext, identifier.getThumbnailExtension()));
             }
         }
-
     }
 
     /**
@@ -68,7 +65,6 @@ public class MimeTypeDetector {
 
         String mimeType = Files.probeContentType(file.toPath());
 
-
         if (mimeType == null || mimeType.isEmpty()) {
             Tika tika = new Tika();
             mimeType = tika.detect(file);
@@ -82,13 +78,10 @@ public class MimeTypeDetector {
             log.debug(e.getMessage());
         }
 
-
-        if (mimeType != null && mimeType.isEmpty())
-            mimeType = null;
+        if (mimeType != null && mimeType.isEmpty()) mimeType = null;
 
         // Identifiers may re-write MIME.
-        for (MimeTypeIdentifier identifier : extraIdentifiers)
-            mimeType = identifier.identify(mimeType, null, file);
+        for (MimeTypeIdentifier identifier : extraIdentifiers) mimeType = identifier.identify(mimeType, null, file);
 
         log.info("Detected MIME-Type of {} is {}", file.getName(), mimeType);
         return mimeType;
@@ -104,8 +97,7 @@ public class MimeTypeDetector {
     public String getStandardExtensionForMimeType(String mimeType) {
         List<String> extensions = getExtensionsCached(mimeType);
 
-        if (extensions == null)
-            return null;
+        if (extensions == null) return null;
 
         try {
             return extensions.get(0);
@@ -116,8 +108,7 @@ public class MimeTypeDetector {
 
     protected List<String> getExtensionsCached(String mimeType) {
         List<String> extensions = extensionsCache.get(mimeType);
-        if (extensions != null)
-            return extensions;
+        if (extensions != null) return extensions;
 
         extensions = new ArrayList<>();
         switch (mimeType) {
@@ -165,8 +156,7 @@ public class MimeTypeDetector {
     public boolean doesExtensionMatchMimeType(String extension, String mimeType) {
         List<String> extensions;
         extensions = getExtensionsCached(mimeType);
-        if (extensions == null)
-            return false;
+        if (extensions == null) return false;
 
         return extensions.contains(extension);
     }
@@ -183,8 +173,7 @@ public class MimeTypeDetector {
         try {
             String ext = FilenameUtils.getExtension(file.getName());
             String mime = getMimeType(file);
-            if (outputThumbnailExtensionCache.containsKey(ext))
-                return outputThumbnailExtensionCache.get(ext);
+            if (outputThumbnailExtensionCache.containsKey(ext)) return outputThumbnailExtensionCache.get(ext);
 
             for (MimeTypeIdentifier identifier : extraIdentifiers) {
                 List<String> exts = identifier.getExtensionsFor(mime);

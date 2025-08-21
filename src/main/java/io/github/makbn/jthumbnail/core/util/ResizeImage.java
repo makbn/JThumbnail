@@ -1,17 +1,14 @@
 package io.github.makbn.jthumbnail.core.util;
 
-
 import io.github.makbn.jthumbnail.core.exception.UnsupportedInputFileFormatException;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
+import javax.imageio.ImageIO;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ResizeImage {
@@ -35,9 +32,12 @@ public class ResizeImage {
      * If output image is bigger than input image, allow the output to be smaller than expected (the size of the input image)
      */
     public static final int ALLOW_SMALLER = 32;
+
     private static final int EXTRA_OPTIONS = DO_NOT_SCALE_UP;
+
     @Setter
     private int resizeMethod = RESIZE_FIT_ONE_DIMENSION;
+
     private BufferedImage inputImage;
     private boolean isProcessed = false;
     private BufferedImage outputImage;
@@ -49,7 +49,6 @@ public class ResizeImage {
     private int scaledHeight;
     private int offsetX;
     private int offsetY;
-
 
     public ResizeImage(int thumbWidth, int thumbHeight) {
         this.thumbWidth = thumbWidth;
@@ -67,8 +66,7 @@ public class ResizeImage {
     }
 
     public void setInputImage(BufferedImage input) throws UnsupportedInputFileFormatException {
-        if (input == null)
-            throw new UnsupportedInputFileFormatException("The image reader could not open the file.");
+        if (input == null) throw new UnsupportedInputFileFormatException("The image reader could not open the file.");
 
         this.inputImage = input;
         isProcessed = false;
@@ -81,15 +79,13 @@ public class ResizeImage {
     }
 
     public void writeOutput(File output, String format) throws IOException {
-        if (!isProcessed)
-            process();
+        if (!isProcessed) process();
 
         ImageIO.write(outputImage, format, output);
     }
 
     private void process() {
-        if (imageWidth == thumbWidth && imageHeight == thumbHeight)
-            outputImage = inputImage;
+        if (imageWidth == thumbWidth && imageHeight == thumbHeight) outputImage = inputImage;
         else {
             calcDimensions(resizeMethod);
             paint();
@@ -100,17 +96,16 @@ public class ResizeImage {
 
     private void calcDimensions(int resizeMethod) {
 
-        double resizeRatio = switch (resizeMethod) {
-            case RESIZE_FIT_BOTH_DIMENSIONS ->
-                    Math.min(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
-            case RESIZE_FIT_ONE_DIMENSION ->
-                    Math.max(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
-            default -> 1.0;
-        };
+        double resizeRatio =
+                switch (resizeMethod) {
+                    case RESIZE_FIT_BOTH_DIMENSIONS ->
+                        Math.min(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
+                    case RESIZE_FIT_ONE_DIMENSION ->
+                        Math.max(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
+                    default -> 1.0;
+                };
 
-        if ((EXTRA_OPTIONS & DO_NOT_SCALE_UP) > 0 && resizeRatio > 1.0)
-            resizeRatio = 1.0;
-
+        if ((EXTRA_OPTIONS & DO_NOT_SCALE_UP) > 0 && resizeRatio > 1.0) resizeRatio = 1.0;
 
         scaledWidth = (int) Math.round(imageWidth * resizeRatio);
         scaledHeight = (int) Math.round(imageHeight * resizeRatio);
@@ -121,15 +116,11 @@ public class ResizeImage {
         }
 
         // Center if smaller.
-        if (scaledWidth < thumbWidth)
-            offsetX = (thumbWidth - scaledWidth) / 2;
-        else
-            offsetX = 0;
+        if (scaledWidth < thumbWidth) offsetX = (thumbWidth - scaledWidth) / 2;
+        else offsetX = 0;
 
-        if (scaledHeight < thumbHeight)
-            offsetY = (thumbHeight - scaledHeight) / 2;
-        else
-            offsetY = 0;
+        if (scaledHeight < thumbHeight) offsetY = (thumbHeight - scaledHeight) / 2;
+        else offsetY = 0;
     }
 
     private void paint() {
@@ -147,12 +138,12 @@ public class ResizeImage {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-
         CompletableFuture<Boolean> isImageReady = new CompletableFuture<>();
-        boolean scalingComplete = graphics2D.drawImage(inputImage, offsetX, offsetY, scaledWidth, scaledHeight, (img, flags, x, y, width, height) -> {
-            isImageReady.complete(true);
-            return true;
-        });
+        boolean scalingComplete = graphics2D.drawImage(
+                inputImage, offsetX, offsetY, scaledWidth, scaledHeight, (img, flags, x, y, width, height) -> {
+                    isImageReady.complete(true);
+                    return true;
+                });
 
         if (!scalingComplete) {
             log.debug("ResizeImage: Scaling is not yet complete!");

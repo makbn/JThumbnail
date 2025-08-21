@@ -1,12 +1,11 @@
 package io.github.makbn.jthumbnail.core.util;
 
-import javax.imageio.*;
+import java.awt.image.RenderedImage;
+import java.io.IOException;
 import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.RenderedImage;
-import java.io.IOException;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-22
@@ -62,7 +61,8 @@ public class GifSequenceWriter {
         child.setAttribute("authenticationCode", "2.0");
 
         int loopContinuously = loop ? 0 : 1;
-        child.setUserObject(new byte[]{0x1, (byte) (loopContinuously & 0xFF), (byte) ((loopContinuously >> 8) & 0xFF)});
+        child.setUserObject(
+                new byte[] {0x1, (byte) (loopContinuously & 0xFF), (byte) ((loopContinuously >> 8) & 0xFF)});
         appExtensionsNode.appendChild(child);
         metadata.setFromTree(metaFormatName, root);
     }
@@ -74,5 +74,4 @@ public class GifSequenceWriter {
     public void close() throws IOException {
         writer.endWriteSequence();
     }
-
 }

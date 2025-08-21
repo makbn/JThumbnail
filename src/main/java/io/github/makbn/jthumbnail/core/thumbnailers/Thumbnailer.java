@@ -1,8 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;

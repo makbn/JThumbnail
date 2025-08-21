@@ -20,5 +20,4 @@ public class ThumbnailerException extends Exception {
     public ThumbnailerException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }
