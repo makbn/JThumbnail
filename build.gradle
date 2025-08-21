@@ -1,4 +1,5 @@
 plugins {
+
     id "org.springframework.boot" version "3.5.4"
     id "io.spring.dependency-management" version "1.1.7"
     id "java-library"
@@ -6,34 +7,39 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+	mavenLocal()
+	maven {
+		url = uri("https://repo.maven.apache.org/maven2/")
+	}
 
-    maven {
-        url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
-        content {
-            includeGroup "e-iceblue"
-        }
-    }
+	maven {
+		url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
+		content {
+			includeGroup "e-iceblue"
+		}
+	}
 }
 
 dependencyManagement {
     imports {
         mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.2'
     }
+
+	imports {
+		mavenBom 'org.springframework.modulith:spring-modulith-bom:1.0.0'
+	}
 }
 
 
 dependencies {
 
-    testImplementation platform("org.junit:junit-bom:${junit_ver}")
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testImplementation "org.springframework.modulith:spring-modulith-starter-test"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+	testImplementation platform("org.junit:junit-bom:${junit_ver}")
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testImplementation "org.springframework.modulith:spring-modulith-starter-test"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
+	testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+
 
     implementation "org.springframework.modulith:spring-modulith-starter-core"
     implementation "org.springframework.modulith:spring-modulith-events-api"
@@ -58,9 +64,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_ver}"
 
-
-    compileOnly "org.projectlombok:lombok:${lombok_ver}"
-    annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+	compileOnly "org.projectlombok:lombok:${lombok_ver}"
+	annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 }
 
 group = 'io.github.makbn'
@@ -69,9 +74,9 @@ description = 'JThumbnail is a Java library for creating Thumbnails of common ty
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
 
             groupId = 'io.github.makbn'
             artifactId = 'jthumbnail'
@@ -79,16 +84,16 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/makbn/jthumbnail"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/makbn/jthumbnail"
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
 }
 
 jar {
@@ -97,10 +102,40 @@ jar {
 }
 
 test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 
-    maxHeapSize = '1G'
+	maxHeapSize = '1G'
+}
+
+spotless {
+
+format 'misc', {
+	// define the files to apply `misc` to
+	target '*.gradle', '.gitattributes', '.gitignore'
+
+	// define the steps to apply to those files
+	trimTrailingWhitespace()
+	leadingSpacesToTabs() // or leadingTabsToSpaces. Takes an integer argument if you don't like 4
+	endWithNewline()
+}
+java {
+	// clean and format imports
+	removeUnusedImports()
+	removeWildcardImports()
+	importOrder()
+
+	// fix formatting of type annotations
+	formatAnnotations()
+
+	// Format sources and javadocs according to Palantir formatter
+	palantirJavaFormat()
+
+	// make sure every file has the following copyright header.
+	// optionally, Spotless can set copyright years by digging
+	// through git history (see "license" section below)
+	// licenseHeader '/* (C)$YEAR */'
+}
 }
