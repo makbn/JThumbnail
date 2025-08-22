@@ -3,7 +3,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import com.spire.xls.FileFormat;
 import com.spire.xls.Workbook;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.nio.file.Files;
 
@@ -16,7 +16,7 @@ import java.nio.file.Files;
 public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     private final OpenOfficeThumbnailer ooThumbnailer;
 
-    public ExcelConverterThumbnailer(AppProperties appProperties, OpenOfficeThumbnailer openOfficeThumbnailer) {
+    public ExcelConverterThumbnailer(ThumbnailProperties appProperties, OpenOfficeThumbnailer openOfficeThumbnailer) {
         super(appProperties);
         this.ooThumbnailer = openOfficeThumbnailer;
     }

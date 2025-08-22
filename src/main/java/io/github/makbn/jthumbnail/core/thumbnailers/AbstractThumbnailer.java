@@ -22,7 +22,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
     /**
      * Initialize the thumbnail size from default constants.
      */
-    protected AbstractThumbnailer(AppProperties appProperties) {
+    protected AbstractThumbnailer(ThumbnailProperties appProperties) {
         thumbHeight = appProperties.thumbHeight();
         thumbWidth = appProperties.thumbWidth();
     }

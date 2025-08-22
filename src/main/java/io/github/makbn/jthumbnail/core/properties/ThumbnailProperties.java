@@ -13,4 +13,4 @@ import org.springframework.validation.annotation.Validated;
  */
 @Validated
 @ConfigurationProperties(prefix = "jthumbnailer.thumbnail", ignoreUnknownFields = false)
-public record AppProperties(@NotNull @Min(1) Integer thumbHeight, @NotNull @Min(1) Integer thumbWidth) {}
+public record ThumbnailProperties(@NotNull @Min(1) Integer thumbHeight, @NotNull @Min(1) Integer thumbWidth) {}

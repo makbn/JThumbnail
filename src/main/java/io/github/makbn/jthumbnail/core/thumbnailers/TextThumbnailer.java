@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class TextThumbnailer extends AbstractThumbnailer {
     private static final Charset charset = StandardCharsets.UTF_8;
 
-    public TextThumbnailer(AppProperties appProperties) {
+    public TextThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
     }
 

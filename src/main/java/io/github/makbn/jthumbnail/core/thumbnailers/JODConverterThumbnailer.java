@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
@@ -41,7 +41,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     private final String officeDir;
 
     protected JODConverterThumbnailer(
-            AppProperties appProperties,
+            ThumbnailProperties appProperties,
             OfficeProperties officeProperties,
             OpenOfficeThumbnailer openOfficeThumbnailer,
             OfficeManager officeManager) {

@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.config;
 
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODHtmlConverterThumbnailer;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class JodConverterConfiguration {
 
-    private final AppProperties appProperties;
+    private final ThumbnailProperties appProperties;
     private final OfficeProperties officeProperties;
 
     @Bean("jodConverter")

@@ -2,7 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.io.BufferedInputStream;
@@ -31,7 +31,7 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      * @param appSettings       Application settings used by the thumbnailer.
      * @param pdfBoxThumbnailer An instance of PDFBoxThumbnailer for handling PDF files.
      */
-    public OpenOfficeThumbnailer(AppProperties appProperties, PDFBoxThumbnailer pdfBoxThumbnailer) {
+    public OpenOfficeThumbnailer(ThumbnailProperties appProperties, PDFBoxThumbnailer pdfBoxThumbnailer) {
         super(appProperties);
         this.pdfBoxThumbnailer = pdfBoxThumbnailer;
     }

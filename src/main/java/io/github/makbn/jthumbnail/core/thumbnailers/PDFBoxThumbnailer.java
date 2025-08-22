@@ -2,7 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    public PDFBoxThumbnailer(AppProperties appProperties) {
+    public PDFBoxThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
     }
 

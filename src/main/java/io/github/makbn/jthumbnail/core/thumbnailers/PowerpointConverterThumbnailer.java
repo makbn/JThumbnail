@@ -3,7 +3,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import com.spire.presentation.Presentation;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
-    public PowerpointConverterThumbnailer(AppProperties appProperties) {
+    public PowerpointConverterThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
     }
 

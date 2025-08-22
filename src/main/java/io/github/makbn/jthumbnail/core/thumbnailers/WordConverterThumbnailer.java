@@ -3,7 +3,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import com.spire.doc.Document;
 import com.spire.doc.documents.ImageType;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WordConverterThumbnailer extends AbstractThumbnailer {
 
-    public WordConverterThumbnailer(AppProperties appProperties) {
+    public WordConverterThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
     }
 
