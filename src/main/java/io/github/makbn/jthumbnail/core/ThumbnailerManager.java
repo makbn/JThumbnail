@@ -5,6 +5,14 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
 import io.github.makbn.jthumbnail.core.model.ExecutionResult;
 import io.github.makbn.jthumbnail.core.thumbnailers.Thumbnailer;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,13 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * This class manages all available Thumbnailers.
@@ -35,19 +36,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @DependsOn({
-    "DWGThumbnailer",
-    "JODExcelThumbnailer",
-    "PDFBoxThumbnailer",
-    "MPEGThumbnailer",
-    "openOfficeThumbnailer",
-    "jodConverter",
-    "MP3Thumbnailer",
-    "powerpointConverterThumbnailer",
-    "JODHtmlConverterThumbnailer",
-    "nativeImageThumbnailer",
-    "textThumbnailer",
-    "imageThumbnailer",
-    "wordConverterThumbnailer"
+        "DWGThumbnailer",
+        "JODExcelThumbnailer",
+        "PDFBoxThumbnailer",
+        "MPEGThumbnailer",
+        "openOfficeThumbnailer",
+        "jodConverter",
+        "MP3Thumbnailer",
+        "powerpointConverterThumbnailer",
+        "JODHtmlConverterThumbnailer",
+        "nativeImageThumbnailer",
+        "textThumbnailer",
+        "imageThumbnailer",
+        "wordConverterThumbnailer"
 })
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -201,11 +202,12 @@ public class ThumbnailerManager implements Thumbnailer {
 
             if (!generated.isGenerated()) {
                 Throwable exp = generated.getException();
-                if (exp instanceof ThumbnailerException thumbnailerException) throw thumbnailerException;
-                else if (exp instanceof ThumbnailerRuntimeException thumbnailerRuntimeException)
-                    throw thumbnailerRuntimeException;
-                else if (exp instanceof RuntimeException runtimeException) throw runtimeException;
-                else throw new ThumbnailerException(exp);
+                switch (exp) {
+                    case ThumbnailerException thumbnailerException -> throw thumbnailerException;
+                    case ThumbnailerRuntimeException thumbnailerRuntimeException -> throw thumbnailerRuntimeException;
+                    case RuntimeException runtimeException -> throw runtimeException;
+                    default -> throw new ThumbnailerException(exp);
+                }
             }
         } else {
             throw new ThumbnailerException(

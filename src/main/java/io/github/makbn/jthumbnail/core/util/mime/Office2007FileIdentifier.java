@@ -1,5 +1,6 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;

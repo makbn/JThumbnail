@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.core.util;
 
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import javax.imageio.*;
 import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;

@@ -30,7 +30,7 @@ class ThumbnailerTest {
     private static JThumbnailer jThumbnailer;
 
     @BeforeAll
-    public static void init() throws IOException {
+    static void init() throws IOException {
         log.info("Starting jThumbnailer ...");
         String[] args = new String[] {};
         Files.createDirectories(Path.of("test_results"));
@@ -38,7 +38,7 @@ class ThumbnailerTest {
     }
 
     @AfterAll
-    public static void destroy() {
+    static void destroy() {
         try {
             jThumbnailer.close();
         } catch (Exception e) {
