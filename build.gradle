@@ -50,7 +50,6 @@ dependencies {
 	implementation "commons-io:commons-io:${commonsio_ver}"
 	implementation "org.slf4j:slf4j-api:${slf4j_ver}"
 	implementation "org.jodconverter:jodconverter-local:${jod_ver}"
-	implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
 	implementation "org.bytedeco:javacv:${javacv_ver}"
 	implementation "org.bytedeco:opencv:${opencv_ver}"
 	implementation "net.coobird:thumbnailator:${thumb_ver}"
@@ -60,6 +59,9 @@ dependencies {
 	implementation "org.apache.tika:tika-core:${tika_ver}"
 	implementation "org.springframework.boot:spring-boot-starter"
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_ver}"
+	implementation ("org.apache.pdfbox:pdfbox:${pdfbox_ver}") {
+		exclude group: "commons-logging", module: "commons-logging"
+	}
 
 	compileOnly "org.projectlombok:lombok:${lombok_ver}"
 	annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
