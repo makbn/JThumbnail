@@ -5,6 +5,14 @@ import io.github.makbn.jthumbnail.core.JThumbnailer;
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,16 +22,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import lombok.AccessLevel;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.modulith.events.ApplicationModuleListener;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-@Component
+
 @Log4j2
+@Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ThumbnailService {
     JThumbnailer thumbnailer;
@@ -99,7 +101,7 @@ public class ThumbnailService {
      *
      * @param event The ThumbnailEvent to process.
      */
-    @ApplicationModuleListener
+    @EventListener
     void onThumbnailEvent(ThumbnailEvent event) {
         if (waitingMap.containsKey(event.getUid())) {
             waitingMap
