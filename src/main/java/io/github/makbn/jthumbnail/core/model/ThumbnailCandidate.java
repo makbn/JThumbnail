@@ -1,6 +1,9 @@
 package io.github.makbn.jthumbnail.core.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
@@ -15,8 +18,10 @@ import java.io.File;
 public class ThumbnailCandidate {
     @NonNull
     File file;
+
     @NonNull
     String uid;
+
     @NonFinal
     String thumbExt;
 }

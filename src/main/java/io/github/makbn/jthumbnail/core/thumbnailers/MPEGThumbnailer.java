@@ -1,24 +1,21 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
-
+import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.springframework.stereotype.Component;
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-22
@@ -43,11 +40,10 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
     /**
      * get thumbnail from multimedia files
      */
-    public void getThumb(String inputPath, String outputPath)
-            throws IOException {
+    public void getThumb(String inputPath, String outputPath) throws IOException {
 
         try (FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
-             ImageOutputStream output = new FileImageOutputStream(new File(outputPath))) {
+                ImageOutputStream output = new FileImageOutputStream(new File(outputPath))) {
             g.setFormat("mp4");
             g.start();
             int frameCount = g.getLengthInFrames();
@@ -68,7 +64,6 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         }
     }
 
-
     /**
      * Get a List of accepted File Types.
      * Only PDF Files are accepted.
@@ -77,19 +72,17 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "video/mp4",
-                "video/MP2T",
-                "video/x-msvideo",
-                "video/x-ms-wmv",
-                "video/x-m4v",
-                "video/webm",
-                "video/quicktime",
-                "video/3gpp"
-
+        return new String[] {
+            "video/mp4",
+            "video/MP2T",
+            "video/x-msvideo",
+            "video/x-ms-wmv",
+            "video/x-m4v",
+            "video/webm",
+            "video/quicktime",
+            "video/3gpp"
         };
     }
-
 
     @SuppressWarnings("Duplicates")
     private BufferedImage getScaledBI(BufferedImage org) {
@@ -102,7 +95,6 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
 
         return scaleBI;
     }
-
 
     private BufferedImage createImageFromBytes(byte[] imageData) {
         ByteArrayInputStream bais = new ByteArrayInputStream(imageData);

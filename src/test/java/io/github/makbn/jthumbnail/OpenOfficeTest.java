@@ -1,6 +1,15 @@
 package io.github.makbn.jthumbnail;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import io.github.makbn.jthumbnail.core.config.AppSettings;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
 import lombok.extern.log4j.Log4j2;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
@@ -14,22 +23,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 @Log4j2
 class OpenOfficeTest {
     private static final Properties properties = new Properties();
+
     @BeforeAll
     static void setup() {
-        try (InputStream inputStream = OpenOfficeTest.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream =
+                OpenOfficeTest.class.getClassLoader().getResourceAsStream("application.properties")) {
             if (inputStream != null) {
                 properties.load(inputStream);
             } else {
@@ -61,15 +62,20 @@ class OpenOfficeTest {
         try {
             for (int i = 0; i < 5; i++) {
                 DocumentConverter converter =
-                        LocalConverter.builder()
-                                .officeManager(officeManager)
-                                .build();
+                        LocalConverter.builder().officeManager(officeManager).build();
 
-                converter.convert(new File("src/test/resources/docx_sample_1.docx")).to(new File("test_results/test_docx_sample.pdf")).execute();
-                converter.convert(new File("src/test/resources/docx_sample_1.docx")).to(new File("test_results/test_docx_sample_2.pdf")).execute();
-                converter.convert(new File("src/test/resources/docx_sample_1.docx")).to(new File("test_results/test_docx_sample_3.pdf")).execute();
-
-
+                converter
+                        .convert(new File("src/test/resources/docx_sample_1.docx"))
+                        .to(new File("test_results/test_docx_sample.pdf"))
+                        .execute();
+                converter
+                        .convert(new File("src/test/resources/docx_sample_1.docx"))
+                        .to(new File("test_results/test_docx_sample_2.pdf"))
+                        .execute();
+                converter
+                        .convert(new File("src/test/resources/docx_sample_1.docx"))
+                        .to(new File("test_results/test_docx_sample_3.pdf"))
+                        .execute();
             }
         } catch (Exception e) {
             fail(e);
@@ -77,6 +83,5 @@ class OpenOfficeTest {
             OfficeUtils.stopQuietly(officeManager);
         }
         assertTrue(Files.exists(Paths.get("test_results/test_docx_sample.pdf")));
-
     }
 }

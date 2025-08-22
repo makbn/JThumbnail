@@ -4,7 +4,6 @@ import com.spire.xls.FileFormat;
 import com.spire.xls.Workbook;
 import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-
 import java.io.File;
 import java.nio.file.Files;
 
@@ -17,7 +16,7 @@ import java.nio.file.Files;
 public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     private final OpenOfficeThumbnailer ooThumbnailer;
 
-    //@Autowired
+    // @Autowired
     public ExcelConverterThumbnailer(AppSettings appSettings, OpenOfficeThumbnailer openOfficeThumbnailer) {
         super(appSettings);
         this.ooThumbnailer = openOfficeThumbnailer;
@@ -26,33 +25,31 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailerException {
 
-        //Create a workbook instance
+        // Create a workbook instance
         try {
             Workbook workbook = new Workbook();
-            //Load a sample Excel document
+            // Load a sample Excel document
             workbook.loadFromFile(input.getAbsolutePath());
-            //Fit all worksheets on one page (optional)
+            // Fit all worksheets on one page (optional)
             workbook.getConverterSetting().setSheetFitToPage(true);
 
             File outputTmp = Files.createTempFile("jthumbnailer", "." + "pdf").toFile();
 
-            //Save the workbook to PDF
+            // Save the workbook to PDF
             workbook.saveToFile(outputTmp.getAbsolutePath(), FileFormat.PDF);
             ooThumbnailer.generateThumbnail(outputTmp, output);
             outputTmp.deleteOnExit();
         } catch (Exception err) {
             throw new ThumbnailerException(err);
         }
-
     }
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        return new String[] {
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         };
     }
-
 }
