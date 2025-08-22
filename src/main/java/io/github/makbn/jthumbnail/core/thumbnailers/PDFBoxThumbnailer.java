@@ -1,8 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    public PDFBoxThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public PDFBoxThumbnailer(AppProperties appProperties) {
+        super(appProperties);
     }
 
     private PDDocument getDocument(File input) throws IOException {

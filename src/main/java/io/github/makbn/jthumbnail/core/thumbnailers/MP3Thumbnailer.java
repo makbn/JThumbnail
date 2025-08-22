@@ -4,8 +4,8 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MP3Thumbnailer extends AbstractThumbnailer {
 
-    public MP3Thumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public MP3Thumbnailer(AppProperties appProperties) {
+        super(appProperties);
     }
 
     @Override

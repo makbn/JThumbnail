@@ -1,6 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.stereotype.Component;
 
@@ -8,8 +9,11 @@ import org.springframework.stereotype.Component;
 public class JODExcelThumbnailer extends JODConverterThumbnailer {
 
     public JODExcelThumbnailer(
-            AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
-        super(settings, openOfficeThumbnailer, officeManager);
+            AppProperties appProperties,
+            OfficeProperties officeProperties,
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager officeManager) {
+        super(appProperties, officeProperties, openOfficeThumbnailer, officeManager);
     }
 
     protected String getStandardOpenOfficeExtension() {

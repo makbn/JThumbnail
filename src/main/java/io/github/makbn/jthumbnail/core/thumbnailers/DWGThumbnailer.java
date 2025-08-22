@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DWGThumbnailer extends AbstractThumbnailer {
-    public DWGThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public DWGThumbnailer(AppProperties appProperties) {
+        super(appProperties);
     }
 
     @SuppressWarnings("all")

@@ -1,7 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import java.io.File;
@@ -40,9 +41,12 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     private final String officeDir;
 
     protected JODConverterThumbnailer(
-            AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
-        super(settings);
-        this.officeDir = settings.getOfficeTemporaryDirectory();
+            AppProperties appProperties,
+            OfficeProperties officeProperties,
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager officeManager) {
+        super(appProperties);
+        this.officeDir = officeProperties.tmp();
         this.ooThumbnailer = openOfficeThumbnailer;
         this.mimeTypeDetector = new MimeTypeDetector();
         this.officeManager = officeManager;

@@ -2,17 +2,9 @@ package io.github.makbn.jthumbnail.api.service;
 
 import io.github.makbn.jthumbnail.api.model.Thumbnail;
 import io.github.makbn.jthumbnail.core.JThumbnailer;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.config.ThumbnailServerConfiguration;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
-import lombok.AccessLevel;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,22 +14,30 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Log4j2
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ThumbnailService {
     JThumbnailer thumbnailer;
-    AppSettings settings;
+
+    private final ThumbnailServerConfiguration thumbnailServerConfiguration;
+
     // can be replaced with LoadingCache to prevent OOM
     Map<String, CompletableFuture<Thumbnail>> waitingMap;
     // can be replaced with LoadingCache to prevent OOM
     Map<String, File> temporaryFilesMap;
 
-    public ThumbnailService(JThumbnailer thumbnailer, AppSettings settings) {
+    public ThumbnailService(JThumbnailer thumbnailer, ThumbnailServerConfiguration settings) {
         this.thumbnailer = thumbnailer;
-        this.settings = settings;
+        this.thumbnailServerConfiguration = settings;
         this.waitingMap = new HashMap<>();
         this.temporaryFilesMap = new HashMap<>();
     }
@@ -141,7 +141,7 @@ public class ThumbnailService {
      */
     private File createTempFile(@NonNull MultipartFile multipartFile) throws IOException {
         File tempFile = Files.createTempFile(
-                        settings.getUploadDirectory().toPath(),
+                        thumbnailServerConfiguration.getUploadDirectory().toPath(),
                         UUID.randomUUID().toString(),
                         multipartFile.getOriginalFilename())
                 .toFile();

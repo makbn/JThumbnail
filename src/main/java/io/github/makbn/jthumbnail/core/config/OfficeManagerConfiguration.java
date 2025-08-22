@@ -1,46 +1,44 @@
 package io.github.makbn.jthumbnail.core.config;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
-import java.io.File;
-import java.io.IOException;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import lombok.RequiredArgsConstructor;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.office.ExistingProcessAction;
 import org.jodconverter.local.office.LocalOfficeManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
-@Configuration("jtOfficeManagerConfiguration")
-@DependsOn("jtApplicationConfig")
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+@Configuration
 public class OfficeManagerConfiguration {
-    OfficeManager officeManager;
 
-    public OfficeManagerConfiguration(AppSettings settings) throws IOException {
-        File dir = settings.getOfficeDirectory();
+    private final OfficeProperties officeProperties;
 
-        this.officeManager = LocalOfficeManager.builder()
-                .portNumbers(settings.getOpenOfficePorts())
-                .workingDir(dir)
-                .processTimeout(settings.getTimeout())
-                .taskExecutionTimeout(settings.getTimeout())
-                .maxTasksPerProcess(settings.getMaxTaskPerProcess())
-                .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
-                .officeHome(settings.getOpenOfficePath())
-                .install()
-                .build();
-        try {
-            officeManager.start();
-        } catch (OfficeException e) {
-            throw new ThumbnailerRuntimeException(e);
-        }
-    }
+    private OfficeManager officeManager = null;
 
     @Bean("officeManager")
     OfficeManager getOfficeManager() {
+        if (officeManager == null) {
+            this.officeManager = LocalOfficeManager.builder()
+                    .portNumbers(officeProperties.ports().stream()
+                            .mapToInt(Integer::valueOf)
+                            .toArray())
+                    .workingDir(officeProperties.workingDir())
+                    .processTimeout(officeProperties.timeout())
+                    .taskExecutionTimeout(officeProperties.timeout())
+                    .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
+                    .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
+                    .officeHome(officeProperties.officeHome())
+                    .install()
+                    .build();
+            try {
+                officeManager.start();
+            } catch (OfficeException e) {
+                throw new ThumbnailerRuntimeException(e);
+            }
+        }
         return officeManager;
     }
 }

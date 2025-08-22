@@ -2,8 +2,8 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import com.spire.doc.Document;
 import com.spire.doc.documents.ImageType;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.AppProperties;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,8 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class WordConverterThumbnailer extends AbstractThumbnailer {
 
-    public WordConverterThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public WordConverterThumbnailer(AppProperties appProperties) {
+        super(appProperties);
     }
 
     @Override
