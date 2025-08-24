@@ -1,9 +1,14 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import io.github.makbn.jthumbnail.core.util.IOUtil;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -12,13 +17,6 @@ import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.LocalConverter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
-
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
-import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
-import io.github.makbn.jthumbnail.core.util.IOUtil;
-import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("jodConverter")
