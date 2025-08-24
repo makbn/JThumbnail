@@ -1,15 +1,9 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
-import io.github.makbn.jthumbnail.core.util.IOUtil;
-import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -18,6 +12,13 @@ import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.LocalConverter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+
+import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import io.github.makbn.jthumbnail.core.util.IOUtil;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component("jodConverter")
@@ -38,7 +39,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected final MimeTypeDetector mimeTypeDetector;
 
-    private final String officeDir;
+    private final File officeTmpDir;
 
     protected JODConverterThumbnailer(
             ThumbnailProperties appProperties,
@@ -46,7 +47,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             OpenOfficeThumbnailer openOfficeThumbnailer,
             OfficeManager officeManager) {
         super(appProperties);
-        this.officeDir = officeProperties.tmp();
+        this.officeTmpDir = officeProperties.tmpDir();
         this.ooThumbnailer = openOfficeThumbnailer;
         this.mimeTypeDetector = new MimeTypeDetector();
         this.officeManager = officeManager;
@@ -59,7 +60,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         // close the connection
         if (officeManager != null && officeManager.isRunning()) {
             try {
-                IOUtil.deleteQuietlyForce(Path.of(officeDir).toFile());
+                IOUtil.deleteQuietlyForce(officeTmpDir);
                 officeManager.stop();
             } catch (OfficeException e) {
                 log.error("JODConverterThumbnailer", e);

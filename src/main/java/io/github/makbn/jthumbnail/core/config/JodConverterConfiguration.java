@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.config;
 
-import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODHtmlConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.OpenOfficeThumbnailer;

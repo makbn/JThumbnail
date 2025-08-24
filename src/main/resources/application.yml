@@ -19,8 +19,9 @@ jthumbnailer:
       - 2004
     timeout: 300000
     max_tasks_per_process: 25
-    tmp: "/tmp"
-#   dir: "/Users/mehdiakbarian/tools/soffice/OpenOffice.app/Contents/"
+    tmp_dir: "/tmp"
+#   working-dir: "/Users/mehdiakbarian/tools/soffice/OpenOffice.app/Contents/"
+#   office_home=/usr/bin/
 
   async:
     core-pool-size: 10
