@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.io.FileUtils;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.office.ExistingProcessAction;
@@ -37,6 +38,11 @@ public class OfficeManagerConfiguration {
             Path temporaryPath;
             try {
                 File workingDirPath = officeProperties.workingDir();
+
+                if (workingDirPath == null) {
+                    // We use the OS temporary directory
+                    workingDirPath = FileUtils.getTempDirectory();
+                }
 
                 if (!workingDirPath.exists()) {
                     log.info("Working directory doesn't exist, creating it");
