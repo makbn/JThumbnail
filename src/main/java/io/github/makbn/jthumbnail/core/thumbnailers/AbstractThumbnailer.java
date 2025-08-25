@@ -29,10 +29,12 @@ import java.io.IOException;
 /**
  * This AbstractThumbnailer may be used in order to implement only essential
  * methods. It
- * <li>stores the current thumbnail height/width
- * <li>implements an empty close method
- * <li>specifies a wildcard MIME Type as appropriate Filetype
- *
+ * <ul>
+ * <li>stores the current thumbnail height/width</li>
+ * <li>implements an empty close method</li>
+ * <li>specifies a wildcard MIME Type as appropriate Filetype</li>
+ * </ul>
+ * 
  * @author Mehdi Akbarian-Rastaghi
  */
 public abstract class AbstractThumbnailer implements Thumbnailer {
