@@ -4,16 +4,20 @@ import io.github.makbn.jthumbnail.core.properties.ThumbnailServerProperties;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ThumbnailServerConfiguration {
 
-    private final ThumbnailServerProperties thumbnailServerProperties;
+    ThumbnailServerProperties thumbnailServerProperties;
 
     public File getUploadDirectory() throws IOException {
         File uploadDirectory = thumbnailServerProperties.uploadDirectory();
@@ -31,11 +35,16 @@ public class ThumbnailServerConfiguration {
         // Create the temporary directory
         log.debug("Creating temporary directory inside upload directory");
         var temporaryPath = uploadDirectory.toPath().resolve(String.valueOf(System.currentTimeMillis()));
-        log.trace("Creating " + temporaryPath.toAbsolutePath().toString() + " directory");
+        log.trace("Creating {} directory", temporaryPath.toAbsolutePath());
 
-        temporaryPath = Files.createDirectory(temporaryPath);
+        File temporaryDirectory = Files.createDirectory(temporaryPath).toFile();
         log.debug("Temporary upload directory created");
 
-        return temporaryPath.toFile();
+        return temporaryDirectory;
+    }
+
+
+    public int getMaxWaitingListSize() {
+        return thumbnailServerProperties.maxWaitingListSize();
     }
 }

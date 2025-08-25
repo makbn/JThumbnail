@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.io.File;
@@ -23,7 +23,7 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
         super(appProperties);
     }
 
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
         try {
@@ -31,7 +31,7 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
             resizer.writeOutput(output);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new ThumbnailerException("File format could not be interpreted as image", e);
+            throw new ThumbnailException("File format could not be interpreted as image", e);
         }
     }
 

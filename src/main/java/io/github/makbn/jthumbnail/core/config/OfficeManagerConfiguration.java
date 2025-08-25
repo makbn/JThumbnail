@@ -1,12 +1,11 @@
 package io.github.makbn.jthumbnail.core.config;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
@@ -15,20 +14,27 @@ import org.jodconverter.local.office.LocalOfficeManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@RequiredArgsConstructor
-@Configuration
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+
 @Slf4j
+@Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OfficeManagerConfiguration {
 
-    private final OfficeProperties officeProperties;
+    OfficeProperties officeProperties;
 
-    private OfficeManager officeManager = null;
+    @NonFinal
+    OfficeManager officeManager;
 
     @Bean("officeManager")
-    OfficeManager getOfficeManager() throws IOException {
+    OfficeManager getOfficeManager() {
         if (officeManager == null) {
-            Path temporaryPath = null;
-
+            Path temporaryPath;
             try {
                 File workingDirPath = officeProperties.workingDir();
 
@@ -46,32 +52,31 @@ public class OfficeManagerConfiguration {
                 // Create the temporary directory
                 log.debug("Creating temporary directory inside working directory");
                 temporaryPath = workingDirPath.toPath().resolve(String.valueOf(System.currentTimeMillis()));
-                log.trace("Creating " + temporaryPath.toAbsolutePath().toString() + " directory");
+                log.trace("Creating {} directory", temporaryPath.toAbsolutePath());
 
-                temporaryPath = Files.createDirectory(temporaryPath);
+                File temporaryDirectory = Files.createDirectory(temporaryPath).toFile();
                 log.debug("Temporary working directory created");
 
-            } catch (IOException ex) {
-                log.error("Working directory creation failed", ex);
-                throw ex;
-            }
-
-            this.officeManager = LocalOfficeManager.builder()
-                    .portNumbers(officeProperties.ports().stream()
-                            .mapToInt(Integer::valueOf)
-                            .toArray())
-                    .workingDir(temporaryPath.toFile())
-                    .processTimeout(officeProperties.timeout())
-                    .taskExecutionTimeout(officeProperties.timeout())
-                    .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
-                    .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
-                    .officeHome(officeProperties.officeHome())
-                    .install()
-                    .build();
-            try {
+                this.officeManager = LocalOfficeManager.builder()
+                        .portNumbers(officeProperties.ports().stream()
+                                .mapToInt(Integer::valueOf)
+                                .toArray())
+                        .workingDir(temporaryDirectory)
+                        .processTimeout(officeProperties.timeout())
+                        .taskExecutionTimeout(officeProperties.timeout())
+                        .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
+                        .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
+                        .officeHome(officeProperties.officeHome())
+                        .install()
+                        .build();
                 officeManager.start();
+
+            } catch (IOException e) {
+                log.error("Failed to create working directory", e);
+                throw new ThumbnailRuntimeException(e);
             } catch (OfficeException e) {
-                throw new ThumbnailerRuntimeException(e);
+                log.error("Failed to start Office manager", e);
+                throw new ThumbnailRuntimeException(e);
             }
         }
         return officeManager;

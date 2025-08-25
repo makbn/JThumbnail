@@ -12,4 +12,5 @@ import org.springframework.validation.annotation.Validated;
  */
 @Validated
 @ConfigurationProperties(prefix = "jthumbnailer.server", ignoreUnknownFields = false)
-public record ThumbnailServerProperties(@NotNull File uploadDirectory) {}
+public record ThumbnailServerProperties(@NotNull File uploadDirectory,
+                                        @NotNull int maxWaitingListSize) {}

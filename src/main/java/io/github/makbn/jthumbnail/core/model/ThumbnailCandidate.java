@@ -5,18 +5,22 @@ import java.io.File;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 /**
- * @author Mehdi Akbarian-Rastaghi 2018-10-23
+ * @author Matt Akbarian (makbn)
  */
 @Data
 @RequiredArgsConstructor(staticName = "of", access = AccessLevel.PUBLIC)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ThumbnailCandidate {
     @NotNull
-    private final File file;
+    File file;
 
     @NotNull
-    private final String uid;
+    String uid;
 
-    private String thumbExt;
+    @NonFinal
+    String thumbExt;
 }

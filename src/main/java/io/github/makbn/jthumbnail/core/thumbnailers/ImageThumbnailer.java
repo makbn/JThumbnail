@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ImageThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         try {
             Thumbnails.of(input)
                     .allowOverwrite(true)
@@ -32,7 +32,7 @@ public class ImageThumbnailer extends AbstractThumbnailer {
                     .toFile(output);
         } catch (IOException e) {
             mLog.error(e);
-            throw new ThumbnailerException();
+            throw new ThumbnailException();
         }
     }
 

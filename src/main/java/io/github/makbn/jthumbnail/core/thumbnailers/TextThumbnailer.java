@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Color;
 import java.awt.Font;
@@ -28,13 +28,13 @@ public class TextThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
 
         String text;
         try {
             text = readFile(input);
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
 
         BufferedImage img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
@@ -87,7 +87,7 @@ public class TextThumbnailer extends AbstractThumbnailer {
         try {
             ImageIO.write(img, "png", output);
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 

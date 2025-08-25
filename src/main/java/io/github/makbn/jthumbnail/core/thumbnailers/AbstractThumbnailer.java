@@ -21,7 +21,7 @@
 
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.io.IOException;
@@ -114,9 +114,9 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * @param mimeType MIME-Type of input file (null if unknown)
      *
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnailing process failed.
      */
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException {
         // Ignore MIME-Type-Hint
         generateThumbnail(input, output);
     }

@@ -8,10 +8,7 @@ import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import lombok.AccessLevel;
@@ -27,19 +24,15 @@ import org.springframework.web.multipart.MultipartFile;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ThumbnailService {
     JThumbnailer thumbnailer;
-
-    private final ThumbnailServerConfiguration thumbnailServerConfiguration;
-
-    // can be replaced with LoadingCache to prevent OOM
+    ThumbnailServerConfiguration thumbnailServerConfiguration;
     Map<String, CompletableFuture<Thumbnail>> waitingMap;
-    // can be replaced with LoadingCache to prevent OOM
     Map<String, File> temporaryFilesMap;
 
     public ThumbnailService(JThumbnailer thumbnailer, ThumbnailServerConfiguration settings) {
         this.thumbnailer = thumbnailer;
         this.thumbnailServerConfiguration = settings;
-        this.waitingMap = new HashMap<>();
-        this.temporaryFilesMap = new HashMap<>();
+        this.waitingMap = createBoundedMap();
+        this.temporaryFilesMap = createBoundedMap();
     }
 
     public String requestThumbnail(@NonNull MultipartFile multipartFile) throws IOException {
@@ -147,5 +140,39 @@ public class ThumbnailService {
                 .toFile();
         multipartFile.transferTo(tempFile);
         return tempFile;
+    }
+
+
+    /**
+     * Creates a thread-safe {@link Map} with a bounded size, implemented using a
+     * {@link LinkedHashMap} wrapped in {@link Collections#synchronizedMap(Map)}.
+     * <p>
+     * The maximum number of entries is determined by
+     * {@code thumbnailServerConfiguration.getMaxWaitingListSize()}. When this limit
+     * is exceeded, the eldest entry (based on insertion order) is automatically removed.
+     * Each removal is logged at debug level.
+     * </p>
+     *
+     * <p><b>Thread Safety:</b> Synchronization is provided via
+     * {@link Collections#synchronizedMap(Map)}, which ensures safe concurrent access
+     * at the cost of coarse-grained locking. For higher concurrency or advanced cache
+     * policies, consider a dedicated caching library such as Caffeine.</p>
+     *
+     * @param <T> the type of values stored in the map
+     * @return a thread-safe bounded {@link Map} with automatic eviction
+     * @see Collections#synchronizedMap(Map)
+     */
+    private <T> Map<String, T> createBoundedMap() {
+        Map<String, T> limitedMap = new LinkedHashMap<>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, T> eldest) {
+                boolean remove = size() > thumbnailServerConfiguration.getMaxWaitingListSize();
+                if (remove) {
+                    log.debug("Removing eldest entry: {}", eldest.getKey());
+                }
+                return remove;
+            }
+        };
+        return Collections.synchronizedMap(limitedMap);
     }
 }

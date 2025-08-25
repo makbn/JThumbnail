@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +19,9 @@ public interface Thumbnailer extends Closeable {
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnailing process failed.
      */
-    void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException;
+    void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException;
 
     /**
      * Generate a Thumbnail of the input file.
@@ -29,9 +29,9 @@ public interface Thumbnailer extends Closeable {
      * @param input  Input file that should be processed
      * @param output File in which should be written
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnailing process failed.
      */
-    void generateThumbnail(File input, File output) throws IOException, ThumbnailerException;
+    void generateThumbnail(File input, File output) throws IOException, ThumbnailException;
 
     /**
      * This function will be called after all Thumbnails are generated.

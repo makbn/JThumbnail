@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
     }
 
     @SuppressWarnings("all")
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         // GENERATE FROM EXISTING BITMAP IN DWG
         byte[] outputByte = new byte[4096];
 
@@ -90,7 +90,7 @@ public class DWGThumbnailer extends AbstractThumbnailer {
                 resizer.writeOutput(output);
             }
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 

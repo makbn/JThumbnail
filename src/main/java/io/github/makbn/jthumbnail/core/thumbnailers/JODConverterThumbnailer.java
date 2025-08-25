@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
@@ -78,9 +78,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      *
      * @param input  Input file that should be processed
      * @param output File in which should be written
-     * @throws ThumbnailerException If the creating thumbnail process failed.
+     * @throws ThumbnailException If the creating thumbnail process failed.
      */
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         File outputTmp = null;
         File workingFile = input;
         try {
@@ -104,16 +104,16 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             converter.convert(workingFile).to(outputTmp).execute();
 
             if (outputTmp.length() == 0) {
-                throw new ThumbnailerException("Could not convert into OpenOffice-File (file was empty)...");
+                throw new ThumbnailException("Could not convert into OpenOffice-File (file was empty)...");
             }
 
             ooThumbnailer.generateThumbnail(outputTmp, output);
 
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         } catch (OfficeException e) {
             log.warn(e.getMessage(), e);
-            throw new ThumbnailerException(e.getMessage());
+            throw new ThumbnailException(e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
@@ -129,10 +129,10 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnailing process failed.
      */
     @Override
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException {
         File workingFile = input;
         String ext = FilenameUtils.getExtension(workingFile.getName());
         if (!mimeTypeDetector.doesExtensionMatchMimeType(ext, mimeType)) {

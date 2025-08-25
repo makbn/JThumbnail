@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
 import java.awt.Graphics2D;
@@ -18,7 +18,7 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.springframework.stereotype.Component;
 
 /**
- * created by Mehdi Akbarian-Rastaghi 2018-10-22
+ * created by Matt Akbarian (makbn)
  */
 @Component
 @Slf4j
@@ -29,11 +29,11 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         try {
             getThumb(input.getPath(), output.getPath());
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 
@@ -103,6 +103,6 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         } catch (IOException e) {
             log.debug(e.getMessage());
         }
-        throw new ThumbnailerRuntimeException("Error in generating thumbnail for MPEG file.");
+        throw new ThumbnailRuntimeException("Error in generating thumbnail for MPEG file.");
     }
 }

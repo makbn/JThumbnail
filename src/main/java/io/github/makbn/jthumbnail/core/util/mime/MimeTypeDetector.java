@@ -1,6 +1,6 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -167,9 +167,9 @@ public class MimeTypeDetector {
      *
      * @param file input file for generating thumbnail.
      * @return the identified extension or 'png' in other cases
-     * @throws ThumbnailerException if there is a problem on reading file
+     * @throws ThumbnailException if there is a problem on reading file
      */
-    public String getOutputExt(File file) throws ThumbnailerException {
+    public String getOutputExt(File file) throws ThumbnailException {
         try {
             String ext = FilenameUtils.getExtension(file.getName());
             String mime = getMimeType(file);
@@ -184,7 +184,7 @@ public class MimeTypeDetector {
                 }
             }
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
 
         return "png";

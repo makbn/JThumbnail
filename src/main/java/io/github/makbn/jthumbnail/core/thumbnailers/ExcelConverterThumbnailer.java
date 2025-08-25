@@ -2,7 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import com.spire.xls.FileFormat;
 import com.spire.xls.Workbook;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.nio.file.Files;
@@ -22,7 +22,7 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
 
         // Create a workbook instance
         try {
@@ -39,7 +39,7 @@ public class ExcelConverterThumbnailer extends AbstractThumbnailer {
             ooThumbnailer.generateThumbnail(outputTmp, output);
             outputTmp.deleteOnExit();
         } catch (Exception err) {
-            throw new ThumbnailerException(err);
+            throw new ThumbnailException(err);
         }
     }
 

@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
@@ -62,7 +62,7 @@ public class JThumbnailer implements Closeable {
             candidate.setThumbExt(typeDetector.getOutputExt(candidate.getFile()));
             File out = manager.createThumbnail(candidate.getFile(), candidate.getThumbExt());
             listener.onThumbnailReady(candidate.getUid(), out);
-        } catch (ThumbnailerRuntimeException | ThumbnailerException re) {
+        } catch (ThumbnailRuntimeException | ThumbnailException re) {
             listener.onThumbnailFailed(candidate.getUid(), re.getMessage(), 500);
         }
     }

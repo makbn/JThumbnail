@@ -6,18 +6,20 @@ import io.github.makbn.jthumbnail.core.thumbnailers.JODConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODHtmlConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.OpenOfficeThumbnailer;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class JodConverterConfiguration {
 
-    private final ThumbnailProperties appProperties;
-    private final OfficeProperties officeProperties;
+    ThumbnailProperties appProperties;
+    OfficeProperties officeProperties;
 
     @Bean("jodConverter")
     JODConverterThumbnailer getJodConverterThumbnailer(

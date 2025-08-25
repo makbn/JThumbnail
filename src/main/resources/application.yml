@@ -11,6 +11,7 @@ jthumbnailer:
 
   server:
     upload_directory: "/tmp/upload"
+    max_waiting_list_size: 1000
 
   openoffice:
     port:
@@ -20,8 +21,8 @@ jthumbnailer:
     timeout: 300000
     max_tasks_per_process: 25
     tmp_dir: "/tmp"
-#   working-dir: "/Users/mehdiakbarian/tools/soffice/OpenOffice.app/Contents/"
-#   office_home=/usr/bin/
+    working-dir: "../../wd"
+    office_home: "../../OpenOffice.app/Contents/"
 
   async:
     core-pool-size: 10

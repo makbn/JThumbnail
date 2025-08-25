@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
@@ -22,13 +24,14 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
-    private final PDFBoxThumbnailer pdfBoxThumbnailer;
+    PDFBoxThumbnailer pdfBoxThumbnailer;
 
     /**
      * Constructor that initializes the OpenOfficeThumbnailer with the necessary app settings and PDFBoxThumbnailer.
      *
-     * @param appSettings       Application settings used by the thumbnailer.
+     * @param appProperties       Application settings used by the thumbnailer.
      * @param pdfBoxThumbnailer An instance of PDFBoxThumbnailer for handling PDF files.
      */
     public OpenOfficeThumbnailer(ThumbnailProperties appProperties, PDFBoxThumbnailer pdfBoxThumbnailer) {
@@ -43,10 +46,10 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      *
      * @param input  The input file for which the thumbnail is to be generated.
      * @param output The output file where the generated thumbnail will be saved.
-     * @throws ThumbnailerException If there are issues processing the file or extracting the thumbnail.
+     * @throws ThumbnailException If there are issues processing the file or extracting the thumbnail.
      */
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
@@ -56,9 +59,9 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 zipFile = new ZipFile(input);
             } catch (ZipException e) {
                 log.warn("OpenOfficeThumbnailer", e);
-                throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice file?", e);
+                throw new ThumbnailException("This is not a zipped file. Is this really an OpenOffice file?", e);
             } catch (IOException e) {
-                throw new ThumbnailerException(e);
+                throw new ThumbnailException(e);
             }
             ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
 
@@ -67,9 +70,9 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 resizer.setInputImage(in);
                 resizer.writeOutput(output);
             } catch (RuntimeException re) {
-                throw new ThumbnailerRuntimeException(re);
+                throw new ThumbnailRuntimeException(re);
             } catch (Exception e) {
-                throw new ThumbnailerException(e.getMessage());
+                throw new ThumbnailException(e.getMessage());
             } finally {
                 IOUtil.quietlyClose(zipFile);
             }

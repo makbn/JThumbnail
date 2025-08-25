@@ -4,7 +4,7 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -28,7 +28,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         try {
             Mp3File song = new Mp3File(input.getPath());
             if (song.hasId3v2Tag()) {
@@ -41,7 +41,7 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
 
         } catch (UnsupportedTagException | InvalidDataException | IOException e) {
             log.warn("MP3Thumbnailer", e);
-            throw new ThumbnailerException();
+            throw new ThumbnailException();
         }
     }
 

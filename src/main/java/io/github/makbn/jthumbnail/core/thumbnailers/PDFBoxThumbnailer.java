@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.awt.image.BufferedImage;
@@ -30,12 +30,12 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException, ThumbnailerRuntimeException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException, ThumbnailRuntimeException {
         if (!Files.exists(input.toPath())) {
-            throw new ThumbnailerException("input file does not exist");
+            throw new ThumbnailException("input file does not exist");
         }
 
-        if (input.length() == 0) throw new ThumbnailerException("File is empty");
+        if (input.length() == 0) throw new ThumbnailException("File is empty");
         FileUtils.deleteQuietly(output);
 
         try (PDDocument document = getDocument(input)) {
@@ -50,9 +50,9 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
                 resizer.writeOutput(output);
             }
         } catch (IllegalArgumentException e) {
-            throw new ThumbnailerRuntimeException(e.getMessage());
+            throw new ThumbnailRuntimeException(e.getMessage());
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 

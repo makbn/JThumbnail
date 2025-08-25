@@ -2,7 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import com.spire.doc.Document;
 import com.spire.doc.documents.ImageType;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,7 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
 
         // Create a Document object
         Document doc = new Document();
@@ -47,12 +47,12 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
         try {
             ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 
     @Override
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException {
         generateThumbnail(input, output);
     }
 

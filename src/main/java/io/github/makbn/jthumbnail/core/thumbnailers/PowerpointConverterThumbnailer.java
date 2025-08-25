@@ -1,8 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import com.spire.presentation.Presentation;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -24,7 +24,7 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         Presentation ppt = new Presentation();
         try {
             ppt.loadFromFile(input.getAbsolutePath());
@@ -37,14 +37,14 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
             ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
 
         } catch (Exception e) {
-            throw new ThumbnailerRuntimeException(e);
+            throw new ThumbnailRuntimeException(e);
         } finally {
             ppt.dispose();
         }
     }
 
     @Override
-    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailException {
         generateThumbnail(input, output);
     }
 
