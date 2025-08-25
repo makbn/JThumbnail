@@ -5,9 +5,11 @@ import java.util.Arrays;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class JThumbnailerStarter {
     private static JThumbnailer mInstance;
 

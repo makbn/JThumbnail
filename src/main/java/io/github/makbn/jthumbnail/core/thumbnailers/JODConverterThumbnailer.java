@@ -1,13 +1,13 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
@@ -37,12 +37,15 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected final MimeTypeDetector mimeTypeDetector;
 
-    private final String officeDir;
+    private final File officeTmpDir;
 
     protected JODConverterThumbnailer(
-            AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
-        super(settings);
-        this.officeDir = settings.getOfficeTemporaryDirectory();
+            ThumbnailProperties appProperties,
+            OfficeProperties officeProperties,
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager officeManager) {
+        super(appProperties);
+        this.officeTmpDir = officeProperties.tmpDir();
         this.ooThumbnailer = openOfficeThumbnailer;
         this.mimeTypeDetector = new MimeTypeDetector();
         this.officeManager = officeManager;
@@ -55,7 +58,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         // close the connection
         if (officeManager != null && officeManager.isRunning()) {
             try {
-                IOUtil.deleteQuietlyForce(Path.of(officeDir).toFile());
+                IOUtil.deleteQuietlyForce(officeTmpDir);
                 officeManager.stop();
             } catch (OfficeException e) {
                 log.error("JODConverterThumbnailer", e);

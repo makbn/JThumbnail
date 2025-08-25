@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class NativeImageThumbnailer extends AbstractThumbnailer {
 
-    public NativeImageThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public NativeImageThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
     public void generateThumbnail(File input, File output) throws ThumbnailerException {

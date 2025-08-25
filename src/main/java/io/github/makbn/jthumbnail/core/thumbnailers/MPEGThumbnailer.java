@@ -1,8 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MPEGThumbnailer extends AbstractThumbnailer {
 
-    public MPEGThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public MPEGThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
     @Override

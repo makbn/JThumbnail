@@ -3,13 +3,10 @@ package io.github.makbn.jthumbnail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Properties;
 import lombok.extern.log4j.Log4j2;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
@@ -18,28 +15,22 @@ import org.jodconverter.core.office.OfficeUtils;
 import org.jodconverter.local.LocalConverter;
 import org.jodconverter.local.office.ExistingProcessAction;
 import org.jodconverter.local.office.LocalOfficeManager;
-import org.jodconverter.local.process.MacProcessManager;
-import org.junit.jupiter.api.BeforeAll;
+import org.jodconverter.local.process.PureJavaProcessManager;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Log4j2
+@ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:application.properties")
+@EnableConfigurationProperties(value = {OfficeProperties.class})
 class OpenOfficeTest {
-    private static final Properties properties = new Properties();
-
-    @BeforeAll
-    static void setup() {
-        try (InputStream inputStream =
-                OpenOfficeTest.class.getClassLoader().getResourceAsStream("application.properties")) {
-            if (inputStream != null) {
-                properties.load(inputStream);
-            } else {
-                log.error("Properties file not found!");
-            }
-        } catch (IOException e) {
-            log.error(e);
-        }
-    }
+    @Autowired
+    private OfficeProperties officeProperties;
 
     @ParameterizedTest
     @ValueSource(ints = {2002})
@@ -47,10 +38,10 @@ class OpenOfficeTest {
         log.info(String.format("SOffice will be running on port: %d", port));
         OfficeManager officeManager = LocalOfficeManager.builder()
                 .portNumbers(port)
-                .processManager(new MacProcessManager())
+                .processManager(new PureJavaProcessManager())
                 .maxTasksPerProcess(1)
                 .existingProcessAction(ExistingProcessAction.CONNECT)
-                .officeHome(properties.getProperty(AppSettings.JTHUMBNAILER_OPENOFFICE_DIR))
+                .officeHome(officeProperties.officeHome())
                 .build();
 
         try {

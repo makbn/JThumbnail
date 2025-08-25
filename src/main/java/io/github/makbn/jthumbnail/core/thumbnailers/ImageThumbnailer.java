@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import java.io.File;
 import java.io.IOException;
 import net.coobird.thumbnailator.Thumbnails;
@@ -18,8 +18,8 @@ public class ImageThumbnailer extends AbstractThumbnailer {
 
     private static final Logger mLog = LogManager.getLogger("ImageThumbnailer");
 
-    public ImageThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public ImageThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
     @Override
