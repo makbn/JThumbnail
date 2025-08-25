@@ -14,7 +14,7 @@ jthumbnailer:
     max_waiting_list_size: 1000
 
   openoffice:
-    port:
+    ports:
       - 2002
       - 2003
       - 2004

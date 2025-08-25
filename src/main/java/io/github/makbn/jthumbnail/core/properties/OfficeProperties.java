@@ -25,7 +25,7 @@ import java.util.List;
 public record OfficeProperties(
         File officeHome,
         File workingDir,
-        @Name("port") @NotNull List<@Min(1) @Max(65535) Integer> ports,
+        @NotNull List<@Min(1) @Max(65535) Integer> ports,
         @NotNull @Min(1) Integer maxTasksPerProcess,
         @NotNull @Min(1) Long timeout,
         @NotNull File tmpDir) {
