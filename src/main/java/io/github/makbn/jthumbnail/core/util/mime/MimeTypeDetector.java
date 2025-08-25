@@ -100,7 +100,7 @@ public class MimeTypeDetector {
         if (extensions == null) return null;
 
         try {
-            return extensions.get(0);
+            return extensions.getFirst();
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
