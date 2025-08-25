@@ -180,7 +180,7 @@ public class ThumbnailerManager implements Thumbnailer {
      * <li>First all Thumbnailers that declare to accept such a MIME Type are used</li>
      * <li>Then all Thumbnailers that declare to accept all possible MIME Types.</li>
      * </ul>
-     * 
+     *
      * @param input    Input file that should be processed
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)

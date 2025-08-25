@@ -35,7 +35,7 @@ import java.io.IOException;
  * <li>implements an empty close method</li>
  * <li>specifies a wildcard MIME Type as appropriate Filetype</li>
  * </ul>
- * 
+ *
  * @author Mehdi Akbarian-Rastaghi
  */
 public abstract class AbstractThumbnailer implements Thumbnailer {
