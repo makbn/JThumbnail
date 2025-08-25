@@ -1,10 +1,12 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.extern.log4j.Log4j2;
+
+import org.apache.poi.hwpf.HWPFDocument;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import lombok.extern.log4j.Log4j2;
-import org.apache.poi.hwpf.HWPFDocument;
 
 @Log4j2
 public class DocFileIdentifier extends OfficeFileIdentifier {

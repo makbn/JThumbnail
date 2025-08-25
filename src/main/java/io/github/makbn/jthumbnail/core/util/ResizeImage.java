@@ -1,6 +1,9 @@
 package io.github.makbn.jthumbnail.core.util;
 
 import io.github.makbn.jthumbnail.core.exception.UnsupportedInputFileFormatException;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -9,9 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
+
 import javax.imageio.ImageIO;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ResizeImage {

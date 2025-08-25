@@ -1,11 +1,13 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.extern.log4j.Log4j2;
+
+import org.apache.poi.hslf.usermodel.HSLFSlideShow;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import lombok.extern.log4j.Log4j2;
-import org.apache.poi.hslf.usermodel.HSLFSlideShow;
-import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
 @Log4j2
 public class PptFileIdentifier extends OfficeFileIdentifier {

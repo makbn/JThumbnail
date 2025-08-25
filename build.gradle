@@ -127,16 +127,20 @@ spotless {
     }
 
     java {
-        // clean and format imports
-        removeUnusedImports()
-        removeWildcardImports()
-        importOrder()
 
-        // fix formatting of type annotations
+         trimTrailingWhitespace()
+
+         // fix formatting of type annotations
         formatAnnotations()
 
         // Format sources and javadocs according to Palantir formatter
         palantirJavaFormat()
+
+
+        // clean and format imports
+        removeUnusedImports()
+        // removeWildcardImports()
+        importOrder('', 'org', 'com', '#', 'java', 'javax')
 
         // make sure every file has the following copyright header.
         // optionally, Spotless can set copyright years by digging

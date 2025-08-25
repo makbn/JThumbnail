@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import lombok.extern.log4j.Log4j2;
+
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
@@ -23,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Log4j2
 @ExtendWith(SpringExtension.class)

@@ -1,16 +1,20 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import com.spire.doc.Document;
-import com.spire.doc.documents.ImageType;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
+
+import com.spire.doc.Document;
+import com.spire.doc.documents.ImageType;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * Dummy class for converting Text documents into Openoffice-Textfiles.

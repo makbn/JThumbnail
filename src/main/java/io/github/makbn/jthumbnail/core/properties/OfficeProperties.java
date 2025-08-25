@@ -3,8 +3,8 @@ package io.github.makbn.jthumbnail.core.properties;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
@@ -25,8 +25,7 @@ import java.util.List;
 public record OfficeProperties(
         File officeHome,
         File workingDir,
-        @Name("port") @NotNull List<@Min(1) @Max(65535) Integer> ports,
+        @NotNull List<@Min(1) @Max(65535) Integer> ports,
         @NotNull @Min(1) Integer maxTasksPerProcess,
         @NotNull @Min(1) Long timeout,
-        @NotNull File tmpDir) {
-}
+        @NotNull File tmpDir) {}

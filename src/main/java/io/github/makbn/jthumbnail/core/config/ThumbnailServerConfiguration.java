@@ -1,15 +1,16 @@
 package io.github.makbn.jthumbnail.core.config;
 
 import io.github.makbn.jthumbnail.core.properties.ThumbnailServerProperties;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.annotation.Configuration;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Slf4j
 @Configuration
@@ -42,7 +43,6 @@ public class ThumbnailServerConfiguration {
 
         return temporaryDirectory;
     }
-
 
     public int getMaxWaitingListSize() {
         return thumbnailServerProperties.maxWaitingListSize();

@@ -1,10 +1,11 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Improve detection of non-XML Office files.

@@ -3,14 +3,17 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+
+import org.springframework.stereotype.Component;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import org.springframework.stereotype.Component;
 
 @Component
 public class DWGThumbnailer extends AbstractThumbnailer {

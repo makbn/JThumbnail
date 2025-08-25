@@ -1,11 +1,12 @@
 package io.github.makbn.jthumbnail.core.model;
 
-import java.io.File;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+
+import java.io.File;
 
 @Builder
 @Getter
