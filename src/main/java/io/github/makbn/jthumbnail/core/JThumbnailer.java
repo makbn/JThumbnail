@@ -6,14 +6,16 @@ import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
-import java.io.Closeable;
-import java.io.File;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
+
+import java.io.Closeable;
+import java.io.File;
 
 @Component
 @EnableAsync

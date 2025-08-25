@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.stereotype.Component;
 

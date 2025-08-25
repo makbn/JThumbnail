@@ -1,10 +1,10 @@
 package io.github.makbn.jthumbnail.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.net.HttpURLConnection;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.net.HttpURLConnection;
 
 @Data
 @Builder

@@ -8,6 +8,7 @@ import io.github.makbn.jthumbnail.core.thumbnailers.OpenOfficeThumbnailer;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,9 +1,11 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import com.spire.xls.FileFormat;
-import com.spire.xls.Workbook;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
+import com.spire.xls.FileFormat;
+import com.spire.xls.Workbook;
+
 import java.io.File;
 import java.nio.file.Files;
 

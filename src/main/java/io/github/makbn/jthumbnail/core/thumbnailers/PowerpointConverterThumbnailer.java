@@ -1,15 +1,19 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import com.spire.presentation.Presentation;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
+
+import com.spire.presentation.Presentation;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+
 import javax.imageio.ImageIO;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.

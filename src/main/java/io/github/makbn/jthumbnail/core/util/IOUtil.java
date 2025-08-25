@@ -1,12 +1,13 @@
 package io.github.makbn.jthumbnail.core.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.zip.ZipFile;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class for handling IO operations, such as closing resources or deleting files.

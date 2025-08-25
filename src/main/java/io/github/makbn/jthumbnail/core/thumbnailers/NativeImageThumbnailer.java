@@ -3,11 +3,14 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 /**
  * This class generates image thumbnails using native Java libraries.

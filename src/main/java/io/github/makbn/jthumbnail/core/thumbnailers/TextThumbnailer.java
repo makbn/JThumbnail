@@ -2,6 +2,9 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
+import org.springframework.stereotype.Component;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -16,8 +19,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
-import org.springframework.stereotype.Component;
 
 @Component
 public class TextThumbnailer extends AbstractThumbnailer {

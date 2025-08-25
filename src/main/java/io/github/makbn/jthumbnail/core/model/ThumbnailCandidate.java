@@ -1,12 +1,13 @@
 package io.github.makbn.jthumbnail.core.model;
 
 import jakarta.validation.constraints.NotNull;
-import java.io.File;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+
+import java.io.File;
 
 /**
  * @author Matt Akbarian (makbn)

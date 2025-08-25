@@ -1,10 +1,11 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23

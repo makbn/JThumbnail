@@ -4,18 +4,21 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.GifSequenceWriter;
+import lombok.extern.slf4j.Slf4j;
+
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.springframework.stereotype.Component;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
-import lombok.extern.slf4j.Slf4j;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.springframework.stereotype.Component;
 
 /**
  * created by Matt Akbarian (makbn)

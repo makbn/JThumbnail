@@ -1,6 +1,11 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.Tika;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,9 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tika.Tika;
 
 /**
  * Wrapper class for MIME Identification of Files.

@@ -1,20 +1,24 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.stereotype.Component;
+
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
-import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 /**
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
