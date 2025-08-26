@@ -20,10 +20,7 @@ jobs:
 
           # Define the URL for the OpenOffice installation package ${LO_VERSION}
           LO_URL=https://download.documentfoundation.org/libreoffice/stable/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz
-     
           
-          
-
           # Create the target directory
           mkdir -p ~/tools/soffice/
 
@@ -44,7 +41,7 @@ jobs:
           jthumbnailer.openoffice.office_home: /opt/libreoffice25.8/
           jthumbnailer.openoffice.dir: /opt/libreoffice25.8/
 
-        run: ./gradlew test -Djava.library.path=/opt/libreoffice25.8/program/
+        run: ./gradlew test --stacktrace --info -Djava.library.path=/opt/libreoffice25.8/program/
 
   publish:
 #    needs: [ "build" ]
