@@ -43,6 +43,7 @@ jobs:
           jthumbnailer.openoffice.working-dir: /tmp/
           jthumbnailer.openoffice.office_home: /opt/libreoffice25.8/
           jthumbnailer.openoffice.dir: /opt/libreoffice25.8/
+
         run: ./gradlew test -Djava.library.path=/opt/libreoffice25.8/program/
 
   publish:

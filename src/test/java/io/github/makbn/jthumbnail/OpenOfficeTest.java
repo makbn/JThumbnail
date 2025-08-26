@@ -50,6 +50,7 @@ class OpenOfficeTest {
         ProcessManager processManager = new PureJavaProcessManager();
         OfficeManager officeManager = LocalOfficeManager.builder()
                 .portNumbers(officeProperties.ports().stream().mapToInt(Integer::intValue).toArray())
+                .pipeNames(officeProperties.pipeNames().toArray(String[]::new))
                 .processManager(processManager)
                 .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
                 .existingProcessAction(ExistingProcessAction.KILL)
