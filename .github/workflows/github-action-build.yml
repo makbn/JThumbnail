@@ -37,9 +37,8 @@ jobs:
 
       - name: Build
         env:
-          jthumbnailer.openoffice.working-dir: /tmp/
-          jthumbnailer.openoffice.office_home: /opt/libreoffice25.8/
-          jthumbnailer.openoffice.dir: /opt/libreoffice25.8/
+          JTHUMBNAILER_OPENOFFICE_WORKING_DIR: /tmp/
+          JTHUMBNAILER_OPENOFFICE_OFFICE_HOME: /opt/libreoffice25.8/
 
         run: ./gradlew test --stacktrace --info -Djava.library.path=/opt/libreoffice25.8/program/
 
