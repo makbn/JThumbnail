@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Optional;
 
 @Slf4j
 @Configuration
@@ -67,6 +69,8 @@ public class OfficeManagerConfiguration {
                         .portNumbers(officeProperties.ports().stream()
                                 .mapToInt(Integer::valueOf)
                                 .toArray())
+                        .pipeNames(Optional.ofNullable(officeProperties.pipeNames())
+                                .orElse(Collections.emptyList()).toArray(String[]::new))
                         .workingDir(temporaryDirectory)
                         .processTimeout(officeProperties.timeout())
                         .taskExecutionTimeout(officeProperties.timeout())
