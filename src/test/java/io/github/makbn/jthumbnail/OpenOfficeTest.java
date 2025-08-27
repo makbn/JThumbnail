@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Log4j2
-@SpringBootTest
+@SpringBootTest(classes = {OpenOfficeTest.class})
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application.yml")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
