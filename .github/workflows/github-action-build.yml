@@ -39,11 +39,12 @@ jobs:
         env:
           JTHUMBNAILER_OPENOFFICE_WORKING_DIR: /tmp/
           JTHUMBNAILER_OPENOFFICE_OFFICE_HOME: /opt/libreoffice25.8/
+          LD_LIBRARY_PATH: /opt/libreoffice25.8/program:$LD_LIBRARY_PATH
 
         run: ./gradlew test --stacktrace --info -Djava.library.path=/opt/libreoffice25.8/program/
 
   publish:
-#    needs: [ "build" ]
+    #    needs: [ "build" ]
     if: contains(github.ref_name, 'dev/')
     permissions:
       contents: read
