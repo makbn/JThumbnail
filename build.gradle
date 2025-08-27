@@ -40,7 +40,7 @@ dependencies {
     implementation "org.springframework.modulith:spring-modulith-events-api"
     implementation "org.springframework:spring-tx"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation api("e-iceblue:spire.office.free:${iceblue_ver}@pom") {
+    implementation api("e-iceblue:spire.office.free:${iceblue_ver}") {
         transitive = true
     }
     implementation "org.springframework.boot:spring-boot-starter-validation"

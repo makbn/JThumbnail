@@ -78,21 +78,25 @@ class ThumbnailerTest {
                                 StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
                         fail(String.format("message: %s", e.getMessage()));
+                    } finally {
+                        output[0] = thumbnail;
+                        msg[0] = hash;
+                        lock.countDown();
                     }
-                    output[0] = thumbnail;
-                    msg[0] = hash;
-                    lock.countDown();
                 }
 
                 @Override
                 public void onThumbnailFailed(String hash, String message, int code) {
-                    msg[0] = hash;
-                    msg[1] = String.valueOf(message);
-                    lock.countDown();
+                   try {
+                       msg[0] = hash;
+                       msg[1] = String.valueOf(message);
+                   }finally {
+                       lock.countDown();
+                   }
                 }
             });
 
-            boolean executed = lock.await(500, TimeUnit.SECONDS);
+            boolean executed = lock.await(60, TimeUnit.SECONDS);
             if (executed) {
                 if (output[0] != null) {
                     assertTrue(Files.exists(output[0].toPath()), "FILE created at : " + output[0].getAbsolutePath());
