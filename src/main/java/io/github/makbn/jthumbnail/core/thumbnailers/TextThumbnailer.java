@@ -1,35 +1,43 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 @Component
 public class TextThumbnailer extends AbstractThumbnailer {
     private static final Charset charset = StandardCharsets.UTF_8;
 
-    @Autowired
-    public TextThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public TextThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
 
         String text;
         try {
             text = readFile(input);
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
 
         BufferedImage img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
@@ -43,9 +51,10 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
         img = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
         graphics = img.createGraphics();
-        graphics.setPaint (Color.WHITE);
-        graphics.fillRect (0, 0, thumbWidth, thumbHeight);
-        graphics.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        graphics.setPaint(Color.WHITE);
+        graphics.fillRect(0, 0, thumbWidth, thumbHeight);
+        graphics.setRenderingHint(
+                RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         graphics.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
@@ -58,7 +67,6 @@ public class TextThumbnailer extends AbstractThumbnailer {
         graphics.setColor(Color.BLACK);
 
         int textW = graphics.getFontMetrics().stringWidth(text);
-
 
         int lineCount = Math.max(1, textW / thumbWidth);
 
@@ -82,13 +90,14 @@ public class TextThumbnailer extends AbstractThumbnailer {
         try {
             ImageIO.write(img, "png", output);
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 
     private String readFile(File input) throws IOException {
         StringBuilder text = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
+        try (BufferedReader br =
+                new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
             String line;
             int linecount = 0;
             while ((line = br.readLine()) != null && linecount++ < 50) {
@@ -101,9 +110,8 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "text/plain",
-                "text/rtf",
+        return new String[] {
+            "text/plain", "text/rtf",
         };
     }
 }

@@ -1,14 +1,14 @@
 package io.github.makbn.jthumbnail.core;
 
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
 import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -25,7 +25,6 @@ public class JThumbnailer implements Closeable {
     MimeTypeDetector typeDetector;
     ApplicationEventPublisher events;
 
-    @Autowired
     public JThumbnailer(ThumbnailerManager manager, ApplicationEventPublisher events) {
         this.manager = manager;
         this.events = events;
@@ -35,7 +34,6 @@ public class JThumbnailer implements Closeable {
     @Async("asyncThreadPoolTaskExecutor")
     public void run(ThumbnailCandidate candidate, ThumbnailListener listener) {
         internalRun(candidate, listener);
-
     }
 
     @Async("asyncThreadPoolTaskExecutor")
@@ -66,7 +64,7 @@ public class JThumbnailer implements Closeable {
             candidate.setThumbExt(typeDetector.getOutputExt(candidate.getFile()));
             File out = manager.createThumbnail(candidate.getFile(), candidate.getThumbExt());
             listener.onThumbnailReady(candidate.getUid(), out);
-        } catch (ThumbnailerRuntimeException | ThumbnailerException re) {
+        } catch (ThumbnailRuntimeException | ThumbnailException re) {
             listener.onThumbnailFailed(candidate.getUid(), re.getMessage(), 500);
         }
     }
@@ -75,5 +73,4 @@ public class JThumbnailer implements Closeable {
     public synchronized void close() {
         manager.close();
     }
-
 }

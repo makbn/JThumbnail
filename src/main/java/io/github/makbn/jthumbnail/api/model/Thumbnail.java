@@ -12,7 +12,9 @@ import java.io.File;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Thumbnail {
     public enum Status {
-        GENERATED, WAITING, FAILED
+        GENERATED,
+        WAITING,
+        FAILED
     }
 
     String uid;

@@ -1,22 +1,27 @@
 package io.github.makbn.jthumbnail.core.model;
 
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
 import java.io.File;
 
 /**
- * @author Mehdi Akbarian-Rastaghi 2018-10-23
+ * @author Matt Akbarian (makbn)
  */
 @Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(staticName = "of", access = AccessLevel.PUBLIC)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ThumbnailCandidate {
-    @NonNull
+    @NotNull
     File file;
-    @NonNull
+
+    @NotNull
     String uid;
+
     @NonFinal
     String thumbExt;
 }
