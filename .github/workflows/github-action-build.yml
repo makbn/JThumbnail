@@ -7,44 +7,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'corretto'
 
       - name: Download and extract OpenOffice
         run: |
           # Define the OpenOffice version you want to download
-          OO_VERSION=4.1.15
+          LO_VERSION=25.8.0
 
-          # Define the URL for the OpenOffice installation package ${OO_VERSION}
-          OO_URL=https://downloads.apache.org/openoffice/${OO_VERSION}/binaries/en-US/Apache_OpenOffice_${OO_VERSION}_Linux_x86-64_install-deb_en-US.tar.gz
+          # Define the URL for the OpenOffice installation package ${LO_VERSION}
+          LO_URL=https://download.documentfoundation.org/libreoffice/stable/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz
           
-          
-          
-
           # Create the target directory
           mkdir -p ~/tools/soffice/
 
-          # Download the OpenOffice package
-          curl -L -o ~/tools/soffice/openoffice.tar.gz $OO_URL
+          # Download the LibreOffice package
+          curl -L -o ~/tools/soffice/libreOffice.tar.gz $LO_URL
 
           # Extract OpenOffice
-          tar -xzf ~/tools/soffice/openoffice.tar.gz -C ~/tools/soffice/
+          tar -xzf ~/tools/soffice/libreOffice.tar.gz --strip-components=1 -C ~/tools/soffice/
 
           # Install OpenOffice (you may need to adapt this step depending on your requirements)
-          sudo dpkg -i ~/tools/soffice/en-US/DEBS/*.deb
+          sudo dpkg -i ~/tools/soffice/DEBS/*.deb
 
         working-directory: ${{ github.workspace }}
 
       - name: Build
         env:
-          jthumbnailer.openoffice.dir: /opt/openoffice4/
-        run: ./gradlew test
+          JTHUMBNAILER_OPENOFFICE_WORKING_DIR: /tmp/
+          JTHUMBNAILER_OPENOFFICE_OFFICE_HOME: /opt/libreoffice25.8/
+          LD_LIBRARY_PATH: /opt/libreoffice25.8/program:$LD_LIBRARY_PATH
+
+        run: ./gradlew test --stacktrace --info -Djava.library.path=/opt/libreoffice25.8/program/
 
   publish:
-#    needs: [ "build" ]
+    #    needs: [ "build" ]
     if: contains(github.ref_name, 'dev/')
     permissions:
       contents: read

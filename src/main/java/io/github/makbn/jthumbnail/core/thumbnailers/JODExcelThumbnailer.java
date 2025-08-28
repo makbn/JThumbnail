@@ -1,16 +1,20 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import org.jodconverter.core.office.OfficeManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JODExcelThumbnailer extends JODConverterThumbnailer {
 
-    @Autowired
-    public JODExcelThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager officeManager) {
-        super(settings, openOfficeThumbnailer, officeManager);
+    public JODExcelThumbnailer(
+            ThumbnailProperties appProperties,
+            OfficeProperties officeProperties,
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager officeManager) {
+        super(appProperties, officeProperties, openOfficeThumbnailer, officeManager);
     }
 
     protected String getStandardOpenOfficeExtension() {
@@ -27,11 +31,10 @@ public class JODExcelThumbnailer extends JODConverterThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        return new String[] {
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         };
     }
 }
-

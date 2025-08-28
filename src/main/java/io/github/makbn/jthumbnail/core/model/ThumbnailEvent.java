@@ -15,7 +15,9 @@ import java.io.File;
 public class ThumbnailEvent {
 
     public enum Status {
-        GENERATED, WAITING, FAILED
+        GENERATED,
+        WAITING,
+        FAILED
     }
 
     String uid;

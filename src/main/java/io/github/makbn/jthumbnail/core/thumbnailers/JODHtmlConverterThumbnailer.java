@@ -1,8 +1,9 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
+import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import org.jodconverter.core.office.OfficeManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,9 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
-    @Autowired
-    public JODHtmlConverterThumbnailer(AppSettings settings, OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager manager) {
-        super(settings, openOfficeThumbnailer, manager);
+    public JODHtmlConverterThumbnailer(
+            ThumbnailProperties appProperties,
+            OfficeProperties officeProperties,
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager manager) {
+        super(appProperties, officeProperties, openOfficeThumbnailer, manager);
     }
 
     protected String getStandardOpenOfficeExtension() {
@@ -35,9 +39,6 @@ public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "text/html"
-        };
+        return new String[] {"text/html"};
     }
-
 }

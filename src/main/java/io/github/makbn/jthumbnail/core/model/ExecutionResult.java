@@ -13,6 +13,7 @@ import lombok.experimental.NonFinal;
 @RequiredArgsConstructor
 public class ExecutionResult {
     boolean generated;
+
     @NonFinal
     Throwable exception;
 

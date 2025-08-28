@@ -1,6 +1,7 @@
 package io.github.makbn.jthumbnail.core.util.mime;
 
 import lombok.extern.log4j.Log4j2;
+
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 
@@ -20,7 +21,8 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
     @Override
     public String identify(String mimeType, byte[] bytes, File file) {
         if (isOfficeFile(mimeType) && !PPT_MIME_TYPE.equals(mimeType)) {
-            try(FileInputStream stream = new FileInputStream(file); HSLFSlideShow presentation = new HSLFSlideShow(stream)) {
+            try (FileInputStream stream = new FileInputStream(file);
+                    HSLFSlideShow presentation = new HSLFSlideShow(stream)) {
                 if (!presentation.getSlides().isEmpty()) {
                     return PPT_MIME_TYPE;
                 }
@@ -36,5 +38,4 @@ public class PptFileIdentifier extends OfficeFileIdentifier {
     public String getThumbnailExtension() {
         return "png";
     }
-
 }

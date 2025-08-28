@@ -43,37 +43,44 @@ jThumbnailer.close();
 ```
 
 ## Configuration Args
+| Configuration Args                        | Description                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------- |
+| **OPENAPI Properties**                    |                                                                     |
+| JTHUMBNAILER_OPENAPI_NAME                 | Application name, e.g. Java Thumbnail Generator in Swagger UI       |
+| JTHUMBNAILER_OPENAPI_DESC                 | Description of the application in Swagger UI                        |
+| JTHUMBNAILER_OPENAPI_LICENSE              | License of the application as displayed in Swagger UI               |
+| JTHUMBNAILER_OPENAPI_URL                  | URL pointing to the license text for Swagger UI                     |
+| **OPENOFFICE Properties**                 |                                                                     |
+| JTHUMBNAILER_OPENOFFICE_PORTS             | Ports used by OpenOffice for document conversion                    |
+| JTHUMBNAILER_OPENOFFICE_TIMEOUT           | Timeout for OpenOffice document conversion tasks                    |
+| JTHUMBNAILER_OPENOFFICE_MAX_TASKS_PER_PROCESS | Maximum number of conversion tasks allowed per OpenOffice process   |
+| JTHUMBNAILER_OPENOFFICE_OFFICE_HOME       | Directory path to the OpenOffice installation                       |
+| JTHUMBNAILER_OPENOFFICE_WORKING_DIR       | Working directory path for OpenOffice                               |
+| JTHUMBNAILER_OPENOFFICE_TMP_DIR           | Directory path for temporary files generated and used by OpenOffice |
+| **THUMBNAIL Properties**                  |                                                                     |
+| JTHUMBNAILER_THUMBNAIL_THUMB_WIDTH        | Width of generated thumbnails                                       |
+| JTHUMBNAILER_THUMBNAIL_THUMB_HEIGHT       | Height of generated thumbnails                                      |
+| **ASYNC Properties**                      |                                                                     |
+| JTHUMBNAILER_ASYNC_CORE_POOL_SIZE         | Core pool size for the asynchronous processing tasks                |
+| JTHUMBNAILER_ASYNC_MAX_POOL_SIZE          | Maximum pool size for the asynchronous processing tasks             |
+| **SERVER Properties**                     |                                                                     |
+| JTHUMBNAILER_SERVER_UPLOAD_DIRECTORY      | Directory used to store uploads when using API                      |
+| JTHUMBNAILER_SERVER_MAX_WAITING_LIST_SIZE | Queue for files to be processed                                     |
+| **SPRING**                                |                                                                     |
+| SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE    | Maximum allowed file size for multipart file uploads                |
+| SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE | Maximum allowed request size for multipart file uploads             |
+| SERVER_PORT                               | Port on which the Web application will be hosted                    |
+| **SPRING DOC**                            |                                                                     |
+| SPRINGDOC_API_DOCS_PATH                   | Path for accessing the API documentation in JSON format             |
+| SPRINGDOC_SWAGGER_UI_PATH                 | Path for accessing the Swagger UI for interactive API documentation |
 
-| Configuration Args                       | Description                                                         |
-| ---------------------------------------- |---------------------------------------------------------------------|
-| **OPENOFFICE Properties**                |                                                                     |
-| jthumbnailer.name                        | Application name, e.g. Java Thumbnail Generator                     |
-| jthumbnailer.openoffice.port             | Ports used by OpenOffice for document conversion                    |
-| jthumbnailer.openoffice.timeout          | Timeout for OpenOffice document conversion tasks                    |
-| jthumbnailer.openoffice.max_tasks_per_process | Maximum number of conversion tasks allowed per OpenOffice process   |
-| jthumbnailer.openoffice.dir              | Directory path to the OpenOffice installation                       |
-| jthumbnailer.openoffice.tmp              | Directory path for temporary files generated and used by OpenOffice |
-| **JTHUMBNAILER Properties**              |                                                                     |
-| jthumbnailer.thumb_width                 | Width of generated thumbnails                                       |
-| jthumbnailer.thumb_height                | Height of generated thumbnails                                      |
-| jthumbnailer.async.core_pool_size        | Core pool size for the asynchronous processing tasks                |
-| jthumbnailer.async.max_pool_size          | Maximum pool size for the asynchronous processing tasks             |
-| **Spring**                                |                                                                     |
-| spring.servlet.multipart.max-file-size    | Maximum allowed file size for multipart file uploads                |
-| spring.servlet.multipart.max-request-size | Maximum allowed request size for multipart file uploads             |
-| server.port                               | Port on which the application will be hosted                        |
-| **Spring Doc**                            |                                                                     |
-| springdoc.api-docs.path                  | Path for accessing the API documentation in JSON format             |
-| springdoc.swagger-ui.path                | Path for accessing the Swagger UI for interactive API documentation |
-
-- All parameters can be passed through the environment variables. To pass a param as environment variable you need to
-remove the dots and make the first characters upper case. For example, `jthumbnailer.openoffice.dir` should be 
-`JthumbnailerOpenofficeDir`.
+- All parameters can be passed through environment variables. To pass a param as environment variable you need to replace the dots with underscore and use uppercase. For example, `jthumbnailer.openoffice.office_home` should be 
+`JTHUMBNAILER_OPENOFFICE_OFFICEHOME` (see [Spring documentation](https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.relaxed-binding).
 
 ## Requirements
 
-- Java JRE **17**
-- OpenOffice 4.x or LibreOffice 7.x
+- Java JRE **21**
+- OpenOffice >4.x or LibreOffice >7.x
 
 ## Supported File Formats
 
@@ -97,7 +104,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 <dependency>
   <groupId>io.github.makbn</groupId>
   <artifactId>jthumbnail</artifactId>
-  <version>2.2.0</version>
+  <version>2.2.1</version>
 </dependency>
 ```
 
@@ -108,7 +115,7 @@ remove the dots and make the first characters upper case. For example, `jthumbna
 **Step 1**. Add the dependency to the `build.gradle` file:
 
 ```gradle
-compile "io.github.makbn:jthumbnail:2.2.0"
+compile "io.github.makbn:jthumbnail:2.2.1"
 ```
 
 ## TODO
@@ -122,8 +129,10 @@ compile "io.github.makbn:jthumbnail:2.2.0"
 - [x] Fix problem with xlsx files
 - [x] Improve code quality
 - [x] Improve current Exception handling system
-- [ ] Fixing issue with running test with the GitHub action: use `UNIX domain sockets` instead of TCP to run openoffice for tests
-- [ ] add rate limit to the project API 
+- [X] Fix issue with running test with the GitHub action: use `UNIX domain sockets` instead of TCP to run openoffice for tests
+- [ ] Add support for remote OpenOffice Manger
+- [ ] Add rate limit to the project API 
+- [ ] Add support for more file formats
 
 ## Original project
 

@@ -21,8 +21,8 @@
 
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,9 +30,11 @@ import java.io.IOException;
 /**
  * This AbstractThumbnailer may be used in order to implement only essential
  * methods. It
- * <li>stores the current thumbnail height/width
- * <li>implements an empty close method
- * <li>specifies a wildcard MIME Type as appropriate Filetype
+ * <ul>
+ * <li>stores the current thumbnail height/width</li>
+ * <li>implements an empty close method</li>
+ * <li>specifies a wildcard MIME Type as appropriate Filetype</li>
+ * </ul>
  *
  * @author Mehdi Akbarian-Rastaghi
  */
@@ -56,9 +58,9 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
     /**
      * Initialize the thumbnail size from default constants.
      */
-    protected AbstractThumbnailer(AppSettings appSettings) {
-        thumbHeight = appSettings.getThumbHeight();
-        thumbWidth = appSettings.getThumbWidth();
+    protected AbstractThumbnailer(ThumbnailProperties appProperties) {
+        thumbHeight = appProperties.thumbHeight();
+        thumbWidth = appProperties.thumbWidth();
     }
 
     /**
@@ -103,7 +105,7 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * Thumbnailer.
      */
     public String[] getAcceptedMIMETypes() {
-        return new String[]{};
+        return new String[] {};
     }
 
     /**
@@ -115,9 +117,9 @@ public abstract class AbstractThumbnailer implements Thumbnailer {
      * @param mimeType MIME-Type of input file (null if unknown)
      *
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailerException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnailing process failed.
      */
-    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException {
         // Ignore MIME-Type-Hint
         generateThumbnail(input, output);
     }
