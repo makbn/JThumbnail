@@ -1,17 +1,19 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import com.spire.presentation.Presentation;
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import com.spire.presentation.Presentation;
+
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+
+import javax.imageio.ImageIO;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
@@ -21,33 +23,32 @@ import java.io.File;
 @Component
 public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
-    public PowerpointConverterThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public PowerpointConverterThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         Presentation ppt = new Presentation();
         try {
             ppt.loadFromFile(input.getAbsolutePath());
-            //Save PPT document to images
-            Image image = ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
-            //Re-write the image with a different color space
+            // Save PPT document to images
+            Image image =
+                    ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
+            // Re-write the image with a different color space
             BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
             newImg.getGraphics().drawImage(image, 0, 0, null);
             ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
 
         } catch (Exception e) {
-            throw new ThumbnailerRuntimeException(e);
+            throw new ThumbnailRuntimeException(e);
         } finally {
             ppt.dispose();
         }
-
     }
 
     @Override
-    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output, String mimeType) throws ThumbnailException {
         generateThumbnail(input, output);
     }
 
@@ -61,12 +62,10 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.ms-powerpoint",
-                "application/vnd.openxmlformats-officedocument.presentationml",
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-
+        return new String[] {
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         };
     }
-
 }

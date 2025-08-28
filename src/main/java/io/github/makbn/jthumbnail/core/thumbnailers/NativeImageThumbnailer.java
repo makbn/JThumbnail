@@ -1,16 +1,16 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * This class generates image thumbnails using native Java libraries.
@@ -22,12 +22,11 @@ import java.io.IOException;
 @Component
 public class NativeImageThumbnailer extends AbstractThumbnailer {
 
-    @Autowired
-    public NativeImageThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public NativeImageThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
 
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
         try {
@@ -35,9 +34,8 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
             resizer.writeOutput(output);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new ThumbnailerException("File format could not be interpreted as image", e);
+            throw new ThumbnailException("File format could not be interpreted as image", e);
         }
-
     }
 
     /**

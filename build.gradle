@@ -1,12 +1,12 @@
 plugins {
-    id "org.springframework.boot" version "3.1.3"
-    id "io.spring.dependency-management" version "1.1.3"
+    id "org.springframework.boot" version "3.5.4"
+    id "io.spring.dependency-management" version "1.1.7"
     id "java-library"
     id "maven-publish"
+    id "com.diffplug.spotless" version "7.2.1"
 }
 
 repositories {
-    mavenLocal()
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
@@ -17,11 +17,12 @@ repositories {
             includeGroup "e-iceblue"
         }
     }
+    mavenLocal()
 }
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.modulith:spring-modulith-bom:1.0.0'
+        mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.2'
     }
 }
 
@@ -36,15 +37,18 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
 
     implementation "org.springframework.modulith:spring-modulith-starter-core"
+    implementation "org.springframework.modulith:spring-modulith-events-api"
     implementation "org.springframework:spring-tx"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "e-iceblue:spire.office.free:${iceblue_ver}"
+    implementation api("e-iceblue:spire.office.free:${iceblue_ver}") {
+        transitive = true
+    }
+    implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.apache.poi:poi:${apachepoi_ver}"
     implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
     implementation "commons-io:commons-io:${commonsio_ver}"
     implementation "org.slf4j:slf4j-api:${slf4j_ver}"
     implementation "org.jodconverter:jodconverter-local:${jod_ver}"
-    implementation "org.apache.pdfbox:pdfbox:${pdfbox_ver}"
     implementation "org.bytedeco:javacv:${javacv_ver}"
     implementation "org.bytedeco:opencv:${opencv_ver}"
     implementation "net.coobird:thumbnailator:${thumb_ver}"
@@ -54,17 +58,27 @@ dependencies {
     implementation "org.apache.tika:tika-core:${tika_ver}"
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_ver}"
-
+    implementation ("org.apache.pdfbox:pdfbox:${pdfbox_ver}") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
 
     compileOnly "org.projectlombok:lombok:${lombok_ver}"
     annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 group = 'io.github.makbn'
-version = 'v2.1.0'
+version = 'v2.2.1'
 description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -72,7 +86,7 @@ publishing {
 
             groupId = 'io.github.makbn'
             artifactId = 'jthumbnail'
-            version = '2.2.0'
+            version = '2.2.1'
         }
     }
 
@@ -88,6 +102,11 @@ publishing {
     }
 }
 
+jar {
+enabled = true
+archiveClassifier = '' //use empty string
+}
+
 test {
     useJUnitPlatform()
     testLogging {
@@ -95,4 +114,39 @@ test {
     }
 
     maxHeapSize = '1G'
+}
+
+spotless {
+
+    format 'misc', {
+        // define the files to apply `misc` to
+        target '*.gradle', '.gitattributes', '.gitignore'
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        leadingTabsToSpaces() // or leadingTabsToSpaces. Takes an integer argument if you don't like 4
+        endWithNewline()
+    }
+
+    java {
+
+         trimTrailingWhitespace()
+
+         // fix formatting of type annotations
+        formatAnnotations()
+
+        // Format sources and javadocs according to Palantir formatter
+        palantirJavaFormat()
+
+
+        // clean and format imports
+        removeUnusedImports()
+        // removeWildcardImports()
+        importOrder('', 'org', 'com', '#', 'java', 'javax')
+
+        // make sure every file has the following copyright header.
+        // optionally, Spotless can set copyright years by digging
+        // through git history (see "license" section below)
+        // licenseHeader '/* (C)$YEAR */'
+    }
 }

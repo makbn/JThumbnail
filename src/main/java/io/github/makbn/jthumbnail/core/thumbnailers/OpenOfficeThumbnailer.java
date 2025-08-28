@@ -1,14 +1,14 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
@@ -25,18 +25,18 @@ import java.util.zip.ZipFile;
  */
 @Slf4j
 @Component
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class OpenOfficeThumbnailer extends AbstractThumbnailer {
-    private final PDFBoxThumbnailer pdfBoxThumbnailer;
+    PDFBoxThumbnailer pdfBoxThumbnailer;
 
     /**
      * Constructor that initializes the OpenOfficeThumbnailer with the necessary app settings and PDFBoxThumbnailer.
      *
-     * @param appSettings       Application settings used by the thumbnailer.
+     * @param appProperties       Application settings used by the thumbnailer.
      * @param pdfBoxThumbnailer An instance of PDFBoxThumbnailer for handling PDF files.
      */
-    @Autowired
-    public OpenOfficeThumbnailer(AppSettings appSettings, PDFBoxThumbnailer pdfBoxThumbnailer) {
-        super(appSettings);
+    public OpenOfficeThumbnailer(ThumbnailProperties appProperties, PDFBoxThumbnailer pdfBoxThumbnailer) {
+        super(appProperties);
         this.pdfBoxThumbnailer = pdfBoxThumbnailer;
     }
 
@@ -47,10 +47,10 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      *
      * @param input  The input file for which the thumbnail is to be generated.
      * @param output The output file where the generated thumbnail will be saved.
-     * @throws ThumbnailerException If there are issues processing the file or extracting the thumbnail.
+     * @throws ThumbnailException If there are issues processing the file or extracting the thumbnail.
      */
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException {
+    public void generateThumbnail(File input, File output) throws ThumbnailException {
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
@@ -60,9 +60,9 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 zipFile = new ZipFile(input);
             } catch (ZipException e) {
                 log.warn("OpenOfficeThumbnailer", e);
-                throw new ThumbnailerException("This is not a zipped file. Is this really an OpenOffice file?", e);
+                throw new ThumbnailException("This is not a zipped file. Is this really an OpenOffice file?", e);
             } catch (IOException e) {
-                throw new ThumbnailerException(e);
+                throw new ThumbnailException(e);
             }
             ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
 
@@ -71,9 +71,9 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
                 resizer.setInputImage(in);
                 resizer.writeOutput(output);
             } catch (RuntimeException re) {
-                throw new ThumbnailerRuntimeException(re);
+                throw new ThumbnailRuntimeException(re);
             } catch (Exception e) {
-                throw new ThumbnailerException(e.getMessage());
+                throw new ThumbnailException(e.getMessage());
             } finally {
                 IOUtil.quietlyClose(zipFile);
             }
@@ -88,38 +88,37 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.sun.xml.writer",
-                "application/vnd.sun.xml.writer.template",
-                "application/vnd.sun.xml.writer.global",
-                "application/vnd.sun.xml.calc",
-                "application/vnd.sun.xml.calc.template",
-                "application/vnd.stardivision.calc",
-                "application/vnd.sun.xml.impress",
-                "application/vnd.sun.xml.impress.template ",
-                "application/vnd.stardivision.impress sdd",
-                "application/vnd.sun.xml.draw",
-                "application/vnd.sun.xml.draw.template",
-                "application/vnd.stardivision.draw",
-                "application/vnd.sun.xml.math",
-                "application/vnd.stardivision.math",
-                "application/vnd.oasis.opendocument.text",
-                "application/vnd.oasis.opendocument.text-template",
-                "application/vnd.oasis.opendocument.text-web",
-                "application/vnd.oasis.opendocument.text-master",
-                "application/vnd.oasis.opendocument.graphics",
-                "application/vnd.oasis.opendocument.graphics-template",
-                "application/vnd.oasis.opendocument.presentation",
-                "application/vnd.oasis.opendocument.presentation-template",
-                "application/vnd.oasis.opendocument.spreadsheet",
-                "application/vnd.oasis.opendocument.spreadsheet-template",
-                "application/vnd.oasis.opendocument.chart",
-                "application/vnd.oasis.opendocument.formula",
-                "application/vnd.oasis.opendocument.database",
-                "application/vnd.oasis.opendocument.image",
-                "text/html",
-                "application/zip" /* Could be an OpenOffice file! */
+        return new String[] {
+            "application/vnd.sun.xml.writer",
+            "application/vnd.sun.xml.writer.template",
+            "application/vnd.sun.xml.writer.global",
+            "application/vnd.sun.xml.calc",
+            "application/vnd.sun.xml.calc.template",
+            "application/vnd.stardivision.calc",
+            "application/vnd.sun.xml.impress",
+            "application/vnd.sun.xml.impress.template ",
+            "application/vnd.stardivision.impress sdd",
+            "application/vnd.sun.xml.draw",
+            "application/vnd.sun.xml.draw.template",
+            "application/vnd.stardivision.draw",
+            "application/vnd.sun.xml.math",
+            "application/vnd.stardivision.math",
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.oasis.opendocument.text-template",
+            "application/vnd.oasis.opendocument.text-web",
+            "application/vnd.oasis.opendocument.text-master",
+            "application/vnd.oasis.opendocument.graphics",
+            "application/vnd.oasis.opendocument.graphics-template",
+            "application/vnd.oasis.opendocument.presentation",
+            "application/vnd.oasis.opendocument.presentation-template",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.oasis.opendocument.spreadsheet-template",
+            "application/vnd.oasis.opendocument.chart",
+            "application/vnd.oasis.opendocument.formula",
+            "application/vnd.oasis.opendocument.database",
+            "application/vnd.oasis.opendocument.image",
+            "text/html",
+            "application/zip" /* Could be an OpenOffice file! */
         };
     }
-
 }

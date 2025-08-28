@@ -26,8 +26,7 @@ public class IOUtil {
      */
     public static void quietlyClose(ZipFile zipFile) {
         try {
-            if (zipFile != null)
-                zipFile.close();
+            if (zipFile != null) zipFile.close();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -42,6 +41,10 @@ public class IOUtil {
     public static void deleteQuietlyForce(File file) {
         if (file != null) {
             try {
+                if (file.getAbsolutePath().equalsIgnoreCase(System.getProperty("java.io.tmpdir"))) {
+                    log.debug("Can't delete system tmp folder: {}! skipping...", file.getAbsolutePath());
+                    return;
+                }
                 Files.deleteIfExists(file.toPath());
             } catch (IOException e) {
                 log.error(e.getMessage(), e);

@@ -1,59 +1,61 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.config.AppSettings;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerException;
-import io.github.makbn.jthumbnail.core.exception.ThumbnailerRuntimeException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
+import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
+import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import javax.imageio.ImageIO;
 
 /**
  * Renders the first page of a PDF file into a thumbnail.
  */
 @Component
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
-    @Autowired
-    public PDFBoxThumbnailer(AppSettings appSettings) {
-        super(appSettings);
+    public PDFBoxThumbnailer(ThumbnailProperties appProperties) {
+        super(appProperties);
     }
+
     private PDDocument getDocument(File input) throws IOException {
-        return PDDocument.load(input);
+        return Loader.loadPDF(input);
     }
+
     @Override
-    public void generateThumbnail(File input, File output) throws ThumbnailerException, ThumbnailerRuntimeException {
-        if(!Files.exists(input.toPath())){
-            throw new ThumbnailerException("input file does not exist");
+    public void generateThumbnail(File input, File output) throws ThumbnailException, ThumbnailRuntimeException {
+        if (!Files.exists(input.toPath())) {
+            throw new ThumbnailException("input file does not exist");
         }
 
-        if (input.length() == 0)
-            throw new ThumbnailerException("File is empty");
+        if (input.length() == 0) throw new ThumbnailException("File is empty");
         FileUtils.deleteQuietly(output);
 
-    try( PDDocument document = getDocument(input)) {
-        BufferedImage tmpImage = writeImageFirstPage(document);
+        try (PDDocument document = getDocument(input)) {
+            BufferedImage tmpImage = writeImageFirstPage(document);
 
-        if (tmpImage.getWidth() == thumbWidth) {
-            ImageIO.write(tmpImage, "PNG", output);
-        } else {
-            ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-            resizer.setResizeMethod(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
-            resizer.setInputImage(tmpImage);
-            resizer.writeOutput(output);
-        }
+            if (tmpImage.getWidth() == thumbWidth) {
+                ImageIO.write(tmpImage, "PNG", output);
+            } else {
+                ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
+                resizer.setResizeMethod(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
+                resizer.setInputImage(tmpImage);
+                resizer.writeOutput(output);
+            }
         } catch (IllegalArgumentException e) {
-            throw new ThumbnailerRuntimeException(e.getMessage());
+            throw new ThumbnailRuntimeException(e.getMessage());
         } catch (IOException e) {
-            throw new ThumbnailerException(e);
+            throw new ThumbnailException(e);
         }
     }
 
@@ -76,10 +78,6 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/pdf"
-        };
+        return new String[] {"application/pdf"};
     }
-
-
 }
