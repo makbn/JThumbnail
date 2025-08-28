@@ -24,6 +24,8 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -38,6 +40,7 @@ import java.io.IOException;
  *
  * @author Mehdi Akbarian-Rastaghi
  */
+@EnableConfigurationProperties(value = {ThumbnailProperties.class})
 public abstract class AbstractThumbnailer implements Thumbnailer {
 
     /**

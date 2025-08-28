@@ -4,6 +4,8 @@ import io.github.makbn.jthumbnail.core.properties.AsyncProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -14,6 +16,7 @@ import java.util.concurrent.Executor;
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@EnableConfigurationProperties(value = {AsyncProperties.class})
 public class ExecutorConfiguration {
     static class ContextAwareForkJoinWorkerThread extends Thread {
         public ContextAwareForkJoinWorkerThread(Runnable target) {

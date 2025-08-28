@@ -1,7 +1,7 @@
 package io.github.makbn.jthumbnail.core.config;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import io.github.makbn.jthumbnail.core.properties.ExternalOfficeProperties;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,12 +9,16 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FileUtils;
+import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
-import org.jodconverter.local.office.ExistingProcessAction;
-import org.jodconverter.local.office.LocalOfficeManager;
+import org.jodconverter.local.LocalConverter;
+import org.jodconverter.local.office.ExternalOfficeManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +31,12 @@ import java.util.Optional;
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OfficeManagerConfiguration {
+@ConditionalOnProperty(value = "jthumbnailer.openoffice.manager_type", havingValue = "external")
+@EnableConfigurationProperties(value = {ExternalOfficeProperties.class})
+@Validated
+public class ExternalOfficeManagerConfiguration {
 
-    OfficeProperties officeProperties;
+    ExternalOfficeProperties externalOfficeProperties;
 
     @NonFinal
     OfficeManager officeManager;
@@ -39,7 +46,7 @@ public class OfficeManagerConfiguration {
         if (officeManager == null) {
             Path temporaryPath;
             try {
-                File workingDirPath = officeProperties.workingDir();
+                File workingDirPath = externalOfficeProperties.workingDir();
 
                 if (workingDirPath == null) {
                     // We use the OS temporary directory
@@ -65,22 +72,28 @@ public class OfficeManagerConfiguration {
                 File temporaryDirectory = Files.createDirectory(temporaryPath).toFile();
                 log.debug("Temporary working directory created");
 
-                this.officeManager = LocalOfficeManager.builder()
-                        .portNumbers(officeProperties.ports().stream()
+                this.officeManager = ExternalOfficeManager.builder()
+                        .hostName(externalOfficeProperties.hostname())
+                        .portNumbers(externalOfficeProperties.ports().stream()
                                 .mapToInt(Integer::valueOf)
                                 .toArray())
-                        .pipeNames(Optional.ofNullable(officeProperties.pipeNames())
-                                .orElse(Collections.emptyList()).toArray(String[]::new))
+                        .pipeNames(Optional.ofNullable(externalOfficeProperties.pipeNames())
+                                .orElse(Collections.emptyList())
+                                .toArray(String[]::new))
+                        .websocketUrls(Optional.ofNullable(externalOfficeProperties.websocketUrls())
+                                .orElse(Collections.emptyList())
+                                .toArray(String[]::new))
+                        .connectOnStart(externalOfficeProperties.connectOnStart())
+                        .connectFailFast(externalOfficeProperties.failFast())
+                        .connectTimeout(externalOfficeProperties.connectionTimeout())
+                        .connectRetryInterval(externalOfficeProperties.connectRetryInterval())
+                        .maxTasksPerConnection(externalOfficeProperties.maxTasksPerConnection())
+                        .taskQueueTimeout(externalOfficeProperties.taskQueueTimeout())
+                        .taskExecutionTimeout(externalOfficeProperties.taskExecutionTimeout())
                         .workingDir(temporaryDirectory)
-                        .processTimeout(officeProperties.timeout())
-                        .taskExecutionTimeout(officeProperties.timeout())
-                        .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
-                        .existingProcessAction(ExistingProcessAction.CONNECT_OR_KILL)
-                        .officeHome(officeProperties.officeHome())
                         .install()
                         .build();
                 officeManager.start();
-
             } catch (IOException e) {
                 log.error("Failed to create working directory", e);
                 throw new ThumbnailRuntimeException(e);
@@ -90,5 +103,10 @@ public class OfficeManagerConfiguration {
             }
         }
         return officeManager;
+    }
+
+    @Bean("converter")
+    DocumentConverter getConverter() {
+        return LocalConverter.builder().officeManager(getOfficeManager()).build();
     }
 }

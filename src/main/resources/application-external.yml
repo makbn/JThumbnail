@@ -13,6 +13,13 @@ jthumbnailer:
     upload_directory: "/tmp/upload"
     max_waiting_list_size: 1000
 
+  openoffice:
+    manager_type: external
+    ports:
+        - 2002
+    working-dir: "/tmp"
+    #office_home: "../../OpenOffice.app/Contents/"
+
   async:
     core-pool-size: 10
     max-pool-size: 32
