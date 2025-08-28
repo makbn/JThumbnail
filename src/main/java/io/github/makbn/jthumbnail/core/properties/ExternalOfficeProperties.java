@@ -22,12 +22,32 @@ import java.util.List;
  * "https://jodconverter.github.io/jodconverter/latest/configuration/external-manager/">JODConverter
  * documentation</a>
  *
+ * @param hostname  Specifies the hostname used to connect to the
+ *                  OpenOffice/LibreOffice. Defaults to 127.0.0.1
+ * @param ports     Ports to access OpenOffice/LibreOffice instances. In the
+ *                  managed case, this will launch instance on each port in the
+ *                  managed case
+ * @param pipeNames pipes to listen to, this will launch instance on each name
+ *                  for managed OpenOffice and try to connect for external
  * @param websocketUrls        Websocket URLs used by the external
  *                             OpenOffice/LibreOffice.
  * @param connectOnStart       Whether we should try to connect when the manager
  *                             starts or wait for the first conversion. Defaults
  *                             to true
  * @param connectRetryInterval Time between two connections attempts
+ *
+ * @param failFast  should fail fast when starting
+ * @param workingDir            OpenOffice/LibreOffice Specifies the directory
+ *                              where temporary files and directories are
+ *                              created.
+ * @param connectionTimeout     Timeout for waiting for OpenOffice/LibreOffice
+ *                              connection. Defaults to 120000
+ * @param maxTasksPerConnection Maximum number of tasks per process/connection.
+ *                              Defaults to 1000
+ * @param taskQueueTimeout      Max duration a conversion will wait in queue.
+ *                              Defaults to 30000
+ * @param taskExecutionTimeout  Maximum duration a conversion should last.
+ *                              Defaults to 120000
  */
 @Validated
 @ConfigurationProperties(prefix = "jthumbnailer.openoffice", ignoreUnknownFields = false)
