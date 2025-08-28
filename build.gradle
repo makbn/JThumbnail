@@ -68,7 +68,7 @@ dependencies {
 }
 
 group = 'io.github.makbn'
-version = 'v2.2.1'
+version = 'v2.3.0'
 description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
 java.sourceCompatibility = JavaVersion.VERSION_21
 
@@ -86,7 +86,7 @@ publishing {
 
             groupId = 'io.github.makbn'
             artifactId = 'jthumbnail'
-            version = '2.2.1'
+            version = '2.3.0'
         }
     }
 

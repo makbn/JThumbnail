@@ -104,7 +104,7 @@ jThumbnailer.close();
 <dependency>
   <groupId>io.github.makbn</groupId>
   <artifactId>jthumbnail</artifactId>
-  <version>2.2.1</version>
+  <version>2.3.0</version>
 </dependency>
 ```
 
@@ -115,7 +115,7 @@ jThumbnailer.close();
 **Step 1**. Add the dependency to the `build.gradle` file:
 
 ```gradle
-compile "io.github.makbn:jthumbnail:2.2.1"
+compile "io.github.makbn:jthumbnail:2.3.0"
 ```
 
 ## TODO
