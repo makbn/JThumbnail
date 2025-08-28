@@ -1,9 +1,13 @@
 package io.github.makbn.jthumbnail;
 
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import io.github.makbn.jthumbnail.core.properties.LocalOfficeProperties;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
@@ -14,47 +18,44 @@ import org.jodconverter.local.office.LocalOfficeManager;
 import org.jodconverter.local.process.ProcessManager;
 import org.jodconverter.local.process.PureJavaProcessManager;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import java.util.Collections;
+import java.util.Optional;
 
 @Log4j2
 @SpringBootTest(classes = {OpenOfficeTest.class})
-@ExtendWith(SpringExtension.class)
-@TestPropertySource("classpath:application.yml")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@EnableConfigurationProperties(value = {OfficeProperties.class})
+@EnableConfigurationProperties(value = {LocalOfficeProperties.class})
 class OpenOfficeTest {
 
-
-    OfficeProperties officeProperties;
+    LocalOfficeProperties localOfficeProperties;
 
     @Autowired
-    public OpenOfficeTest(OfficeProperties officeProperties) {
-        this.officeProperties = officeProperties;
+    public OpenOfficeTest(LocalOfficeProperties officeProperties) {
+        this.localOfficeProperties = officeProperties;
     }
 
     @Test
     void testRunSOffice() {
-        log.info("SOffice will be running on pipe: {}", officeProperties.pipeNames());
+        log.info("SOffice will be running on pipe: {}", localOfficeProperties.pipeNames());
         ProcessManager processManager = new PureJavaProcessManager();
         OfficeManager officeManager = LocalOfficeManager.builder()
-                .portNumbers(officeProperties.ports().stream().mapToInt(Integer::intValue).toArray())
-                .pipeNames(officeProperties.pipeNames().toArray(String[]::new))
+                .portNumbers(localOfficeProperties.ports().stream()
+                        .mapToInt(Integer::intValue)
+                        .toArray())
+                .pipeNames(Optional.ofNullable(localOfficeProperties.pipeNames())
+                        .orElse(Collections.emptyList())
+                        .toArray(String[]::new))
                 .processManager(processManager)
-                .maxTasksPerProcess(officeProperties.maxTasksPerProcess())
+                .maxTasksPerProcess(localOfficeProperties.maxTasksPerConnection())
                 .existingProcessAction(ExistingProcessAction.KILL)
-                .officeHome(officeProperties.officeHome())
+                .officeHome(localOfficeProperties.officeHome())
                 .keepAliveOnShutdown(false)
                 .processRetryInterval(0L)
                 .build();

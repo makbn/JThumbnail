@@ -49,6 +49,7 @@ dependencies {
     implementation "commons-io:commons-io:${commonsio_ver}"
     implementation "org.slf4j:slf4j-api:${slf4j_ver}"
     implementation "org.jodconverter:jodconverter-local:${jod_ver}"
+    implementation "org.jodconverter:jodconverter-remote:${jod_ver}"
     implementation "org.bytedeco:javacv:${javacv_ver}"
     implementation "org.bytedeco:opencv:${opencv_ver}"
     implementation "net.coobird:thumbnailator:${thumb_ver}"

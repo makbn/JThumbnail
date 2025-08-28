@@ -1,8 +1,8 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 
+import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeManager;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ public class JODHtmlConverterThumbnailer extends JODConverterThumbnailer {
 
     public JODHtmlConverterThumbnailer(
             ThumbnailProperties appProperties,
-            OfficeProperties officeProperties,
             OpenOfficeThumbnailer openOfficeThumbnailer,
-            OfficeManager manager) {
-        super(appProperties, officeProperties, openOfficeThumbnailer, manager);
+            OfficeManager manager,
+            DocumentConverter converter) {
+        super(appProperties, openOfficeThumbnailer, manager, converter);
     }
 
     protected String getStandardOpenOfficeExtension() {
