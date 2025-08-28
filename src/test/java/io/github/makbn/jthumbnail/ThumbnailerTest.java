@@ -87,12 +87,12 @@ class ThumbnailerTest {
 
                 @Override
                 public void onThumbnailFailed(String hash, String message, int code) {
-                   try {
-                       msg[0] = hash;
-                       msg[1] = String.valueOf(message);
-                   }finally {
-                       lock.countDown();
-                   }
+                    try {
+                        msg[0] = hash;
+                        msg[1] = String.valueOf(message);
+                    } finally {
+                        lock.countDown();
+                    }
                 }
             });
 

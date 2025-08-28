@@ -13,14 +13,10 @@ jthumbnailer:
     upload_directory: "/tmp/upload"
 
   openoffice:
+    manager_type: local
     ports:
-    pipe-names:
-      - "jt-pipe"
-    timeout: 300000
-    max_tasks_per_process: 25
-    tmp_dir: "/tmp"
-    working-dir: "../../wd"
-    office_home: "../../OpenOffice.app/Contents/"
+      - 2002
+    working-dir: "/tmp"
 
   async:
     core-pool-size: 10
