@@ -1,36 +1,6 @@
 # OPENOFFICE Properties
 jthumbnailer:
-  thumbnail:
-    thumbWidth: 400
-    thumbHeight: 535
-
-  openapi:
-    name: "Java Thumbnail Generator"
-    desc: "A thumbnail generation Java library for Office, PDF, HTML, Text, MP3, MPEG and Image documents"
-    license-url: "https://github.com/makbn/JThumbnail/blob/master/LICENSE"
-
-  server:
-    upload_directory: "/tmp/upload"
-    max_waiting_list_size: 1000
-
   openoffice:
     manager_type: local
     ports:
-      - 2002
     working-dir: "/tmp"
-
-  async:
-    core-pool-size: 10
-    max-pool-size: 32
-
-#Spring
-spring:
-  servlet:
-    multipart:
-      max-file-size: 30MB
-      max-request-size: 30MB
-server.port: 8081
-# Spring Doc
-springdoc:
-  api-docs.path: "/api-docs"
-  swagger-ui.path: "/swagger-ui.html"
