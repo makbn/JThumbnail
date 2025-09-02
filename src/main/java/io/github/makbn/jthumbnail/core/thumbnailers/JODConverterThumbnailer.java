@@ -5,7 +5,6 @@ import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -128,7 +127,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      * @param input    Input file that should be processed
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)
-     * @throws IOException          If file cannot be read/written
+     * @throws IOException        If file cannot be read/written
      * @throws ThumbnailException If the thumbnailing process failed.
      */
     @Override
@@ -136,12 +135,15 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         File workingFile = input;
         String ext = FilenameUtils.getExtension(workingFile.getName());
         if (!mimeTypeDetector.doesExtensionMatchMimeType(ext, mimeType)) {
-            String newExt;
-            if ("application/zip".equals(mimeType)) newExt = getStandardZipExtension();
-            else if ("application/vnd.ms-office".equals(mimeType)) newExt = getStandardOfficeExtension();
-            else newExt = mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
+            String normalizedExtension;
 
-            workingFile = Files.createTempFile(workingFile.getName(), newExt).toFile();
+            normalizedExtension = switch (mimeType) {
+                case "application/zip" -> getStandardZipExtension();
+                case "application/vnd.ms-office" -> getStandardOfficeExtension();
+                default -> mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
+            };
+
+            workingFile = Files.createTempFile(workingFile.getName(), FilenameUtils.EXTENSION_SEPARATOR + normalizedExtension).toFile();
         }
 
         generateThumbnail(workingFile, output);
@@ -155,17 +157,17 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[] {
-            "application/vnd.oasis.opendocument.text",
-            "application/vnd.oasis.opendocument.text-template",
-            "application/vnd.oasis.opendocument.text-web",
-            "application/vnd.oasis.opendocument.text-master",
-            "application/vnd.oasis.opendocument.graphics",
-            "application/vnd.oasis.opendocument.graphics-template",
-            "application/vnd.oasis.opendocument.presentation",
-            "application/vnd.oasis.opendocument.presentation-template",
-            "application/vnd.oasis.opendocument.spreadsheet",
-            "application/vnd.oasis.opendocument.spreadsheet-template",
+        return new String[]{
+                "application/vnd.oasis.opendocument.text",
+                "application/vnd.oasis.opendocument.text-template",
+                "application/vnd.oasis.opendocument.text-web",
+                "application/vnd.oasis.opendocument.text-master",
+                "application/vnd.oasis.opendocument.graphics",
+                "application/vnd.oasis.opendocument.graphics-template",
+                "application/vnd.oasis.opendocument.presentation",
+                "application/vnd.oasis.opendocument.presentation-template",
+                "application/vnd.oasis.opendocument.spreadsheet",
+                "application/vnd.oasis.opendocument.spreadsheet-template",
         };
     }
 }
