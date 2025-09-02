@@ -5,6 +5,7 @@ import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
@@ -143,7 +144,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 default -> mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
             };
 
-            workingFile = Files.createTempFile(workingFile.getName(), FilenameUtils.EXTENSION_SEPARATOR + normalizedExtension).toFile();
+            workingFile = Files.createTempFile(
+                            workingFile.getName(), FilenameUtils.EXTENSION_SEPARATOR + normalizedExtension)
+                    .toFile();
         }
 
         generateThumbnail(workingFile, output);
@@ -157,17 +160,17 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.oasis.opendocument.text",
-                "application/vnd.oasis.opendocument.text-template",
-                "application/vnd.oasis.opendocument.text-web",
-                "application/vnd.oasis.opendocument.text-master",
-                "application/vnd.oasis.opendocument.graphics",
-                "application/vnd.oasis.opendocument.graphics-template",
-                "application/vnd.oasis.opendocument.presentation",
-                "application/vnd.oasis.opendocument.presentation-template",
-                "application/vnd.oasis.opendocument.spreadsheet",
-                "application/vnd.oasis.opendocument.spreadsheet-template",
+        return new String[] {
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.oasis.opendocument.text-template",
+            "application/vnd.oasis.opendocument.text-web",
+            "application/vnd.oasis.opendocument.text-master",
+            "application/vnd.oasis.opendocument.graphics",
+            "application/vnd.oasis.opendocument.graphics-template",
+            "application/vnd.oasis.opendocument.presentation",
+            "application/vnd.oasis.opendocument.presentation-template",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.oasis.opendocument.spreadsheet-template",
         };
     }
 }
