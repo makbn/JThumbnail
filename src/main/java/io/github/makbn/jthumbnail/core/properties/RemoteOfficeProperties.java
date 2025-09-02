@@ -1,8 +1,9 @@
 package io.github.makbn.jthumbnail.core.properties;
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -42,10 +43,10 @@ import java.net.URI;
 public record RemoteOfficeProperties(
         @NotNull ManagerType managerType,
         File workingDir,
-        @Nullable @Min(1) @DefaultValue("1") Integer poolSize,
+        @Nullable @Positive @DefaultValue("1") Integer poolSize,
         @NotNull URI urlConnection,
-        @Nullable @Min(1) @DefaultValue("120000") Long connectionTimeout,
-        @Nullable @Min(1) @DefaultValue("120000") Long socketTimeout,
-        @Nullable @Min(1) @DefaultValue("1000") Integer maxTasksPerConnection,
-        @Nullable @Min(1) @DefaultValue("30000") Long taskQueueTimeout,
-        @Nullable @Min(1) @DefaultValue("120000") Long taskExecutionTimeout) {}
+        @Nullable @PositiveOrZero @DefaultValue("120000") Long connectionTimeout,
+        @Nullable @PositiveOrZero @DefaultValue("120000") Long socketTimeout,
+        @Nullable @PositiveOrZero @DefaultValue("1000") Integer maxTasksPerConnection,
+        @Nullable @Positive @DefaultValue("30000") Long taskQueueTimeout,
+        @Nullable @Positive @DefaultValue("120000") Long taskExecutionTimeout) {}

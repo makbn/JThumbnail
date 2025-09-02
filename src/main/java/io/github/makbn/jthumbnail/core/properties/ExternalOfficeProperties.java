@@ -2,9 +2,10 @@ package io.github.makbn.jthumbnail.core.properties;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -54,14 +55,14 @@ import java.util.List;
 public record ExternalOfficeProperties(
         @NotNull ManagerType managerType,
         @NotEmpty @DefaultValue("127.0.0.1") String hostname,
-        @NotNull List<@Min(1) @Max(65535) Integer> ports,
+        @NotNull List<@Positive @Max(65535) Integer> ports,
         @Nullable List<@NotNull @NotEmpty String> pipeNames,
         @Nullable List<@NotEmpty String> websocketUrls,
-        @Nullable @Min(1) @DefaultValue("120000") Long connectionTimeout,
-        @Nullable @Min(1) @DefaultValue("1000") Integer maxTasksPerConnection,
-        @Nullable @Min(1) @DefaultValue("30000") Long taskQueueTimeout,
-        @Nullable @Min(1) @DefaultValue("120000") Long taskExecutionTimeout,
+        @Nullable @Positive @DefaultValue("120000") Long connectionTimeout,
+        @Nullable @PositiveOrZero @DefaultValue("1000") Integer maxTasksPerConnection,
+        @Nullable @Positive @DefaultValue("30000") Long taskQueueTimeout,
+        @Nullable @Positive @DefaultValue("120000") Long taskExecutionTimeout,
         @Nullable @DefaultValue("false") Boolean failFast,
         @Nullable @DefaultValue("true") Boolean connectOnStart,
-        @Nullable @Min(1) @DefaultValue("250") Long connectRetryInterval,
+        @Nullable @Positive @DefaultValue("250") Long connectRetryInterval,
         File workingDir) {}
