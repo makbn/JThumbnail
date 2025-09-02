@@ -15,7 +15,8 @@ jthumbnailer:
   openoffice:
     manager_type: local
     ports:
-      - 2002
+    pipe-names:
+      - "jt-pipe"
     working-dir: "/tmp"
 
   async:
