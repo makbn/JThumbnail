@@ -1,17 +1,16 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
-import io.github.makbn.jthumbnail.core.properties.OfficeProperties;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.IOUtil;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.utils.SystemUtils;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
-import org.jodconverter.local.LocalConverter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +29,11 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
     protected final OfficeManager officeManager;
 
     /**
+     * Jod converter used
+     */
+    protected final DocumentConverter converter;
+
+    /**
      * Thumbnail Extractor for OpenOffice Files
      */
     protected final OpenOfficeThumbnailer ooThumbnailer;
@@ -38,18 +42,16 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
      */
     protected final MimeTypeDetector mimeTypeDetector;
 
-    private final File officeTmpDir;
-
     protected JODConverterThumbnailer(
             ThumbnailProperties appProperties,
-            OfficeProperties officeProperties,
             OpenOfficeThumbnailer openOfficeThumbnailer,
-            OfficeManager officeManager) {
+            OfficeManager officeManager,
+            DocumentConverter converter) {
         super(appProperties);
-        this.officeTmpDir = officeProperties.tmpDir();
         this.ooThumbnailer = openOfficeThumbnailer;
         this.mimeTypeDetector = new MimeTypeDetector();
         this.officeManager = officeManager;
+        this.converter = converter;
     }
 
     /**
@@ -59,7 +61,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         // close the connection
         if (officeManager != null && officeManager.isRunning()) {
             try {
-                IOUtil.deleteQuietlyForce(officeTmpDir);
                 officeManager.stop();
             } catch (OfficeException e) {
                 log.error("JODConverterThumbnailer", e);
@@ -98,10 +99,8 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                     if (officeManager.isRunning()) break;
                 }
             }
-            DocumentConverter converter =
-                    LocalConverter.builder().officeManager(officeManager).build();
-            log.info("converter created");
 
+            log.info("Using injected converter");
             converter.convert(workingFile).to(outputTmp).execute();
 
             if (outputTmp.length() == 0) {
@@ -145,7 +144,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 default -> mimeTypeDetector.getStandardExtensionForMimeType(mimeType);
             };
 
-            workingFile = Files.createTempFile(workingFile.getName(), FilenameUtils.EXTENSION_SEPARATOR + normalizedExtension).toFile();
+            workingFile = Files.createTempFile(
+                            workingFile.getName(), FilenameUtils.EXTENSION_SEPARATOR + normalizedExtension)
+                    .toFile();
         }
 
         generateThumbnail(workingFile, output);
@@ -159,17 +160,17 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
     public String[] getAcceptedMIMETypes() {
-        return new String[]{
-                "application/vnd.oasis.opendocument.text",
-                "application/vnd.oasis.opendocument.text-template",
-                "application/vnd.oasis.opendocument.text-web",
-                "application/vnd.oasis.opendocument.text-master",
-                "application/vnd.oasis.opendocument.graphics",
-                "application/vnd.oasis.opendocument.graphics-template",
-                "application/vnd.oasis.opendocument.presentation",
-                "application/vnd.oasis.opendocument.presentation-template",
-                "application/vnd.oasis.opendocument.spreadsheet",
-                "application/vnd.oasis.opendocument.spreadsheet-template",
+        return new String[] {
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.oasis.opendocument.text-template",
+            "application/vnd.oasis.opendocument.text-web",
+            "application/vnd.oasis.opendocument.text-master",
+            "application/vnd.oasis.opendocument.graphics",
+            "application/vnd.oasis.opendocument.graphics-template",
+            "application/vnd.oasis.opendocument.presentation",
+            "application/vnd.oasis.opendocument.presentation-template",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.oasis.opendocument.spreadsheet-template",
         };
     }
 }

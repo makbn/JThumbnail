@@ -1,0 +1,7 @@
+jthumbnailer:
+  openoffice:
+    # can be tested with
+    # podman run -p 9980:9980 -e "extra_params=--o:ssl.enable=false" --rm docker.io/collabora/code
+    url-connection: http://localhost:9980
+    working-dir: "/tmp"
+    manager_type: remote
