@@ -1,8 +1,5 @@
 ## JThumbnail
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/17bbe0b4242d4f02a5d1a0288a6e6cbb)](https://app.codacy.com/app/makbn/JThumbnail?utm_source=github.com&utm_medium=referral&utm_content=makbn/JThumbnail&utm_campaign=Badge_Grade_Dashboard)
-[![](https://jitpack.io/v/makbn/JThumbnail.svg)](https://jitpack.io/#makbn/JThumbnail)
-
 JThumbnail is a Java library for creating Thumbnails of common types of file including `.doc`, `.docx`, `.pdf` , `.mp4` etc. [full list](#supported-file-formats)
 
 - **Project is under development!**
@@ -95,9 +92,10 @@ jThumbnailer.close();
 
 ## Adding Repository
 
+Packages are currently published on Github Registry.Please [read this document](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#installing-a-package) for more information on using them.
+
 ### Maven
 
----
 **Step 1**. Add the dependency to the `pom` file:
 
 ```xml
@@ -109,8 +107,6 @@ jThumbnailer.close();
 ```
 
 ### Gradle
-
----
 
 **Step 1**. Add the dependency to the `build.gradle` file:
 
