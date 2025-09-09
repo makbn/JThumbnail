@@ -44,7 +44,6 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
             ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
             resizer.setInputImage(image);
-            resizer.setResizeOptions(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             resizer.writeOutput(output, FilenameUtils.getExtension(output.getName()));
         } catch (Exception e) {

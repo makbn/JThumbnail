@@ -56,7 +56,6 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
             } else {
                 log.debug("Resizing to {}x{}", thumbWidth, thumbHeight);
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-                resizer.setResizeOptions(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
                 resizer.setInputImage(tmpImage);
                 resizer.writeOutput(output);
             }

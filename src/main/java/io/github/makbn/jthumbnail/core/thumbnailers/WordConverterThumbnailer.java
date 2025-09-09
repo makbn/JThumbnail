@@ -53,7 +53,6 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
 
             log.trace("Pages saved, getting first page and scaling for thumbnail");
             ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-            resizer.setResizeOptions(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
             resizer.setInputImage(pages[0]);
 
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());

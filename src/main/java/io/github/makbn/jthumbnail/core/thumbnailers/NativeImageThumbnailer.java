@@ -34,7 +34,6 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
 
         log.debug("Resizing to {}x{}", thumbWidth, thumbHeight);
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-        resizer.setResizeOptions(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
         try {
             resizer.setInputImage(input);
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
