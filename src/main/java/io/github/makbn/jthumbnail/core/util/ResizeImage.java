@@ -69,7 +69,9 @@ public class ResizeImage {
     }
 
     public void setInputImage(BufferedImage input) throws UnsupportedInputFileFormatException {
-        if (input == null) throw new UnsupportedInputFileFormatException("The image reader could not open the file.");
+        if (input == null) {
+            throw new UnsupportedInputFileFormatException("The image reader could not open the file.");
+        }
 
         this.inputImage = input;
         isProcessed = false;
@@ -82,14 +84,17 @@ public class ResizeImage {
     }
 
     public void writeOutput(File output, String format) throws IOException {
-        if (!isProcessed) process();
+        if (!isProcessed) {
+            process();
+        }
 
         ImageIO.write(outputImage, format, output);
     }
 
     private void process() {
-        if (imageWidth == thumbWidth && imageHeight == thumbHeight) outputImage = inputImage;
-        else {
+        if (imageWidth == thumbWidth && imageHeight == thumbHeight) {
+            outputImage = inputImage;
+        } else {
             calcDimensions(resizeOptions);
             paint();
         }
@@ -134,6 +139,13 @@ public class ResizeImage {
         } else {
             offsetY = 0;
         }
+
+        log.debug(
+                "According to parameters, resizing to {}x{} with offset (x={},y={})",
+                thumbWidth,
+                thumbHeight,
+                offsetX,
+                offsetY);
     }
 
     private void paint() {
