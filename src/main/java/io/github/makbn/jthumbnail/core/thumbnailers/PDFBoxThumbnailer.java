@@ -4,6 +4,7 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.util.ResizeImage;
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.Loader;
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
  * Renders the first page of a PDF file into a thumbnail.
  */
 @Component
+@Slf4j
 public class PDFBoxThumbnailer extends AbstractThumbnailer {
     public PDFBoxThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
@@ -41,12 +43,18 @@ public class PDFBoxThumbnailer extends AbstractThumbnailer {
         if (input.length() == 0) throw new ThumbnailException("File is empty");
         FileUtils.deleteQuietly(output);
 
+        log.debug(
+                "Starting conversion of {} using {}",
+                input.getName(),
+                this.getClass().getName());
+
         try (PDDocument document = getDocument(input)) {
             BufferedImage tmpImage = writeImageFirstPage(document);
 
             if (tmpImage.getWidth() == thumbWidth) {
                 ImageIO.write(tmpImage, "PNG", output);
             } else {
+                log.debug("Resizing to {}x{}", thumbWidth, thumbHeight);
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
                 resizer.setResizeMethod(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
                 resizer.setInputImage(tmpImage);

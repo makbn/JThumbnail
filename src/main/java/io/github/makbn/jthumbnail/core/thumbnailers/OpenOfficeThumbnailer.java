@@ -51,9 +51,16 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
      */
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting conversion of {} using {}",
+                input.getName(),
+                this.getClass().getName());
+
         if (FilenameUtils.getExtension(input.getName()).equalsIgnoreCase("pdf")) {
+            log.debug("{} has PDF extension, using PDF thumbnailer", input.getName());
             pdfBoxThumbnailer.generateThumbnail(input, output);
         } else {
+            log.debug("Trying to extract thumbnails from file");
             ZipFile zipFile;
 
             try {
@@ -67,6 +74,7 @@ public class OpenOfficeThumbnailer extends AbstractThumbnailer {
             ZipEntry entry = zipFile.getEntry("Thumbnails/thumbnail.png");
 
             try (BufferedInputStream in = new BufferedInputStream(zipFile.getInputStream(entry))) {
+                log.debug("Resizing to {}x{}", thumbWidth, thumbHeight);
                 ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
                 resizer.setInputImage(in);
                 resizer.writeOutput(output);

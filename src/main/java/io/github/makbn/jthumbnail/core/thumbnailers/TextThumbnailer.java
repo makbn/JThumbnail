@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 @Component
+@Slf4j
 public class TextThumbnailer extends AbstractThumbnailer {
     private static final Charset charset = StandardCharsets.UTF_8;
 
@@ -32,6 +34,10 @@ public class TextThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting thumbnail generation for {} with {}",
+                input.getName(),
+                this.getClass().getName());
 
         String text;
         try {
@@ -88,6 +94,7 @@ public class TextThumbnailer extends AbstractThumbnailer {
         }
 
         try {
+            log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             ImageIO.write(img, "png", output);
         } catch (IOException e) {
             throw new ThumbnailException(e);
