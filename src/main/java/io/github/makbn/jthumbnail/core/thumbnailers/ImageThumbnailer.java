@@ -2,11 +2,10 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -16,9 +15,8 @@ import java.io.IOException;
  * created by Mehdi Akbarian-Rastaghi 2018-10-23
  */
 @Component
+@Slf4j
 public class ImageThumbnailer extends AbstractThumbnailer {
-
-    private static final Logger mLog = LogManager.getLogger("ImageThumbnailer");
 
     public ImageThumbnailer(ThumbnailProperties appProperties) {
         super(appProperties);
@@ -26,14 +24,21 @@ public class ImageThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting thumbnail generation for {} with {}",
+                input.getName(),
+                this.getClass().getName());
+
         try {
+            log.trace("Calling thumbnailator");
             Thumbnails.of(input)
                     .allowOverwrite(true)
                     .antialiasing(Antialiasing.ON)
                     .size(thumbWidth, thumbHeight)
                     .toFile(output);
+            log.debug("Thumbnail generated for {} to {}", input.getName(), output.getAbsolutePath());
         } catch (IOException e) {
-            mLog.error(e);
+            log.error("Got an IOException", e);
             throw new ThumbnailException();
         }
     }

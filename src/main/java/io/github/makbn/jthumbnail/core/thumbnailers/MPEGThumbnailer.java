@@ -33,6 +33,10 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting thumbnail generation for {} with {}",
+                input.getName(),
+                this.getClass().getName());
         try {
             getThumb(input.getPath(), output.getPath());
         } catch (IOException e) {
@@ -44,24 +48,29 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
      * get thumbnail from multimedia files
      */
     public void getThumb(String inputPath, String outputPath) throws IOException {
-
-        try (FFmpegFrameGrabber g = new FFmpegFrameGrabber(inputPath);
+        try (FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(inputPath);
                 ImageOutputStream output = new FileImageOutputStream(new File(outputPath))) {
-            g.setFormat("mp4");
-            g.start();
-            int frameCount = g.getLengthInFrames();
+            log.trace("Building frame grabber");
+            frameGrabber.setFormat("mp4");
+            frameGrabber.start();
+
+            log.trace("Extracting number of frames");
+            int frameCount = frameGrabber.getLengthInFrames();
 
             GifSequenceWriter gifSequenceWriter = null;
 
-            for (int ig = 0; ig < frameCount; ig += g.getLengthInFrames() / 10) {
-                if (ig > 0) g.setFrameNumber(ig);
+            log.trace("Generating animated GIF");
 
-                BufferedImage bi = createImageFromBytes(g.grabImage().data.array());
+            for (int ig = 0; ig < frameCount; ig += frameGrabber.getLengthInFrames() / 10) {
+                if (ig > 0) frameGrabber.setFrameNumber(ig);
+
+                BufferedImage bi =
+                        createImageFromBytes(frameGrabber.grabImage().data.array());
 
                 if (gifSequenceWriter == null)
                     gifSequenceWriter = new GifSequenceWriter(output, bi.getType(), 500, true);
                 gifSequenceWriter.writeToSequence(getScaledBI(bi));
-                g.stop();
+                frameGrabber.stop();
                 gifSequenceWriter.close();
             }
         }

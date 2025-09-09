@@ -3,6 +3,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import javax.imageio.ImageIO;
  * @see JODConverterThumbnailer
  */
 @Component
+@Slf4j
 public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
     public PowerpointConverterThumbnailer(ThumbnailProperties appProperties) {
@@ -29,15 +31,25 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
     @Override
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting thumbnail generation for {} with {}",
+                input.getName(),
+                this.getClass().getName());
+
         Presentation ppt = new Presentation();
         try {
+            log.trace("Loading document into RAM");
             ppt.loadFromFile(input.getAbsolutePath());
+
+            log.trace("Document loaded, saving first slide as image and rescale");
             // Save PPT document to images
             Image image =
                     ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
             // Re-write the image with a different color space
             BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
             newImg.getGraphics().drawImage(image, 0, 0, null);
+
+            log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
 
         } catch (Exception e) {

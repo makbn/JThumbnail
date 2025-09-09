@@ -86,13 +86,21 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
         File outputTmp = null;
         File workingFile = input;
         try {
+            log.debug(
+                    "Starting conversion of {} using {}",
+                    input.getName(),
+                    this.getClass().getName());
+
+            log.trace("Creating temporary file");
             outputTmp = Files.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension())
                     .toFile();
+            log.trace("Created {} temporary file", outputTmp.getAbsolutePath());
 
             if (SystemUtils.IS_OS_WINDOWS)
                 workingFile = new File(workingFile.getAbsolutePath().replace("\\\\", "\\"));
 
             if (!officeManager.isRunning()) {
+                log.debug("Office not running, starting it");
                 for (int i = 0; i < 10; i++) {
                     Thread.sleep(1000);
                     log.info("waiting for office manager");
@@ -107,6 +115,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
                 throw new ThumbnailException("Could not convert into OpenOffice-File (file was empty)...");
             }
 
+            log.debug("Calling delegated thumbnailer");
             ooThumbnailer.generateThumbnail(outputTmp, output);
 
         } catch (IOException e) {

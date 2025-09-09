@@ -27,10 +27,17 @@ public class NativeImageThumbnailer extends AbstractThumbnailer {
     }
 
     public void generateThumbnail(File input, File output) throws ThumbnailException {
+        log.debug(
+                "Starting thumbnail generation for {} with {}",
+                input.getName(),
+                this.getClass().getName());
+
+        log.debug("Resizing to {}x{}", thumbWidth, thumbHeight);
         ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
         try {
             resizer.setInputImage(input);
+            log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             resizer.writeOutput(output);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
