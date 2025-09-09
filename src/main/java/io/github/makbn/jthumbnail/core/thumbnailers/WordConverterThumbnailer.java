@@ -69,6 +69,8 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
                     "Got an unexpected exception with message {}, throwing ThumbnailException",
                     e.getLocalizedMessage());
             throw new ThumbnailException(e);
+        } finally {
+            doc.close();
         }
     }
 
