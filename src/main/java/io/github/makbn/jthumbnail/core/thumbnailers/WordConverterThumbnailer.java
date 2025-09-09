@@ -58,7 +58,6 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
 
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             resizer.writeOutput(output, FilenameUtils.getExtension(output.getName()));
-
         } catch (IOException e) {
             throw new ThumbnailException(e);
         } catch (Exception e) {
