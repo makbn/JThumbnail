@@ -3,6 +3,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FilenameUtils;
@@ -10,11 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.spire.presentation.Presentation;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
-
-import javax.imageio.ImageIO;
 
 /**
  * Dummy class for converting Presentation documents into Openoffice-Textfiles.
@@ -43,15 +40,13 @@ public class PowerpointConverterThumbnailer extends AbstractThumbnailer {
 
             log.trace("Document loaded, saving first slide as image and rescale");
             // Save PPT document to images
-            Image image =
-                    ppt.getSlides().get(0).saveAsImage().getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
-            // Re-write the image with a different color space
-            BufferedImage newImg = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_RGB);
-            newImg.getGraphics().drawImage(image, 0, 0, null);
+            var image = ppt.getSlides().get(0).saveAsImage();
+            ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
 
+            resizer.setInputImage(image);
+            resizer.setResizeMethod(ResizeImage.RESIZE_FIT_BOTH_DIMENSIONS);
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
-            ImageIO.write(newImg, FilenameUtils.getExtension(output.getName()), output);
-
+            resizer.writeOutput(output, FilenameUtils.getExtension(output.getName()));
         } catch (Exception e) {
             throw new ThumbnailRuntimeException(e);
         } finally {
