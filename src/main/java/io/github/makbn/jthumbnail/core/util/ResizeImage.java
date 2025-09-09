@@ -19,15 +19,15 @@ import javax.imageio.ImageIO;
 public class ResizeImage {
 
     /**
-     * Scale input image so that width and height is equal (or smaller) to the output size.
+     * Scale input image so that width and height are equal (or smaller) to the output size.
      * The other dimension will be smaller or equal than the output size.
      */
-    public static final int RESIZE_FIT_BOTH_DIMENSIONS = 2;
+    public static final int RESIZE_FIT_BOTH_DIMENSIONS = 0;
     /**
      * Scale input image so that width or height is equal to the output size.
      * The other dimension will be bigger or equal than the output size.
      */
-    public static final int RESIZE_FIT_ONE_DIMENSION = 3;
+    public static final int RESIZE_FIT_ONE_DIMENSION = 1;
 
     /**
      * Do not try to scale the image up, only down. If bigger, center it.
