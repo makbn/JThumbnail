@@ -22,26 +22,24 @@ public class ResizeImage {
      * Scale input image so that width and height are equal (or smaller) to the output size.
      * The other dimension will be smaller or equal than the output size.
      */
-    public static final int RESIZE_FIT_BOTH_DIMENSIONS = 0;
+    public static final int RESIZE_FIT_BOTH_DIMENSIONS = 0x000;
     /**
      * Scale input image so that width or height is equal to the output size.
      * The other dimension will be bigger or equal than the output size.
      */
-    public static final int RESIZE_FIT_ONE_DIMENSION = 1;
+    public static final int RESIZE_FIT_ONE_DIMENSION = 0x001;
 
     /**
      * Do not try to scale the image up, only down. If bigger, center it.
      */
-    public static final int DO_NOT_SCALE_UP = 16;
+    public static final int DO_NOT_SCALE_UP = 0x010;
     /**
      * If output image is bigger than input image, allow the output to be smaller than expected (the size of the input image)
      */
-    public static final int ALLOW_SMALLER = 32;
-
-    private static final int EXTRA_OPTIONS = DO_NOT_SCALE_UP;
+    public static final int ALLOW_SMALLER = 0x100;
 
     @Setter
-    private int resizeMethod = RESIZE_FIT_ONE_DIMENSION;
+    private int resizeOptions = RESIZE_FIT_ONE_DIMENSION;
 
     private BufferedImage inputImage;
     private boolean isProcessed = false;
@@ -92,17 +90,17 @@ public class ResizeImage {
     private void process() {
         if (imageWidth == thumbWidth && imageHeight == thumbHeight) outputImage = inputImage;
         else {
-            calcDimensions(resizeMethod);
+            calcDimensions(resizeOptions);
             paint();
         }
 
         isProcessed = true;
     }
 
-    private void calcDimensions(int resizeMethod) {
+    private void calcDimensions(int resizeOptions) {
 
         double resizeRatio =
-                switch (resizeMethod) {
+                switch (resizeOptions & RESIZE_FIT_ONE_DIMENSION) {
                     case RESIZE_FIT_BOTH_DIMENSIONS ->
                         Math.min(((double) thumbWidth) / imageWidth, ((double) thumbHeight) / imageHeight);
                     case RESIZE_FIT_ONE_DIMENSION ->
@@ -110,22 +108,32 @@ public class ResizeImage {
                     default -> 1.0;
                 };
 
-        if ((EXTRA_OPTIONS & DO_NOT_SCALE_UP) > 0 && resizeRatio > 1.0) resizeRatio = 1.0;
+        if ((resizeOptions & DO_NOT_SCALE_UP) == DO_NOT_SCALE_UP && resizeRatio > 1.0) {
+            resizeRatio = 1.0;
+        }
 
         scaledWidth = (int) Math.round(imageWidth * resizeRatio);
         scaledHeight = (int) Math.round(imageHeight * resizeRatio);
 
-        if ((EXTRA_OPTIONS & ALLOW_SMALLER) > 0 && scaledWidth < thumbWidth && scaledHeight < thumbHeight) {
+        if ((resizeOptions & ALLOW_SMALLER) == ALLOW_SMALLER
+                && scaledWidth < thumbWidth
+                && scaledHeight < thumbHeight) {
             thumbWidth = scaledWidth;
             thumbHeight = scaledHeight;
         }
 
         // Center if smaller.
-        if (scaledWidth < thumbWidth) offsetX = (thumbWidth - scaledWidth) / 2;
-        else offsetX = 0;
+        if (scaledWidth < thumbWidth) {
+            offsetX = (thumbWidth - scaledWidth) / 2;
+        } else {
+            offsetX = 0;
+        }
 
-        if (scaledHeight < thumbHeight) offsetY = (thumbHeight - scaledHeight) / 2;
-        else offsetY = 0;
+        if (scaledHeight < thumbHeight) {
+            offsetY = (thumbHeight - scaledHeight) / 2;
+        } else {
+            offsetY = 0;
+        }
     }
 
     private void paint() {
