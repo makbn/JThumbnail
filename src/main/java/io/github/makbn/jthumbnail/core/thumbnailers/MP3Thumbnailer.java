@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import io.github.makbn.jthumbnail.core.util.ResizeImage;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Component;
@@ -11,7 +12,6 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -43,9 +43,12 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();
                 // converting the bytes to an image
-                BufferedImage img = getScaledBI(ImageIO.read(new ByteArrayInputStream(imageData)));
+                BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageData));
+
+                ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
+                resizer.setInputImage(img);
                 log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
-                ImageIO.write(img, "png", output);
+                resizer.writeOutput(output, "PNG");
             } else {
                 log.info("MP3 file does not have Id3v2 tags, no thumbnail generated");
             }
@@ -54,16 +57,6 @@ public class MP3Thumbnailer extends AbstractThumbnailer {
             log.warn("MP3Thumbnailer", e);
             throw new ThumbnailException();
         }
-    }
-
-    private BufferedImage getScaledBI(BufferedImage img) {
-        log.trace("Resizing image");
-        Image tmp = img.getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
-        BufferedImage scaleBI = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
-
-        scaleBI.getGraphics().drawImage(tmp, 0, 0, null);
-
-        return scaleBI;
     }
 
     @Override
