@@ -6,7 +6,7 @@ While this is a small and focused library, and I'm not actively contributing, yo
 
 ## Guidelines
 
-If you do want to contribute, here are a few quick guidelines to follow to keep things clean and consistent:
+If you do want to contribute, please read the CLA first, an then here are a few quick guidelines to follow to keep things clean and consistent:
 
 ### 1. Keep It Aligned with the Project Scope
 
