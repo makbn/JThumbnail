@@ -13,7 +13,6 @@ Project Source: https://github.com/makbn/JThumbnail
 ## How to use
 
 ```jshelllanguage
-
 String[] args = new String[]{};
 
 JThumbnailer jThumbnailer = JThumbnailerStarter.init(args);
@@ -36,7 +35,6 @@ jThumbnailer.run(candidate, new ThumbnailListener() {
 
 // close thumbnailer
 jThumbnailer.close();
-
 ```
 
 ## Configuration Args
@@ -102,7 +100,7 @@ Packages are currently published on Github Registry.Please [read this document](
 <dependency>
   <groupId>io.github.makbn</groupId>
   <artifactId>jthumbnail</artifactId>
-  <version>2.2.1</version>
+  <version>2.2.2</version>
 </dependency>
 ```
 
@@ -111,24 +109,15 @@ Packages are currently published on Github Registry.Please [read this document](
 **Step 1**. Add the dependency to the `build.gradle` file:
 
 ```gradle
-compile "io.github.makbn:jthumbnail:2.2.1"
+compile "io.github.makbn:jthumbnail:2.2.2"
 ```
 
 ## TODO
 
-- [x] Update all dependencies from jar to maven
-- [x] update project old and deprecated dependencies
-- [x] Change the structure of project
-- [x] Add new Configuration method to config OpenOffice dir and port
-- [x] Add Async multi-thread support
-- [x] replace Thumbnailers for Microsoft Office documents with e-iceblue
-- [x] Fix problem with xlsx files
-- [x] Improve code quality
-- [x] Improve current Exception handling system
-- [X] Fix issue with running test with the GitHub action: use `UNIX domain sockets` instead of TCP to run openoffice for tests
-- [ ] Add support for remote OpenOffice Manger
-- [ ] Add rate limit to the project API 
-- [ ] Add support for more file formats
+All the tasks and features that are planned to be implemented are moved to the [Project board](https://github.com/users/makbn/projects/3)!
+
+## Contributing
+Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md), [Code of Conduct](CODE_OF_CONDUCT.md), and [CLA](CLA.md) before opening issues or pull requests.
 
 ## Original project
 
