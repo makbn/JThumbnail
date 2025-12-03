@@ -81,6 +81,7 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
             "application/vnd.openxmlformats-officedocument.wordprocessingml",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/wordperfect",
+            "application/msword"
         };
     }
 }

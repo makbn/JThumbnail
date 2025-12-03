@@ -265,21 +265,24 @@ public class ThumbnailerManager implements Thumbnailer {
         ExecutionResult result = ExecutionResult.failed(
                 new ThumbnailException("No suitable Thumbnailer has been " + "found for: " + input.getName()));
 
-        for (Thumbnailer thumbnailer : thumbnailers.get(useMimeType)) {
-            try {
-                if (thumbnailer instanceof ThumbnailerManager) continue;
-                thumbnailer.generateThumbnail(input, output, detectedMimeType);
-                result = ExecutionResult.success();
-                return result;
-            } catch (ThumbnailRuntimeException e) {
-                log.warn("pass runtime error to Thumbnailer");
-                result = ExecutionResult.failed(e);
-            } catch (ThumbnailException | IOException e) {
-                // This Thumbnailer apparently wasn't suitable, so try next
-                result = ExecutionResult.failed(e);
-            } catch (Exception e) {
-                log.error("unknown exception occurred!");
-                result = ExecutionResult.failed(e);
+        var thumbnailerList = thumbnailers.get(useMimeType);
+        if (thumbnailerList != null) {
+            for (Thumbnailer thumbnailer : thumbnailerList) {
+                try {
+                    if (thumbnailer instanceof ThumbnailerManager) continue;
+                    thumbnailer.generateThumbnail(input, output, detectedMimeType);
+                    result = ExecutionResult.success();
+                    return result;
+                } catch (ThumbnailRuntimeException e) {
+                    log.warn("pass runtime error to Thumbnailer");
+                    result = ExecutionResult.failed(e);
+                } catch (ThumbnailException | IOException e) {
+                    // This Thumbnailer apparently wasn't suitable, so try next
+                    result = ExecutionResult.failed(e);
+                } catch (Exception e) {
+                    log.error("unknown exception occurred!");
+                    result = ExecutionResult.failed(e);
+                }
             }
         }
         return result;
