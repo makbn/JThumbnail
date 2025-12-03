@@ -96,7 +96,6 @@ public class MPEGThumbnailer extends AbstractThumbnailer {
         };
     }
 
-    @SuppressWarnings("Duplicates")
     private BufferedImage getScaledBI(BufferedImage org) {
         Image tmp = org.getScaledInstance(thumbWidth, thumbHeight, Image.SCALE_SMOOTH);
         BufferedImage scaleBI = new BufferedImage(thumbWidth, thumbHeight, BufferedImage.TYPE_INT_ARGB);
