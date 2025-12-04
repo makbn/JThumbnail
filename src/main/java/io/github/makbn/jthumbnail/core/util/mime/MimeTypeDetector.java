@@ -124,7 +124,8 @@ public class MimeTypeDetector {
                 extensions.add("ppsx");
                 extensions.add("potx");
             }
-            case "application/vnd.openxmlformats-officedocument.spreadsheetml" -> {
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml" -> {
                 extensions.add("xlsx");
                 extensions.add("xltx");
             }
