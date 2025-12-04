@@ -99,7 +99,7 @@ public class MimeTypeDetector {
     public String getStandardExtensionForMimeType(String mimeType) {
         List<String> extensions = getExtensionsCached(mimeType);
 
-        if (extensions == null) return null;
+        if (extensions == null || extensions.size() == 0) return null;
 
         try {
             return extensions.getFirst();
