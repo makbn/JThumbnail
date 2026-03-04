@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import com.spire.doc.Document;
 import com.spire.doc.documents.ImageType;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,12 +47,12 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
 
             log.trace("Document loaded, saving all pages to images");
 
-            // Convert the whole document into individual buffered images
-            BufferedImage[] pages = doc.saveToImages(ImageType.Bitmap);
+            // Convert the first page as image
+            var firstPage = doc.saveToImages(0, ImageType.Bitmap);
 
             log.trace("Pages saved, getting first page and scaling for thumbnail");
             ResizeImage resizer = new ResizeImage(thumbWidth, thumbHeight);
-            resizer.setInputImage(pages[0]);
+            resizer.setInputImage(firstPage);
 
             log.debug("Writing {} thumbnail to {}", input.getName(), output.getAbsolutePath());
             resizer.writeOutput(output, FilenameUtils.getExtension(output.getName()));
@@ -66,6 +65,7 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
             throw new ThumbnailException(e);
         } finally {
             doc.close();
+            doc.dispose();
         }
     }
 
@@ -81,6 +81,7 @@ public class WordConverterThumbnailer extends AbstractThumbnailer {
             "application/vnd.openxmlformats-officedocument.wordprocessingml",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/wordperfect",
+            "application/msword"
         };
     }
 }
