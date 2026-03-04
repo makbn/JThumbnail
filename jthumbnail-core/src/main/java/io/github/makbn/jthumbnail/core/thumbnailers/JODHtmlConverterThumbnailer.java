@@ -8,7 +8,7 @@ import org.jodconverter.core.office.OfficeManager;
 import org.springframework.stereotype.Component;
 
 /**
- * Dummy class for converting Html documents into Openoffice-Textfiles.
+ * Dummy class for converting HTML documents into Openoffice-Textfiles.
  * <p>
  * (The preview won't be better than what OpenOffice can achieve. See also
  * issue <a href="https://github.com/benjamin4ruby/java-thumbnailer/issues/8">...</a>)

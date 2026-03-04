@@ -20,7 +20,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * created by Mehdi Akbarian-Rastaghi 2018-10-23
+ * @author Matt Akbarian (makbn)
  */
 @Component
 @Slf4j

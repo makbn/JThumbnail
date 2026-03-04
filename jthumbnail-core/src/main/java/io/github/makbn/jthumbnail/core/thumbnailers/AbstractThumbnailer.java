@@ -38,7 +38,7 @@ import java.io.IOException;
  * <li>specifies a wildcard MIME Type as appropriate Filetype</li>
  * </ul>
  *
- * @author Mehdi Akbarian-Rastaghi
+ * @author Matt Akbarian (makbn)
  */
 @EnableConfigurationProperties(value = {ThumbnailProperties.class})
 public abstract class AbstractThumbnailer implements Thumbnailer {

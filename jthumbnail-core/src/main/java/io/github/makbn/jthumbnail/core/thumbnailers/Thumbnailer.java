@@ -20,7 +20,7 @@ public interface Thumbnailer extends Closeable {
      * @param output   File in which should be written
      * @param mimeType MIME-Type of input file (null if unknown)
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnail-ing process failed.
      */
     void generateThumbnail(File input, File output, String mimeType) throws IOException, ThumbnailException;
 
@@ -30,7 +30,7 @@ public interface Thumbnailer extends Closeable {
      * @param input  Input file that should be processed
      * @param output File in which should be written
      * @throws IOException          If file cannot be read/written
-     * @throws ThumbnailException If the thumbnailing process failed.
+     * @throws ThumbnailException If the thumbnail-ing process failed.
      */
     void generateThumbnail(File input, File output) throws IOException, ThumbnailException;
 
@@ -39,7 +39,7 @@ public interface Thumbnailer extends Closeable {
      * Note: This acts as a Deconstruct. Do not expect this object to work
      * after calling this method.
      *
-     * @throws IOException If some errors occurred during finalising
+     * @throws IOException If some errors occurred during finalizing
      */
     void close() throws IOException;
 

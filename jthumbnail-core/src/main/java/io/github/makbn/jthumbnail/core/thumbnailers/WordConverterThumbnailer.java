@@ -17,7 +17,6 @@ import java.io.IOException;
 /**
  * Dummy class for converting Text documents into Openoffice-Textfiles.
  * <p>
- * Tika could be used to detect ms-word-files, but quite a heavy library. Maybe it would be useful as a preperator as well?
  *
  * @see JODConverterThumbnailer
  */

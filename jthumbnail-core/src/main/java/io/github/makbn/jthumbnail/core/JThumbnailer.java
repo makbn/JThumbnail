@@ -73,10 +73,8 @@ public class JThumbnailer implements Closeable {
             }
 
             listener.onThumbnailReady(candidate.getUid(), out);
-        } catch (ThumbnailRuntimeException | ThumbnailException re) {
+        } catch (ThumbnailRuntimeException | ThumbnailException | IOException re) {
             listener.onThumbnailFailed(candidate.getUid(), re.getMessage(), 500);
-        } catch (IOException ioe) {
-            listener.onThumbnailFailed(candidate.getUid(), ioe.getMessage(), 500);
         }
     }
 

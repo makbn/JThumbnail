@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -56,7 +57,9 @@ public class ThumbnailProviderRegistry {
                 .toList();
     }
 
-    /** Add a provider at runtime (e.g. SPI or dynamic loading). */
+    /**
+     * Add a provider at runtime (e.g. SPI or dynamic loading).
+     */
     public void register(ThumbnailProvider provider) {
         if (provider != null && !runtimeProviders.contains(provider)) {
             runtimeProviders.add(provider);
@@ -64,12 +67,16 @@ public class ThumbnailProviderRegistry {
         }
     }
 
-    /** Remove a runtime-registered provider. */
+    /**
+     * Remove a runtime-registered provider.
+     */
     public void unregister(ThumbnailProvider provider) {
         runtimeProviders.remove(provider);
     }
 
-    /** Providers that support the file type, in priority order (beans first, then runtime). */
+    /**
+     * Providers that support the file type, in priority order (beans first, then runtime).
+     */
     public List<ThumbnailProvider> getProvidersFor(FileType fileType) {
         List<ThumbnailProvider> out = new ArrayList<>();
         for (ThumbnailProvider p : orderedProviders) {
@@ -81,7 +88,9 @@ public class ThumbnailProviderRegistry {
         return out;
     }
 
-    /** Run first supporting provider until one succeeds; throws if none do. */
+    /**
+     * Run first supporting provider until one succeeds; throws if none do.
+     */
     public void generateThumbnail(File input, File output, String mimeType)
             throws ThumbnailException, ThumbnailRuntimeException {
         FileType fileType = FileType.of(mimeType);
@@ -109,10 +118,12 @@ public class ThumbnailProviderRegistry {
                 lastException = new ThumbnailException(e);
             }
         }
-        throw lastException != null ? lastException : new ThumbnailException("No provider could generate thumbnail");
+        throw lastException;
     }
 
-    /** Close closeable providers and clear runtime-registered ones. */
+    /**
+     * Close closeable providers and clear runtime-registered ones.
+     */
     public void close() {
         for (ThumbnailProvider p : orderedProviders) {
             if (p instanceof Closeable c) {

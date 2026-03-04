@@ -79,7 +79,7 @@ public class ThumbnailerManager {
         generateThumbnail(input, output, null);
     }
 
-    public synchronized void close() throws IOException {
+    public synchronized void close() {
         registry.close();
     }
 
