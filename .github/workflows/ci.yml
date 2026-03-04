@@ -1,0 +1,91 @@
+# CI: on every push, run build then test then E2E for the project.
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "gradle"
+
+      - name: Build (compile and package, no tests)
+        run: ./gradlew build -x test --no-daemon --stacktrace
+
+  test:
+    name: Test
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "gradle"
+
+      - name: Install LibreOffice (for Office-related tests)
+        run: |
+          LO_VERSION=25.8.0
+          LO_URL=https://download.documentfoundation.org/libreoffice/stable/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz
+          mkdir -p ~/tools/soffice
+          curl -sSL -o ~/tools/soffice/libreOffice.tar.gz "$LO_URL"
+          tar -xzf ~/tools/soffice/libreOffice.tar.gz --strip-components=1 -C ~/tools/soffice/
+          sudo dpkg -i ~/tools/soffice/DEBS/*.deb || true
+          sudo apt-get install -f -y || true
+
+      - name: Run unit and integration tests
+        env:
+          JTHUMBNAILER_OPENOFFICE_WORKING_DIR: /tmp/
+          JTHUMBNAILER_OPENOFFICE_OFFICE_HOME: /opt/libreoffice25.8/
+          LD_LIBRARY_PATH: /opt/libreoffice25.8/program:$LD_LIBRARY_PATH
+        run: ./gradlew test --no-daemon --stacktrace -Djava.library.path=/opt/libreoffice25.8/program/
+
+  e2e:
+    name: E2E & integration
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "gradle"
+
+      - name: Install LibreOffice (for Office E2E/integration tests)
+        run: |
+          LO_VERSION=25.8.0
+          LO_URL=https://download.documentfoundation.org/libreoffice/stable/${LO_VERSION}/deb/x86_64/LibreOffice_${LO_VERSION}_Linux_x86-64_deb.tar.gz
+          mkdir -p ~/tools/soffice
+          curl -sSL -o ~/tools/soffice/libreOffice.tar.gz "$LO_URL"
+          tar -xzf ~/tools/soffice/libreOffice.tar.gz --strip-components=1 -C ~/tools/soffice/
+          sudo dpkg -i ~/tools/soffice/DEBS/*.deb || true
+          sudo apt-get install -f -y || true
+
+      - name: Run E2E and integration tests
+        env:
+          JTHUMBNAILER_OPENOFFICE_WORKING_DIR: /tmp/
+          JTHUMBNAILER_OPENOFFICE_OFFICE_HOME: /opt/libreoffice25.8/
+          LD_LIBRARY_PATH: /opt/libreoffice25.8/program:$LD_LIBRARY_PATH
+        run: ./gradlew e2eTest --no-daemon --stacktrace -Djava.library.path=/opt/libreoffice25.8/program/
