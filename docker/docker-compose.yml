@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  jthumbnail-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.app
+    container_name: jthumbnail-app
+    ports:
+      - "8081:8081"   # REST / webservice / GraphQL
+      - "9090:9090"   # gRPC (when enabled)
+    environment:
+      # Use the bundled H2 file database inside the container
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/jthumbnail;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+
+      # Core thumbnail configuration
+      JTHUMBNAILER_THUMBNAIL_THUMBWIDTH: 400
+      JTHUMBNAILER_THUMBNAIL_THUMBHEIGHT: 535
+
+      # Upload directory (mounted volume)
+      JTHUMBNAILER_SERVER_UPLOADDIRECTORY: /data/upload
+      JTHUMBNAILER_SERVER_MAXWAITINGLISTSIZE: 1000
+
+      # Example: enable GraphQL and CDN Edge connectors
+      JTHUMBNAILER_GRAPHQL_ENABLED: "true"
+      JTHUMBNAILER_CDNEDGE_ENABLED: "true"
+
+      # Rate limiting
+      JTHUMBNAILER_RATELIMIT_ENABLED: "true"
+      JTHUMBNAILER_RATELIMIT_REQUESTSPERMINUTE: 60
+
+      # Expose health/metrics
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,metrics,prometheus"
+      MANAGEMENT_ENDPOINTS_WEB_BASEPATH: /actuator
+
+      # Java options (can be overridden)
+      JAVA_OPTS: "-Xms256m -Xmx1024m"
+
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+

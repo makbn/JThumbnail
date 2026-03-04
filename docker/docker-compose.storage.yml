@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-08-03T04-33-23Z
+    container_name: jthumbnail-minio
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio-data:/data
+
+  jthumbnail-app:
+    environment:
+      # Enable S3-compatible storage connector
+      JTHUMBNAILER_STORAGE_ENABLED: "true"
+      JTHUMBNAILER_STORAGE_ENDPOINTOVERRIDE: http://minio:9000
+      JTHUMBNAILER_STORAGE_REGION: us-east-1
+      # Allow all buckets and file types by default; configure as needed
+      # JTHUMBNAILER_STORAGE_BUCKETWHITELIST: my-bucket
+      # JTHUMBNAILER_STORAGE_FILETYPEINCLUDE: pdf,png,jpg
+
