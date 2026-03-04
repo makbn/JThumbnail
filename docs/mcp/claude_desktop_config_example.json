@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "jthumbnail": {
+      "command": "/absolute/path/to/JThumbnail/run-mcp.sh",
+      "env": {
+        "JTHUMBNAIL_BASE_URL": "http://localhost:8081"
+      }
+    }
+  }
+}

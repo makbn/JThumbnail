@@ -19,7 +19,26 @@ JThumbnailer jThumbnailer = JThumbnailerStarter.init(args);
 
 File in = new File("/inputFile.docx");
 
-ThumbnailCandidate candidate = new ThumbnailCandidate(in,"unique_code");
+// Minimal usage – uses default engine configuration
+ThumbnailCandidate candidate = ThumbnailCandidate.of(in, "unique_code");
+
+// Optional: override output format, size, cropping, rotation, color, border, text, ...
+ThumbnailConfig config = ThumbnailConfig.builder()
+        .outputFormat(ThumbnailConfig.OutputFormat.WEBP)
+        .width(512)
+        .height(512)
+        .cropMode(ThumbnailConfig.CropMode.FILL) // center-crop to fill box
+        .rotationDegrees(0.0)
+        .colorFilter(ThumbnailConfig.ColorFilter.SEPIA)
+        .addBorder(true)
+        .borderSize(4)
+        .borderColor("#000000")
+        .overlayText("Sample")
+        .overlayTextSize(18)
+        .overlayTextColor("#FFFFFF")
+        .build();
+
+ThumbnailCandidate configured = ThumbnailCandidate.of(in, "unique_code_with_config", config);
 
 jThumbnailer.run(candidate, new ThumbnailListener() {
      @Override
@@ -71,6 +90,55 @@ jThumbnailer.close();
 
 - All parameters can be passed through environment variables. To pass a param as environment variable you need to replace the dots with underscore and use uppercase. For example, `jthumbnailer.openoffice.office_home` should be 
 `JTHUMBNAILER_OPENOFFICE_OFFICEHOME` (see [Spring documentation](https://docs.spring.io/spring-boot/reference/features/external-config.html#features.external-config.typesafe-configuration-properties.relaxed-binding).
+
+## Multi-module build
+
+The project is split into **Maven-style Gradle modules** so you can depend only on what you need (e.g. Kafka without AMQP/gRPC/storage). Each module can be **built and published independently**.
+
+- **Build all:** `./gradlew build`
+- **Publish all:** `./gradlew publish`
+- **Details:** [docs/MULTI_MODULE.md](docs/MULTI_MODULE.md)
+
+| Module | Artifact | Purpose |
+|--------|----------|---------|
+| `jthumbnail-core` | `io.github.makbn:jthumbnail-core` | API, job processing, thumbnailers |
+| `jthumbnail-kafka` | `io.github.makbn:jthumbnail-kafka` | Kafka job queue |
+| `jthumbnail-webservice` | `io.github.makbn:jthumbnail-webservice` | REST API |
+| `jthumbnail-webhook` | `io.github.makbn:jthumbnail-webhook` | Webhook connector |
+| `jthumbnail-amqp` | `io.github.makbn:jthumbnail-amqp` | AMQP connector |
+| `jthumbnail-grpc` | `io.github.makbn:jthumbnail-grpc` | gRPC server |
+| `jthumbnail-watcher` | `io.github.makbn:jthumbnail-watcher` | Filesystem watcher |
+| `jthumbnail-storage` | `io.github.makbn:jthumbnail-storage` | S3 storage connector |
+| `jthumbnail-mcp` | `io.github.makbn:jthumbnail-mcp` | MCP server (LLM tools) |
+| `jthumbnail-app` | `io.github.makbn:jthumbnail-app` | Spring Boot application |
+| `jthumbnail-spring-boot-starter` | `io.github.makbn:jthumbnail-spring-boot-starter` | Spring Boot starter for embedding core |
+
+## Module documentation
+
+Each module has a **detailed README** under [docs/](docs/) with build, run, and use instructions:
+
+| Module | Description | Documentation |
+|--------|-------------|---------------|
+| **Application** | Main Spring Boot app: build, run, config | [docs/application/README.md](docs/application/README.md) |
+| **Connector API** | Public API for submitting jobs (connector authors) | [docs/connector-api/README.md](docs/connector-api/README.md) |
+| **Core** | Job processing, OpenOffice, thumbnail size, async | [docs/core/README.md](docs/core/README.md) |
+| **Webservice** | REST API: upload, jobs, status, Swagger | [docs/webservice/README.md](docs/webservice/README.md) |
+| **Webhook** | HTTP webhook for CMS/CI (POST JSON → job) | [docs/webhook/README.md](docs/webhook/README.md) |
+| **Kafka** | Job queue: produce/consume, DLQ, retry | [docs/kafka/README.md](docs/kafka/README.md) |
+| **AMQP** | RabbitMQ: consume messages, create/process jobs | [docs/amqp/README.md](docs/amqp/README.md) |
+| **gRPC** | gRPC server for submitting jobs | [docs/grpc/README.md](docs/grpc/README.md) |
+| **Watcher** | Filesystem watcher: auto-submit new files | [docs/watcher/README.md](docs/watcher/README.md) |
+| **Storage** | S3-compatible: webhook/SQS → thumbnail → upload | [docs/storage/README.md](docs/storage/README.md) |
+| **MCP** | MCP server for LLMs (Claude Desktop, Cursor) | [docs/mcp/README.md](docs/mcp/README.md) |
+
+Full index: [docs/README.md](docs/README.md).
+
+## Connectors and extensibility
+
+Thumbnail jobs can be triggered via **REST**, **Kafka**, **AMQP**, **gRPC**, **webhook (CMS)**, **filesystem watcher**, and **S3-compatible storage**. All connectors follow a single public contract so the system is extensible by third-party developers.
+
+- **Public API:** [`io.github.makbn.jthumbnail.connector.api.ThumbnailJobSubmitter`](src/main/java/io/github/makbn/jthumbnail/connector/api/ThumbnailJobSubmitter.java) — use this to submit jobs from any connector.
+- **Specification:** [docs/CONNECTOR_SPECIFICATION.md](docs/CONNECTOR_SPECIFICATION.md) — lifecycle, configuration pattern, and how to add new connectors.
 
 ## Requirements
 
