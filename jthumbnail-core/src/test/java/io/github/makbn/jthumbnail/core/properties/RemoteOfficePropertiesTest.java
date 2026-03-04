@@ -11,8 +11,7 @@ import java.net.URI;
 class RemoteOfficePropertiesTest {
 
     private RemoteOfficeProperties createProperties() {
-        File workingDir =
-                new File(System.getProperty("java.io.tmpdir"), "jthumb-remote-test");
+        File workingDir = new File(System.getProperty("java.io.tmpdir"), "jthumb-remote-test");
         return new RemoteOfficeProperties(
                 ManagerType.REMOTE,
                 workingDir,
@@ -57,5 +56,4 @@ class RemoteOfficePropertiesTest {
         assertEquals(30000L, properties.taskQueueTimeout());
         assertEquals(120000L, properties.taskExecutionTimeout());
     }
-
 }

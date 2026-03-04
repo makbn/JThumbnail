@@ -140,6 +140,8 @@ Thumbnail jobs can be triggered via **REST**, **Kafka**, **AMQP**, **gRPC**, **w
 - **Public API:** [`io.github.makbn.jthumbnail.connector.api.ThumbnailJobSubmitter`](src/main/java/io/github/makbn/jthumbnail/connector/api/ThumbnailJobSubmitter.java) — use this to submit jobs from any connector.
 - **Specification:** [docs/CONNECTOR_SPECIFICATION.md](docs/CONNECTOR_SPECIFICATION.md) — lifecycle, configuration pattern, and how to add new connectors.
 
+**Custom thumbnail generators:** You can add support for new file types by implementing **ThumbnailProvider** (or **Thumbnailer**) and registering it as a Spring bean; optionally implement **MimeTypeIdentifier** for custom MIME/extension detection. See [docs/EXTENDING.md](docs/EXTENDING.md) for full instructions.
+
 ## Requirements
 
 - Java JRE **21**

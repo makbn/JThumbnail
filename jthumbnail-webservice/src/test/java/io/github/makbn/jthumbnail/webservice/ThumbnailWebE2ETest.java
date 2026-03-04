@@ -33,9 +33,7 @@ import javax.imageio.ImageIO;
  * End-to-end test for the thumbnail webservice: upload a file, poll status, download thumbnail.
  * Uses embedded server and test profile (no LibreOffice).
  */
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = WebserviceTestApplication.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = WebserviceTestApplication.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = "spring.main.allow-circular-references=true")
 class ThumbnailWebE2ETest {

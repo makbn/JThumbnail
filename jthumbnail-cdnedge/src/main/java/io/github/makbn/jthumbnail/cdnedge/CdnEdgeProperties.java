@@ -3,6 +3,7 @@ package io.github.makbn.jthumbnail.cdnedge;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -48,13 +49,8 @@ public record CdnEdgeProperties(
 
     public static final long DEFAULT_MAX_BYTES = 50L * 1024L * 1024L;
 
+    /** Returns a properties instance with default values (connector disabled). */
     public static CdnEdgeProperties withDefaults() {
-        return new CdnEdgeProperties(
-                false,
-                List.of(),
-                List.of(),
-                DEFAULT_MAX_BYTES,
-                Duration.ofSeconds(30));
+        return new CdnEdgeProperties(false, List.of(), List.of(), DEFAULT_MAX_BYTES, Duration.ofSeconds(30));
     }
 }
-

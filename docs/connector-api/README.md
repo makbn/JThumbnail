@@ -85,6 +85,8 @@ For lifecycle details, configuration rules, and step-by-step instructions to add
 
 - **[Connector Specification](../CONNECTOR_SPECIFICATION.md)**
 
+To add support for **new file types** (custom thumbnail generators and MIME detection), see **[Extending JThumbnail](../EXTENDING.md)**.
+
 ## Related documentation
 
 - [Application](application/README.md) – How to build and run the main app

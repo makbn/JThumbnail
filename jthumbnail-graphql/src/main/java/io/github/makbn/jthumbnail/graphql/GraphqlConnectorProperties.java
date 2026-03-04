@@ -12,4 +12,3 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConfigurationProperties(prefix = "jthumbnailer.graphql", ignoreUnknownFields = false)
 public record GraphqlConnectorProperties(boolean enabled) {}
-

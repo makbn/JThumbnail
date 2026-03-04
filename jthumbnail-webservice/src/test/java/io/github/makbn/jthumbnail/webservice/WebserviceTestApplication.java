@@ -1,6 +1,7 @@
 package io.github.makbn.jthumbnail.webservice;
 
 import io.github.makbn.jthumbnail.connector.api.JobProducer;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -26,4 +27,3 @@ public class WebserviceTestApplication {
         };
     }
 }
-

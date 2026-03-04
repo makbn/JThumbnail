@@ -2,6 +2,7 @@ package io.github.makbn.jthumbnail.cdnedge;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -16,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -62,31 +62,26 @@ public class CdnEdgeDownloadService {
         }
 
         RestTemplate client = buildClient();
-        var response = client.execute(
-                uri,
-                org.springframework.http.HttpMethod.GET,
-                null,
-                clientHttpResponse -> {
-                    if (!Objects.equals(responseStatus(clientHttpResponse.getRawStatusCode()), HttpStatus.OK)) {
-                        throw new RestClientException("Unexpected response status: " + clientHttpResponse.getRawStatusCode());
-                    }
-                    long contentLength = contentLength(clientHttpResponse.getHeaders());
-                    if (contentLength > 0 && contentLength > props.maxBytes()) {
-                        throw new RestClientException("Content-Length exceeds limit: " + contentLength);
-                    }
-                    Path tempFile =
-                            Files.createTempFile("cdn-thumb-", "-" + fileName(uri.getPath()));
-                    try (var in = clientHttpResponse.getBody();
-                            var out = new FileOutputStream(tempFile.toFile())) {
-                        byte[] data = in.readAllBytes();
-                        long length = Math.min(data.length, props.maxBytes() + 1);
-                        out.write(data, 0, (int) length);
-                        if (length > props.maxBytes()) {
-                            throw new RestClientException("Downloaded bytes exceed limit: " + length);
-                        }
-                    }
-                    return tempFile.toFile();
-                });
+        var response = client.execute(uri, org.springframework.http.HttpMethod.GET, null, clientHttpResponse -> {
+            if (!Objects.equals(responseStatus(clientHttpResponse.getStatusCode().value()), HttpStatus.OK)) {
+                throw new RestClientException("Unexpected response status: " + clientHttpResponse.getStatusCode());
+            }
+            long contentLength = contentLength(clientHttpResponse.getHeaders());
+            if (contentLength > 0 && contentLength > props.maxBytes()) {
+                throw new RestClientException("Content-Length exceeds limit: " + contentLength);
+            }
+            Path tempFile = Files.createTempFile("cdn-thumb-", "-" + fileName(uri.getPath()));
+            try (var in = clientHttpResponse.getBody();
+                    var out = new FileOutputStream(tempFile.toFile())) {
+                byte[] data = in.readAllBytes();
+                long length = Math.min(data.length, props.maxBytes() + 1);
+                out.write(data, 0, (int) length);
+                if (length > props.maxBytes()) {
+                    throw new RestClientException("Downloaded bytes exceed limit: " + length);
+                }
+            }
+            return tempFile.toFile();
+        });
 
         if (response == null) {
             throw new IOException("Empty HTTP response for " + url);
@@ -104,7 +99,8 @@ public class CdnEdgeDownloadService {
     private boolean extensionAllowed(String path) {
         List<String> allowed = props.allowedExtensions();
         if (allowed == null || allowed.isEmpty()) return true;
-        String ext = path.contains(".") ? path.substring(path.lastIndexOf('.') + 1).toLowerCase() : "";
+        String ext =
+                path.contains(".") ? path.substring(path.lastIndexOf('.') + 1).toLowerCase() : "";
         return allowed.stream().map(String::toLowerCase).anyMatch(ext::equals);
     }
 
@@ -128,4 +124,3 @@ public class CdnEdgeDownloadService {
         return name.isBlank() ? "download.bin" : name;
     }
 }
-

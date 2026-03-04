@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 
 import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.provider.ThumbnailProviderRegistry;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class ThumbnailerManagerTest {
     @BeforeEach
     void setUp() {
         registry = mock(ThumbnailProviderRegistry.class);
-        manager = new ThumbnailerManager(registry);
+        manager = new ThumbnailerManager(registry, new MimeTypeDetector());
     }
 
     @Test

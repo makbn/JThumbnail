@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,6 @@ import java.io.IOException;
  *   <li>Connector submits the local file path via {@link ThumbnailJobSubmitter}.</li>
  *   <li>Core pipeline processes the job and the usual job APIs can be used to query status.</li>
  * </ol>
- * </p>
  */
 @RestController
 @RequestMapping("/api/cdnedge")
@@ -36,6 +36,7 @@ public class CdnEdgeJobController {
     private final CdnEdgeDownloadService downloader;
     private final ThumbnailJobSubmitter jobSubmitter;
 
+    /** Creates a thumbnail job by downloading the given URL and submitting the local file. */
     @PostMapping("/jobs")
     public CreateJobResponse createJob(@Valid @RequestBody CreateJobRequest request) throws IOException {
         File downloaded = downloader.downloadToTemp(request.getUrl());
@@ -44,28 +45,34 @@ public class CdnEdgeJobController {
         return new CreateJobResponse(jobId);
     }
 
+    /** Request body for creating a job from a URL. */
     public static class CreateJobRequest {
         @NotBlank
         private String url;
 
+        /** Default constructor for JSON binding. */
         public CreateJobRequest() {}
 
+        /** Creates a request with the given URL. */
         public CreateJobRequest(String url) {
             this.url = url;
         }
 
+        /** Returns the URL to download. */
         public String getUrl() {
             return url;
         }
 
+        /** Sets the URL to download. */
         public void setUrl(String url) {
             this.url = url;
         }
     }
 
+    /** Response containing the created job ID. */
     @Value
     public static class CreateJobResponse {
+        /** The thumbnail job ID. */
         String jobId;
     }
 }
-

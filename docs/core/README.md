@@ -71,9 +71,21 @@ As a **user of the application**, you use the REST API, webhook, or other connec
 | `jthumbnailer.jobs` | Kafka topic, DLQ, retries, concurrency |
 | `jthumbnailer.ffmpeg` | FFmpeg for video (if used) |
 
+## Extending: custom thumbnail generators and file types
+
+Third parties can add support for new file types by:
+
+- Implementing **ThumbnailProvider** (or **Thumbnailer**) and registering it as a Spring bean. The **ThumbnailProviderRegistry** picks up all such beans and tries them when generating thumbnails.
+- Optionally implementing **MimeTypeIdentifier** and registering it as a bean so that custom extensions (e.g. `.xyz`) are detected with the correct MIME type and thumbnail output extension.
+
+Provider order can be tuned with `jthumbnailer.providers.priority`.
+
+See **[Extending JThumbnail (custom thumbnailers and MIME)](../EXTENDING.md)** for step-by-step instructions and examples.
+
 ## Related documentation
 
 - [Application](application/README.md) – Build and run the app
 - [Connector API](connector-api/README.md) – Public submission API
 - [Kafka](kafka/README.md) – Job queue
 - [Connector Specification](../CONNECTOR_SPECIFICATION.md) – Full connector contract
+- [Extending](../EXTENDING.md) – Custom thumbnail generators and MIME detection

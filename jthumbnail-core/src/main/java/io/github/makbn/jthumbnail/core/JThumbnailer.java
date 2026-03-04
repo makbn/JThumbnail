@@ -4,8 +4,8 @@ import io.github.makbn.jthumbnail.core.exception.ThumbnailException;
 import io.github.makbn.jthumbnail.core.exception.ThumbnailRuntimeException;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
-import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.model.ThumbnailConfig;
+import io.github.makbn.jthumbnail.core.model.ThumbnailEvent;
 import io.github.makbn.jthumbnail.core.util.ThumbnailPostProcessor;
 import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.AccessLevel;
@@ -28,10 +28,10 @@ public class JThumbnailer implements Closeable {
     MimeTypeDetector typeDetector;
     ApplicationEventPublisher events;
 
-    public JThumbnailer(ThumbnailerManager manager, ApplicationEventPublisher events) {
+    public JThumbnailer(ThumbnailerManager manager, ApplicationEventPublisher events, MimeTypeDetector typeDetector) {
         this.manager = manager;
         this.events = events;
-        this.typeDetector = new MimeTypeDetector();
+        this.typeDetector = typeDetector;
     }
 
     @Async("asyncThreadPoolTaskExecutor")

@@ -107,3 +107,12 @@ Your connector should be gated by `@ConditionalOnProperty(name = "jthumbnailer.<
 - **Built-in connectors:** `webservice`, `kafka`, `amqp`, `grpc`, `webhook`, `watcher`, `storage`
 
 Third-party connectors can live in a separate module or package; they only need to depend on the `connector.api` package and the Spring context that provides `ThumbnailJobSubmitter`.
+
+## 7. Extending thumbnail generation (new file types)
+
+Connectors submit jobs by file path; the **core** chooses which thumbnail generator to use by file type. To support **new file formats**, implement a custom thumbnail generator and (optionally) custom MIME detection:
+
+- **ThumbnailProvider** (or **Thumbnailer**) – implement and register as a Spring bean; the core registry will use it when generating thumbnails.
+- **MimeTypeIdentifier** – implement and register as a bean to map your file extension to the correct MIME type and output extension.
+
+See **[EXTENDING.md](EXTENDING.md)** for step-by-step instructions and code examples.

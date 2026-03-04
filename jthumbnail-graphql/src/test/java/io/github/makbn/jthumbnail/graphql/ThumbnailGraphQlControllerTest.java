@@ -1,22 +1,19 @@
 package io.github.makbn.jthumbnail.graphql;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
 import io.github.makbn.jthumbnail.connector.api.ThumbnailJobSubmitter;
 import io.github.makbn.jthumbnail.core.job.ThumbnailJob;
 import io.github.makbn.jthumbnail.core.job.ThumbnailJobService;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.graphql.GraphQlTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.graphql.test.tester.GraphQlTester;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 class ThumbnailGraphQlControllerTest {
 
@@ -28,8 +25,7 @@ class ThumbnailGraphQlControllerTest {
 
         ThumbnailGraphQlController controller = new ThumbnailGraphQlController(submitter, jobService);
 
-        ThumbnailGraphQlController.SubmitJobPayload payload =
-                controller.submitThumbnailJob("/tmp/file.pdf");
+        ThumbnailGraphQlController.SubmitJobPayload payload = controller.submitThumbnailJob("/tmp/file.pdf");
         org.junit.jupiter.api.Assertions.assertEquals("job-1", payload.jobId());
     }
 
@@ -41,8 +37,7 @@ class ThumbnailGraphQlControllerTest {
         ThumbnailGraphQlController controller =
                 new ThumbnailGraphQlController(Mockito.mock(ThumbnailJobSubmitter.class), jobService);
 
-        ThumbnailGraphQlController.ThumbnailJobDto dto =
-                controller.thumbnailJob(job.getJobId());
+        ThumbnailGraphQlController.ThumbnailJobDto dto = controller.thumbnailJob(job.getJobId());
 
         org.junit.jupiter.api.Assertions.assertEquals(job.getJobId(), dto.jobId());
         org.junit.jupiter.api.Assertions.assertEquals("/tmp/a.txt", dto.filePath());
@@ -85,8 +80,8 @@ class ThumbnailGraphQlControllerTest {
                 (reactor.core.publisher.Flux<ThumbnailGraphQlController.ThumbnailJobDto>)
                         controller.thumbnailJobCompleted(job.getJobId());
 
-        ThumbnailGraphQlController.ThumbnailJobDto dto = flux.blockFirst(Duration.ofSeconds(1));
+        // Subscription polls every 1s; allow time for first tick to emit
+        ThumbnailGraphQlController.ThumbnailJobDto dto = flux.blockFirst(Duration.ofSeconds(3));
         org.junit.jupiter.api.Assertions.assertEquals(job.getJobId(), dto.jobId());
     }
 }
-

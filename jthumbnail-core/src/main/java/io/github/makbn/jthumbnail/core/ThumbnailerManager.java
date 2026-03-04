@@ -31,9 +31,9 @@ public class ThumbnailerManager {
     @NonFinal
     File thumbnailFolder;
 
-    public ThumbnailerManager(ThumbnailProviderRegistry registry) {
+    public ThumbnailerManager(ThumbnailProviderRegistry registry, MimeTypeDetector mimeTypeDetector) {
         this.registry = registry;
-        this.mimeTypeDetector = new MimeTypeDetector();
+        this.mimeTypeDetector = mimeTypeDetector;
     }
 
     public File chooseThumbnailFilename(File input, String ext) throws ThumbnailException {

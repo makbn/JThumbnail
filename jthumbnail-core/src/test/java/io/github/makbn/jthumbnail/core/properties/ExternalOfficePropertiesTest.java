@@ -14,8 +14,7 @@ import java.util.List;
 class ExternalOfficePropertiesTest {
 
     private ExternalOfficeProperties createProperties() {
-        File workingDir =
-                new File(System.getProperty("java.io.tmpdir"), "jthumb-external-test");
+        File workingDir = new File(System.getProperty("java.io.tmpdir"), "jthumb-external-test");
         return new ExternalOfficeProperties(
                 ManagerType.EXTERNAL,
                 "127.0.0.1",

@@ -24,6 +24,7 @@ This directory contains **module-level documentation** for JThumbnail: build, ru
 ## Other documents
 
 - **[CONNECTOR_SPECIFICATION.md](CONNECTOR_SPECIFICATION.md)** – Connector lifecycle, configuration pattern, and how to add third-party connectors.
+- **[EXTENDING.md](EXTENDING.md)** – Custom thumbnail generators and MIME detection: implement `ThumbnailProvider` or `Thumbnailer` and optionally `MimeTypeIdentifier` to support new file types.
 
 ## Quick start
 

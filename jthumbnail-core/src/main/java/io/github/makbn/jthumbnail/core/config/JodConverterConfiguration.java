@@ -4,6 +4,7 @@ import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.JODHtmlConverterThumbnailer;
 import io.github.makbn.jthumbnail.core.thumbnailers.OpenOfficeThumbnailer;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,12 @@ public class JodConverterConfiguration {
 
     @Bean("jodConverter")
     JODConverterThumbnailer getJodConverterThumbnailer(
-            OpenOfficeThumbnailer openOfficeThumbnailer, OfficeManager manager, DocumentConverter converter) {
+            OpenOfficeThumbnailer openOfficeThumbnailer,
+            OfficeManager manager,
+            DocumentConverter converter,
+            MimeTypeDetector mimeTypeDetector) {
         log.debug("jod_converter bean created");
-        return new JODHtmlConverterThumbnailer(appProperties, openOfficeThumbnailer, manager, converter);
+        return new JODHtmlConverterThumbnailer(
+                appProperties, openOfficeThumbnailer, manager, converter, mimeTypeDetector);
     }
 }

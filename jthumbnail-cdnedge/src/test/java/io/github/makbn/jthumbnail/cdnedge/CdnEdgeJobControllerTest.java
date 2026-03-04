@@ -1,14 +1,5 @@
 package io.github.makbn.jthumbnail.cdnedge;
 
-import io.github.makbn.jthumbnail.connector.api.ThumbnailJobSubmitter;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.io.File;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -16,6 +7,16 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import io.github.makbn.jthumbnail.connector.api.ThumbnailJobSubmitter;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.io.File;
 
 class CdnEdgeJobControllerTest {
 
@@ -48,4 +49,3 @@ class CdnEdgeJobControllerTest {
         assertEquals(tmp.getAbsolutePath(), submittedPath);
     }
 }
-

@@ -35,7 +35,7 @@ public class ThumbnailJobProcessor {
     @Autowired(required = false)
     private List<ThumbnailJobFailureHandler> failureHandlers;
 
-    private final MimeTypeDetector mimeTypeDetector = new MimeTypeDetector();
+    private final MimeTypeDetector mimeTypeDetector;
 
     public enum ProcessResult {
         SUCCESS,

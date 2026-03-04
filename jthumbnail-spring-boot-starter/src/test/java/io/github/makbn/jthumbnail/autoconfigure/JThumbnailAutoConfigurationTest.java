@@ -17,12 +17,10 @@ class JThumbnailAutoConfigurationTest {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream(resource)) {
             assertTrue(in != null, "AutoConfiguration.imports resource should exist");
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                boolean found = reader.lines()
-                        .anyMatch(line ->
-                                line.trim().equals("io.github.makbn.jthumbnail.autoconfigure.JThumbnailAutoConfiguration"));
+                boolean found = reader.lines().anyMatch(line -> line.trim()
+                        .equals("io.github.makbn.jthumbnail.autoconfigure.JThumbnailAutoConfiguration"));
                 assertTrue(found, "JThumbnailAutoConfiguration should be listed in AutoConfiguration.imports");
             }
         }
     }
 }
-

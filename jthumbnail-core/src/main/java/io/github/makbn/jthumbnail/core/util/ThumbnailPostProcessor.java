@@ -51,22 +51,20 @@ public class ThumbnailPostProcessor {
         }
 
         // Color filters
-        if (config.getColorFilter() != null
-                && config.getColorFilter() != ThumbnailConfig.ColorFilter.NONE) {
+        if (config.getColorFilter() != null && config.getColorFilter() != ThumbnailConfig.ColorFilter.NONE) {
             working = applyColorFilter(working, config.getColorFilter());
         }
 
         // Border
         if (config.isAddBorder() && config.getBorderSize() != null && config.getBorderSize() > 0) {
-            working = addBorder(working, config.getBorderSize(), parseColorOrDefault(
-                    config.getBorderColor(), Color.BLACK));
+            working = addBorder(
+                    working, config.getBorderSize(), parseColorOrDefault(config.getBorderColor(), Color.BLACK));
         }
 
         // Text overlay
         if (config.getOverlayText() != null && !config.getOverlayText().isBlank()) {
             int fontSize = config.getOverlayTextSize() != null ? config.getOverlayTextSize() : 14;
-            Color textColor =
-                    parseColorOrDefault(config.getOverlayTextColor(), Color.WHITE);
+            Color textColor = parseColorOrDefault(config.getOverlayTextColor(), Color.WHITE);
             working = addOverlayText(working, config.getOverlayText(), fontSize, textColor);
         }
 
@@ -140,8 +138,7 @@ public class ThumbnailPostProcessor {
         return rotated;
     }
 
-    private static BufferedImage applyColorFilter(
-            BufferedImage src, ThumbnailConfig.ColorFilter filter) {
+    private static BufferedImage applyColorFilter(BufferedImage src, ThumbnailConfig.ColorFilter filter) {
         int w = src.getWidth();
         int h = src.getHeight();
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -198,8 +195,7 @@ public class ThumbnailPostProcessor {
         return out;
     }
 
-    private static BufferedImage addOverlayText(
-            BufferedImage src, String text, int fontSize, Color color) {
+    private static BufferedImage addOverlayText(BufferedImage src, String text, int fontSize, Color color) {
         BufferedImage out = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = out.createGraphics();
         try {
@@ -249,4 +245,3 @@ public class ThumbnailPostProcessor {
         };
     }
 }
-

@@ -1,6 +1,7 @@
 package io.github.makbn.jthumbnail.core.thumbnailers;
 
 import io.github.makbn.jthumbnail.core.properties.ThumbnailProperties;
+import io.github.makbn.jthumbnail.core.util.mime.MimeTypeDetector;
 
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeManager;
@@ -13,8 +14,9 @@ public class JODExcelThumbnailer extends JODConverterThumbnailer {
             ThumbnailProperties appProperties,
             OpenOfficeThumbnailer openOfficeThumbnailer,
             OfficeManager officeManager,
-            DocumentConverter converter) {
-        super(appProperties, openOfficeThumbnailer, officeManager, converter);
+            DocumentConverter converter,
+            MimeTypeDetector mimeTypeDetector) {
+        super(appProperties, openOfficeThumbnailer, officeManager, converter, mimeTypeDetector);
     }
 
     protected String getStandardOpenOfficeExtension() {

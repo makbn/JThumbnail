@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import io.github.makbn.JThumbnailerStarter;
 import io.github.makbn.jthumbnail.core.JThumbnailer;
 import io.github.makbn.jthumbnail.core.listener.ThumbnailListener;
-import io.github.makbn.jthumbnail.core.model.ThumbnailConfig;
 import io.github.makbn.jthumbnail.core.model.ThumbnailCandidate;
+import io.github.makbn.jthumbnail.core.model.ThumbnailConfig;
 import lombok.extern.log4j.Log4j2;
 
 import org.junit.jupiter.api.AfterAll;
@@ -146,8 +146,7 @@ class ThumbnailerTest {
                 .overlayText("cfg")
                 .build();
 
-        ThumbnailCandidate candidate =
-                ThumbnailCandidate.of(in, "configured_txt_unique_hash", config);
+        ThumbnailCandidate candidate = ThumbnailCandidate.of(in, "configured_txt_unique_hash", config);
 
         jThumbnailer.run(candidate, new ThumbnailListener() {
             @Override

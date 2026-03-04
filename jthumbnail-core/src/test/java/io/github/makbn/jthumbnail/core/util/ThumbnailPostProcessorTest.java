@@ -106,13 +106,12 @@ class ThumbnailPostProcessorTest {
         assertTrue(input.length() > 0);
 
         // AUTO format uses file extension, explicit JPEG / PNG / WEBP paths should be exercised
-        for (ThumbnailConfig.OutputFormat fmt :
-                new ThumbnailConfig.OutputFormat[] {
-                    ThumbnailConfig.OutputFormat.AUTO,
-                    ThumbnailConfig.OutputFormat.JPEG,
-                    ThumbnailConfig.OutputFormat.PNG,
-                    ThumbnailConfig.OutputFormat.WEBP
-                }) {
+        for (ThumbnailConfig.OutputFormat fmt : new ThumbnailConfig.OutputFormat[] {
+            ThumbnailConfig.OutputFormat.AUTO,
+            ThumbnailConfig.OutputFormat.JPEG,
+            ThumbnailConfig.OutputFormat.PNG,
+            ThumbnailConfig.OutputFormat.WEBP
+        }) {
             ThumbnailConfig cfg = ThumbnailConfig.builder()
                     .outputFormat(fmt)
                     .width(10)
@@ -126,4 +125,3 @@ class ThumbnailPostProcessorTest {
         assertNotNull(finalImg);
     }
 }
-

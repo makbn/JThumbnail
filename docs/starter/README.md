@@ -43,14 +43,15 @@ This transitively pulls in `jthumbnail-core` and its dependencies.
 
 ## Auto-configuration
 
-The starter registers a single auto-configuration:
+The starter registers a single auto-configuration class that:
 
-```java
-@AutoConfiguration
-@ConditionalOnClass(JThumbnailer.class)
-@ComponentScan(basePackages = "io.github.makbn.jthumbnail.core")
-public class JThumbnailAutoConfiguration {}
-```
+1. **Enables configuration properties** – Binds `jthumbnailer.thumbnail`, `jthumbnailer.server`,
+   `jthumbnailer.async`, `jthumbnailer.providers`, and `jthumbnailer.ffmpeg` from your
+   `application.properties` / `application.yml` so the core can use them.
+2. **Scans the core package** – Registers all `@Component`, `@Service`, and `@Configuration`
+   beans from `io.github.makbn.jthumbnail.core` (so you get explicit bean definitions from
+   the core module, not from the starter itself).
+3. **Can be disabled** – Set `jthumbnailer.enabled=false` to skip registering any JThumbnail beans.
 
 It is discovered via:
 

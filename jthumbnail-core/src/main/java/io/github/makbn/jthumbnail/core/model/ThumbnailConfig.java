@@ -57,6 +57,7 @@ public class ThumbnailConfig {
 
     /** Optional overlay text drawn on top of the thumbnail. */
     String overlayText;
+
     Integer overlayTextSize;
     /**
      * Overlay text color as hex RGB (`#RRGGBB`). When {@code null}, defaults to
@@ -97,13 +98,6 @@ public class ThumbnailConfig {
         boolean defaultFormat = outputFormat == null || outputFormat == OutputFormat.AUTO;
         boolean defaultCrop = cropMode == null || cropMode == CropMode.FIT;
         boolean defaultFilter = colorFilter == null || colorFilter == ColorFilter.NONE;
-        return sizeUnspecified
-                && noRotation
-                && noBorder
-                && noText
-                && defaultFormat
-                && defaultCrop
-                && defaultFilter;
+        return sizeUnspecified && noRotation && noBorder && noText && defaultFormat && defaultCrop && defaultFilter;
     }
 }
-

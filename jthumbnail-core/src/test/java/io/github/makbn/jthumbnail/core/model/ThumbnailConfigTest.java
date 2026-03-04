@@ -18,10 +18,12 @@ class ThumbnailConfigTest {
         ThumbnailConfig resized = ThumbnailConfig.builder().width(200).build();
         assertFalse(resized.isNoOp());
 
-        ThumbnailConfig rotated = ThumbnailConfig.builder().rotationDegrees(45.0).build();
+        ThumbnailConfig rotated =
+                ThumbnailConfig.builder().rotationDegrees(45.0).build();
         assertFalse(rotated.isNoOp());
 
-        ThumbnailConfig border = ThumbnailConfig.builder().addBorder(true).borderSize(2).build();
+        ThumbnailConfig border =
+                ThumbnailConfig.builder().addBorder(true).borderSize(2).build();
         assertFalse(border.isNoOp());
 
         ThumbnailConfig text = ThumbnailConfig.builder().overlayText("x").build();
@@ -43,4 +45,3 @@ class ThumbnailConfigTest {
         assertFalse(filtered.isNoOp());
     }
 }
-

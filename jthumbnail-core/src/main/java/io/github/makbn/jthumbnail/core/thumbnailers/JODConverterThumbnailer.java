@@ -46,10 +46,11 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
             ThumbnailProperties appProperties,
             OpenOfficeThumbnailer openOfficeThumbnailer,
             OfficeManager officeManager,
-            DocumentConverter converter) {
+            DocumentConverter converter,
+            MimeTypeDetector mimeTypeDetector) {
         super(appProperties);
         this.ooThumbnailer = openOfficeThumbnailer;
-        this.mimeTypeDetector = new MimeTypeDetector();
+        this.mimeTypeDetector = mimeTypeDetector;
         this.officeManager = officeManager;
         this.converter = converter;
     }

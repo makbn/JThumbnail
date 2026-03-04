@@ -1,7 +1,5 @@
 package io.github.makbn.jthumbnail.core.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -37,4 +35,3 @@ class ResizeImageTest {
         resizer.writeOutput(tmp);
     }
 }
-
