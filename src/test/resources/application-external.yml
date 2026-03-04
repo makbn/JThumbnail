@@ -1,0 +1,7 @@
+jthumbnailer:
+  openoffice:
+    manager_type: external
+    hostname: 127.0.0.1
+    ports:
+      - 2002
+    working-dir: ${java.io.tmpdir}/jthumbnail-external-test

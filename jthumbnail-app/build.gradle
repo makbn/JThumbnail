@@ -1,0 +1,40 @@
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    implementation project(':jthumbnail-core')
+    implementation project(':jthumbnail-webservice')
+    implementation project(':jthumbnail-webhook')
+    implementation project(':jthumbnail-kafka')
+    implementation project(':jthumbnail-amqp')
+    implementation project(':jthumbnail-grpc')
+    implementation project(':jthumbnail-watcher')
+    implementation project(':jthumbnail-storage')
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "org.springframework.boot:spring-boot-starter-amqp"
+    implementation "org.apache.kafka:connect-api:${kafka_connect_ver}"
+    runtimeOnly "com.h2database:h2"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.kafka:spring-kafka-test"
+    testImplementation "org.springframework.modulith:spring-modulith-starter-test"
+    testImplementation "org.jodconverter:jodconverter-local:${jod_ver}"
+    testImplementation "org.jodconverter:jodconverter-remote:${jod_ver}"
+}
+
+bootJar {
+    archiveBaseName = 'jthumbnail'
+    archiveClassifier = ''
+}
+
+tasks.register('runMcpServer', JavaExec) {
+    group = 'application'
+    description = 'Run the JThumbnail MCP server (stdio)'
+    classpath = project(':jthumbnail-mcp').sourceSets.main.runtimeClasspath + project(':jthumbnail-mcp').sourceSets.main.output
+    mainClass = 'io.github.makbn.jthumbnail.mcp.JThumbnailMcpServer'
+    standardInput = System.in
+    standardOutput = System.out
+}

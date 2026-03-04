@@ -1,0 +1,39 @@
+type ThumbnailJob {
+  jobId: ID!
+  filePath: String!
+  status: JobStatus!
+  retryCount: Int!
+  errorMessage: String
+  createdAt: String
+  completedAt: String
+  thumbnailPath: String
+  sourceBucket: String
+  sourceKey: String
+  outputBucket: String
+  outputKey: String
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  FAILED
+  COMPLETED
+}
+
+type SubmitJobPayload {
+  jobId: ID!
+}
+
+type Query {
+  thumbnailJob(jobId: ID!): ThumbnailJob
+  thumbnailJobsByStatus(status: JobStatus!): [ThumbnailJob!]!
+}
+
+type Mutation {
+  submitThumbnailJob(localFilePath: String!): SubmitJobPayload!
+}
+
+type Subscription {
+  thumbnailJobCompleted(jobId: ID!): ThumbnailJob!
+}
+

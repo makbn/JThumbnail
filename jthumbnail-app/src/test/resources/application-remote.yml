@@ -1,0 +1,5 @@
+jthumbnailer:
+  openoffice:
+    manager_type: remote
+    url-connection: http://localhost:9980
+    working-dir: ${java.io.tmpdir}/jthumbnail-remote-test

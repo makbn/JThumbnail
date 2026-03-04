@@ -1,0 +1,10 @@
+jthumbnailer:
+  thumbnail:
+    thumbHeight: 400
+    thumbWidth: 535
+  openoffice:
+    manager_type: none
+  server:
+    upload_directory: "/tmp/upload-test"
+    max_waiting_list_size: 100
+

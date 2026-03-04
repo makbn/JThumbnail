@@ -1,0 +1,32 @@
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation "org.springframework.modulith:spring-modulith-starter-core"
+    implementation "org.springframework.modulith:spring-modulith-events-api"
+    implementation "org.springframework:spring-tx"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    api("e-iceblue:spire.office.free:${iceblue_ver}") { transitive = true }
+    implementation "org.apache.poi:poi:${apachepoi_ver}"
+    implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
+    implementation "commons-io:commons-io:${commonsio_ver}"
+    implementation "org.slf4j:slf4j-api:${slf4j_ver}"
+    implementation "org.jodconverter:jodconverter-local:${jod_ver}"
+    implementation "org.jodconverter:jodconverter-remote:${jod_ver}"
+    implementation "org.bytedeco:javacv:${javacv_ver}"
+    implementation "org.bytedeco:opencv:${opencv_ver}"
+    implementation "net.coobird:thumbnailator:${thumb_ver}"
+    implementation "com.mpatric:mp3agic:${mp3agic_ver}"
+    implementation "org.bytedeco.javacpp-presets:opencv-platform:${opencvplat_ver}"
+    implementation "commons-cli:commons-cli:${commonscli_ver}"
+    implementation "org.apache.tika:tika-core:${tika_ver}"
+    implementation("org.apache.pdfbox:pdfbox:${pdfbox_ver}") {
+        exclude group: "commons-logging", module: "commons-logging"
+    }
+    implementation "io.micrometer:micrometer-core"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.modulith:spring-modulith-starter-test"
+    runtimeOnly "com.h2database:h2"
+}

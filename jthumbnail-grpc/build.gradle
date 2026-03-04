@@ -1,0 +1,40 @@
+apply plugin: 'com.google.protobuf'
+
+dependencies {
+    implementation project(':jthumbnail-core')
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "io.grpc:grpc-stub:${grpc_ver}"
+    implementation "io.grpc:grpc-protobuf:${grpc_ver}"
+    implementation "io.grpc:grpc-netty-shaded:${grpc_ver}"
+    implementation "com.google.protobuf:protobuf-java:${protobuf_ver}"
+    implementation "javax.annotation:javax.annotation-api:1.3.2"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/source/proto/main/java"
+            srcDir "$buildDir/generated/source/proto/main/grpc"
+        }
+    }
+}
+
+tasks.named('sourcesJar') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protobuf_ver}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpc_ver}" }
+    }
+    generateProtoTasks {
+        ofSourceSet("main").configureEach {
+            plugins { grpc {} }
+        }
+    }
+    generatedFilesBaseDir = "$buildDir/generated/source/proto"
+}

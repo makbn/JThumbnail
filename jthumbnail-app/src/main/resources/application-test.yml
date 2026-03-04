@@ -1,0 +1,4 @@
+# Test profile: no LibreOffice required (no-op OfficeManager)
+jthumbnailer:
+  openoffice:
+    manager_type: none

@@ -1,0 +1,8 @@
+# OPENOFFICE Properties
+jthumbnailer:
+  openoffice:
+    manager_type: external
+    ports:
+        - 2002
+    working-dir: "/tmp"
+    #office_home: "../../OpenOffice.app/Contents/"

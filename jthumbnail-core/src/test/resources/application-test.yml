@@ -1,0 +1,36 @@
+# Test profile: no LibreOffice; in-memory DB; no Kafka (job queue disabled)
+jthumbnailer:
+  rate-limit:
+    enabled: false
+  watcher:
+    enabled: false
+  amqp:
+    enabled: false
+  grpc:
+    enabled: false
+  webhook:
+    enabled: false
+  openoffice:
+    manager_type: none
+    ports: [2002]
+    working-dir: /tmp
+    office-home: /tmp
+  server:
+    upload_directory: /tmp
+    max_waiting_list_size: 1000
+  jobs:
+    topic: test-jobs
+    dead-letter-topic: test-jobs-dlq
+    max-retries: 2
+    consumer-concurrency: 1
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration

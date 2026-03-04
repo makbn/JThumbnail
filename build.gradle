@@ -1,153 +1,103 @@
 plugins {
-    id "org.springframework.boot" version "3.5.4"
+    id "org.springframework.boot" version "3.5.4" apply false
     id "io.spring.dependency-management" version "1.1.7"
-    id "java-library"
-    id "maven-publish"
-    id "com.diffplug.spotless" version "7.2.1"
+    id "com.diffplug.spotless" version "7.2.1" apply false
+    id "com.google.protobuf" version "0.9.4" apply false
 }
 
-repositories {
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+allprojects {
+    group = 'io.github.makbn'
+    version = 'v2.3.0'
+}
 
-    maven {
-        url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
-        content {
-            includeGroup "e-iceblue"
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.diffplug.spotless'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
         }
-    }
-    mavenLocal()
-}
-
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.2'
-    }
-}
-
-
-dependencies {
-
-    testImplementation platform("org.junit:junit-bom:${junit_ver}")
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testImplementation "org.springframework.modulith:spring-modulith-starter-test"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
-
-    implementation "org.springframework.modulith:spring-modulith-starter-core"
-    implementation "org.springframework.modulith:spring-modulith-events-api"
-    implementation "org.springframework:spring-tx"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation api("e-iceblue:spire.office.free:${iceblue_ver}") {
-        transitive = true
-    }
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-    implementation "org.apache.poi:poi:${apachepoi_ver}"
-    implementation "org.apache.poi:poi-scratchpad:${apachepoi_ver}"
-    implementation "commons-io:commons-io:${commonsio_ver}"
-    implementation "org.slf4j:slf4j-api:${slf4j_ver}"
-    implementation "org.jodconverter:jodconverter-local:${jod_ver}"
-    implementation "org.jodconverter:jodconverter-remote:${jod_ver}"
-    implementation "org.bytedeco:javacv:${javacv_ver}"
-    implementation "org.bytedeco:opencv:${opencv_ver}"
-    implementation "net.coobird:thumbnailator:${thumb_ver}"
-    implementation "com.mpatric:mp3agic:${mp3agic_ver}"
-    implementation "org.bytedeco.javacpp-presets:opencv-platform:${opencvplat_ver}"
-    implementation "commons-cli:commons-cli:${commonscli_ver}"
-    implementation "org.apache.tika:tika-core:${tika_ver}"
-    implementation "org.springframework.boot:spring-boot-starter"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_ver}"
-    implementation ("org.apache.pdfbox:pdfbox:${pdfbox_ver}") {
-        exclude group: "commons-logging", module: "commons-logging"
-    }
-
-    compileOnly "org.projectlombok:lombok:${lombok_ver}"
-    annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-}
-
-group = 'io.github.makbn'
-version = 'v2.3.0'
-description = 'JThumbnail is a Java library for creating Thumbnails of common types of files'
-java.sourceCompatibility = JavaVersion.VERSION_21
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-    withJavadocJar()
-    withSourcesJar()
-}
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            groupId = 'io.github.makbn'
-            artifactId = 'jthumbnail'
-            version = '2.3.0'
-        }
+        withJavadocJar()
+        withSourcesJar()
     }
 
     repositories {
+        maven { url = uri("https://repo.maven.apache.org/maven2/") }
         maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/makbn/jthumbnail"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+            url = uri("https://repo.e-iceblue.com/nexus/content/groups/public/")
+            content { includeGroup "e-iceblue" }
+        }
+        mavenLocal()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.5.4'
+            mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.2'
         }
     }
-}
 
-jar {
-enabled = true
-archiveClassifier = '' //use empty string
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombok_ver}"
+        annotationProcessor "org.projectlombok:lombok:${lombok_ver}"
+        testImplementation platform("org.junit:junit-bom:${junit_ver}")
+        testImplementation "org.junit.jupiter:junit-jupiter"
+        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        testCompileOnly "org.projectlombok:lombok:${lombok_ver}"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombok_ver}"
     }
 
-    maxHeapSize = '1G'
-}
-
-spotless {
-
-    format 'misc', {
-        // define the files to apply `misc` to
-        target '*.gradle', '.gitattributes', '.gitignore'
-
-        // define the steps to apply to those files
-        trimTrailingWhitespace()
-        leadingTabsToSpaces() // or leadingTabsToSpaces. Takes an integer argument if you don't like 4
-        endWithNewline()
+    test {
+        useJUnitPlatform()
+        testLogging { events "passed", "skipped", "failed" }
+        maxHeapSize = '1G'
     }
 
-    java {
+    spotless {
+        java {
+            trimTrailingWhitespace()
+            formatAnnotations()
+            palantirJavaFormat()
+            removeUnusedImports()
+            importOrder('', 'org', 'com', '#', 'java', 'javax')
+            targetExclude '**/build/generated/**'
+        }
+    }
 
-         trimTrailingWhitespace()
-
-         // fix formatting of type annotations
-        formatAnnotations()
-
-        // Format sources and javadocs according to Palantir formatter
-        palantirJavaFormat()
-
-
-        // clean and format imports
-        removeUnusedImports()
-        // removeWildcardImports()
-        importOrder('', 'org', 'com', '#', 'java', 'javax')
-
-        // make sure every file has the following copyright header.
-        // optionally, Spotless can set copyright years by digging
-        // through git history (see "license" section below)
-        // licenseHeader '/* (C)$YEAR */'
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                groupId = 'io.github.makbn'
+                artifactId = project.name
+                version = '2.3.0'
+                pom {
+                    name = project.name
+                    description = "JThumbnail ${project.name} module"
+                    url = 'https://github.com/makbn/JThumbnail'
+                    licenses {
+                        license {
+                            name = 'GNU Lesser General Public License v2.1'
+                            url = 'https://github.com/makbn/JThumbnail/blob/master/LICENSE'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'makbn'
+                            name = 'Matt Akbarian'
+                            email = 'mehdi74akbarian@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:https://github.com/makbn/JThumbnail.git'
+                        developerConnection = 'scm:git:ssh://github.com/makbn/JThumbnail.git'
+                        url = 'https://github.com/makbn/JThumbnail'
+                    }
+                }
+            }
+        }
     }
 }

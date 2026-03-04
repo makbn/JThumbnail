@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(':jthumbnail-core')
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "commons-io:commons-io:${commonsio_ver}"
+    implementation "software.amazon.awssdk:s3:2.28.0"
+    implementation "software.amazon.awssdk:sqs:2.28.0"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}

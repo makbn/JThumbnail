@@ -1,0 +1,6 @@
+# OPENOFFICE Properties
+jthumbnailer:
+  openoffice:
+    manager_type: local
+    ports:
+    working-dir: "/tmp"

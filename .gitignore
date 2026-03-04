@@ -17,3 +17,7 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Local env and generated test outputs
+.env
+test_results/

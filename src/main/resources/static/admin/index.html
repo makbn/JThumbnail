@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JThumbnail Admin</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --success: #3fb950;
+      --danger: #f85149;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h1 a { color: var(--accent); text-decoration: none; }
+    .links {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .links a:hover { text-decoration: underline; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .status { font-weight: 500; }
+    .status.PENDING { color: var(--muted); }
+    .status.PROCESSING { color: var(--accent); }
+    .status.COMPLETED { color: var(--success); }
+    .status.FAILED { color: var(--danger); }
+    .file-path { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .thumb-cell { width: 100px; }
+    .thumb-cell img {
+      max-width: 80px;
+      max-height: 60px;
+      object-fit: contain;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    button.retry {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    button.retry:hover { opacity: 0.9; }
+    button.retry:disabled { opacity: 0.5; cursor: not-allowed; }
+    .loading { color: var(--muted); }
+    .error { color: var(--danger); margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>JThumbnail Admin</h1>
+  <div class="links">
+    <a href="/actuator/health" target="_blank">Health</a>
+    <a href="/actuator/metrics" target="_blank">Metrics</a>
+    <a href="/actuator/prometheus" target="_blank">Prometheus</a>
+    <a href="/swagger-ui.html" target="_blank">API Docs</a>
+  </div>
+  <div id="content">
+    <p class="loading">Loading jobs…</p>
+  </div>
+  <script>
+    const api = (path) => fetch(path).then(r => r.ok ? r.json() : Promise.reject(new Error(r.statusText)));
+    function render(jobs) {
+      const result = jobs.result || [];
+      if (result.length === 0) {
+        return '<p class="muted">No jobs.</p>';
+      }
+      const rows = result.map(j => {
+        const statusClass = j.status || '';
+        const thumb = j.status === 'COMPLETED' && j.jobId
+          ? `<img src="/jobs/${j.jobId}/thumbnail" alt="thumb" loading="lazy" onerror="this.style.display=\'none\'">`
+          : '—';
+        const retryBtn = j.status === 'FAILED'
+          ? `<button class="retry" data-id="${j.jobId}">Retry</button>`
+          : '—';
+        const err = j.errorMessage ? `<br><small class="error">${escapeHtml(j.errorMessage)}</small>` : '';
+        return `<tr>
+          <td><span class="file-path" title="${escapeHtml(j.filePath || '')}">${escapeHtml(j.filePath || '')}</span></td>
+          <td><span class="status ${statusClass}">${escapeHtml(j.status || '')}</span>${err}</td>
+          <td>${j.retryCount ?? 0}</td>
+          <td class="thumb-cell">${thumb}</td>
+          <td>${retryBtn}</td>
+        </tr>`;
+      }).join('');
+      return `<table>
+        <thead><tr><th>File</th><th>Status</th><th>Retries</th><th>Preview</th><th>Actions</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    }
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+    function load() {
+      document.getElementById('content').innerHTML = '<p class="loading">Loading jobs…</p>';
+      api('/jobs')
+        .then(data => {
+          document.getElementById('content').innerHTML = render(data);
+          document.querySelectorAll('button.retry').forEach(btn => {
+            btn.onclick = () => {
+              const id = btn.dataset.id;
+              btn.disabled = true;
+              fetch(`/jobs/${id}/retry`, { method: 'POST' })
+                .then(r => r.json())
+                .then(() => load())
+                .catch(() => { btn.disabled = false; });
+            };
+          });
+        })
+        .catch(e => {
+          document.getElementById('content').innerHTML = `<p class="error">Failed to load jobs: ${escapeHtml(e.message)}</p>`;
+        });
+    }
+    load();
+  </script>
+</body>
+</html>
