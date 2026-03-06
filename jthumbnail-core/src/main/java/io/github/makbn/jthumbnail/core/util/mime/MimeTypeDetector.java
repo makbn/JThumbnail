@@ -143,7 +143,20 @@ public class MimeTypeDetector {
                 extensions.add("dotm");
             }
             case "application/pdf" -> extensions.add("pdf");
-            default -> log.warn("no ext found!");
+            case "text/markdown", "text/x-markdown" -> extensions.add("md");
+            case "application/zip", "application/x-zip-compressed" -> extensions.add("zip");
+            case "application/epub+zip" -> extensions.add("epub");
+            case "video/webm" -> extensions.add("webm");
+            case "video/x-msvideo" -> extensions.add("avi");
+            case "image/heic", "image/heif" -> {
+                extensions.add("heic");
+                extensions.add("heif");
+            }
+            case "image/x-adobe-dng" -> extensions.add("dng");
+            case "image/x-canon-cr2" -> extensions.add("cr2");
+            case "image/x-nikon-nef" -> extensions.add("nef");
+            case "image/x-sony-arw" -> extensions.add("arw");
+            default -> log.warn("no ext found for mime type: {}", mimeType);
         }
         extensionsCache.put(mimeType, extensions);
         return extensions;
